@@ -1504,6 +1504,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   .header-inner { padding: 0 0; height: var(--header-h); }
   .header-action span { display: none; }
   .cat-nav-inner { justify-content: flex-start; }
+  .cat-nav-arrow { display: none; }
   .header-action--whatsapp { display: none; }
 
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
