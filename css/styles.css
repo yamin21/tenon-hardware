@@ -69,8 +69,8 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 .section-title {
   font-size: clamp(2.2rem, 3.2vw, 3.8rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   line-height: 1.06;
   color: var(--text);
   max-width: 680px;
@@ -268,7 +268,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   border-radius: var(--radius-pill);
   padding: 8px 18px;
   font-size: 0.84rem;
-  font-weight: 700;
+  font-weight: 400;
   cursor: pointer;
   transition: background var(--transition);
 }
@@ -1500,9 +1500,10 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   .mobile-overlay { display: block; pointer-events: none; }
   .mobile-overlay--visible { pointer-events: auto; }
 
-  .search-wrap { max-width: none; order: 3; flex-basis: 100%; }
-  .header-inner { flex-wrap: wrap; padding: 12px 0; height: auto; gap: 10px; }
+  .search-wrap { display: none; }
+  .header-inner { padding: 0 0; height: var(--header-h); }
   .header-action span { display: none; }
+  .cat-nav-inner { justify-content: flex-start; }
   .header-action--whatsapp { display: none; }
 
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
