@@ -1055,7 +1055,8 @@
     // ── Scroll to Top ─────────────────────────────────────────
     window.addEventListener('scroll', () => {
       const btn = document.getElementById('scrollTopBtn');
-      btn.classList.toggle('scroll-top-btn--visible', window.scrollY > 500);
+      const atBottom = (window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 40;
+      btn.classList.toggle('scroll-top-btn--visible', atBottom);
 
       // Compact header on scroll
       const header = document.getElementById('siteHeader');
