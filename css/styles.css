@@ -443,6 +443,46 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   border-color: var(--border-strong);
 }
 .cat-nav-brands { color: var(--brand); border-color: var(--brand); font-weight: 700; }
+.cat-nav-item--active { color: var(--brand); border-color: var(--brand); background: #fff; }
+
+/* ── Sub-category Nav (mobile) ───────────────────────────── */
+.sub-nav {
+  display: none;
+  position: sticky;
+  top: calc(var(--header-h) + var(--cat-nav-h));
+  z-index: 98;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.26s ease;
+}
+.sub-nav--open { max-height: 60px; }
+.sub-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 10px 16px;
+}
+.sub-nav-inner::-webkit-scrollbar { display: none; }
+.sub-nav-item {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 13px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  background: #fff;
+  transition: border-color 0.18s, color 0.18s;
+}
+.sub-nav-item:hover { border-color: var(--brand); color: var(--brand); }
 
 /* ── Mobile Menu ─────────────────────────────────────────── */
 .mobile-overlay {
@@ -718,7 +758,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .categories-section { background: var(--bg); }
 .cat-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 14px;
 }
 .cat-card {
@@ -761,14 +801,21 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .cat-card:hover .cat-card-arrow { opacity: 1; transform: translateX(0); }
 
 /* category accent colours */
-.cat-card--tools     { --cat-accent: #fee2e2; }
-.cat-card--hand      { --cat-accent: #dbeafe; }
-.cat-card--plumbing  { --cat-accent: #ccfbf1; }
-.cat-card--electrical{ --cat-accent: #fef9c3; }
-.cat-card--paints    { --cat-accent: #ede9fe; }
-.cat-card--safety    { --cat-accent: #ffedd5; }
-.cat-card--fixings   { --cat-accent: #e4e4e7; }
-.cat-card--building  { --cat-accent: #dcfce7; }
+.cat-card--adhesives  { --cat-accent: #fef3c7; }
+.cat-card--abrasives  { --cat-accent: #fee2e2; }
+.cat-card--paints     { --cat-accent: #ede9fe; }
+.cat-card--hand       { --cat-accent: #dbeafe; }
+.cat-card--electrical { --cat-accent: #fef9c3; }
+.cat-card--plumbing   { --cat-accent: #ccfbf1; }
+.cat-card--sanitary   { --cat-accent: #e0f2fe; }
+.cat-card--tiles      { --cat-accent: #f0fdf4; }
+.cat-card--fasteners  { --cat-accent: #e4e4e7; }
+.cat-card--safety     { --cat-accent: #ffedd5; }
+.cat-card--tools      { --cat-accent: #fee2e2; }
+.cat-card--building   { --cat-accent: #dcfce7; }
+.cat-card--machinery  { --cat-accent: #f3f4f6; }
+.cat-card--general    { --cat-accent: #fdf4ff; }
+.cat-card--metal      { --cat-accent: #f1f5f9; }
 .cat-card:hover { background: var(--cat-accent, var(--bg-soft)); }
 
 /* ── Flash Deals ─────────────────────────────────────────── */
@@ -1475,7 +1522,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .products-grid--4 { grid-template-columns: repeat(3, 1fr); }
-  .cat-grid { grid-template-columns: repeat(4, 1fr); }
+  .cat-grid { grid-template-columns: repeat(5, 1fr); }
   .why-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
   .footer-brand-col { grid-column: 1 / -1; }
@@ -1487,7 +1534,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   .slide-visual { display: none; }
   .carousel-slide { padding: 48px 0; min-height: auto; }
   .products-grid--4 { grid-template-columns: repeat(2, 1fr); }
-  .cat-grid { grid-template-columns: repeat(4, 1fr); }
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
   .newsletter-copy p { margin-inline: auto; }
   .modal-inner { grid-template-columns: 1fr; }
   .modal-img { min-height: 220px; }
@@ -1506,6 +1553,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   .cat-nav-inner { justify-content: flex-start; }
   .cat-nav-arrow { display: none; }
   .header-action--whatsapp { display: none; }
+  .sub-nav { display: block; }
 
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
   .flash-header { flex-direction: column; align-items: flex-start; }

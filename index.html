@@ -71,22 +71,34 @@
       <div class="cat-nav-inner" id="catNavInner">
         <a href="#" class="cat-nav-item cat-nav-all">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          All Categories
+          All
         </a>
-        <a href="#" class="cat-nav-item">Power Tools</a>
-        <a href="#" class="cat-nav-item">Hand Tools</a>
-        <a href="#" class="cat-nav-item">Plumbing</a>
-        <a href="#" class="cat-nav-item">Electrical</a>
-        <a href="#" class="cat-nav-item">Paints & Coatings</a>
-        <a href="#" class="cat-nav-item">Safety & PPE</a>
-        <a href="#" class="cat-nav-item">Adhesives</a>
-        <a href="#" class="cat-nav-item">Fixings</a>
+        <a href="#" class="cat-nav-item" data-cat="Adhesives">Adhesives</a>
+        <a href="#" class="cat-nav-item" data-cat="Abrasives">Abrasives</a>
+        <a href="#" class="cat-nav-item" data-cat="Paints">Paints</a>
+        <a href="#" class="cat-nav-item" data-cat="Hand Tools">Hand Tools</a>
+        <a href="#" class="cat-nav-item" data-cat="Electricals">Electricals</a>
+        <a href="#" class="cat-nav-item" data-cat="Plumbing">Plumbing</a>
+        <a href="#" class="cat-nav-item" data-cat="Sanitaryware & Bathroom">Sanitaryware</a>
+        <a href="#" class="cat-nav-item" data-cat="Tiles">Tiles</a>
+        <a href="#" class="cat-nav-item" data-cat="Fasteners">Fasteners</a>
+        <a href="#" class="cat-nav-item" data-cat="Safety">Safety</a>
+        <a href="#" class="cat-nav-item" data-cat="Power Tools">Power Tools</a>
+        <a href="#" class="cat-nav-item" data-cat="Building">Building</a>
+        <a href="#" class="cat-nav-item" data-cat="Machinery">Machinery</a>
+        <a href="#" class="cat-nav-item" data-cat="General Hardware">General Hardware</a>
+        <a href="#" class="cat-nav-item" data-cat="Metal">Metal</a>
       </div>
       <button class="cat-nav-arrow cat-nav-arrow--right" id="catNavRight" onclick="scrollCatNav(1)" aria-label="Scroll right">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
   </nav>
+
+  <!-- ── Sub-Category Nav (mobile only) ───────────────────── -->
+  <div class="sub-nav" id="subNav">
+    <div class="sub-nav-inner" id="subNavInner"></div>
+  </div>
 
   <!-- ── Mobile Menu ──────────────────────────────────────── -->
   <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
@@ -103,15 +115,21 @@
     </div>
     <nav class="mobile-nav">
       <strong>Categories</strong>
-      <a href="#">Power Tools</a>
+      <a href="#">Adhesives</a>
+      <a href="#">Abrasives</a>
+      <a href="#">Paints</a>
       <a href="#">Hand Tools</a>
+      <a href="#">Electricals</a>
       <a href="#">Plumbing</a>
-      <a href="#">Electrical</a>
-      <a href="#">Paints & Coatings</a>
-      <a href="#">Safety & PPE</a>
-      <a href="#">Adhesives & Sealants</a>
-      <a href="#">Fixings & Fasteners</a>
-      <a href="#">Building Materials</a>
+      <a href="#">Sanitaryware & Bathroom</a>
+      <a href="#">Tiles</a>
+      <a href="#">Fasteners</a>
+      <a href="#">Safety</a>
+      <a href="#">Power Tools</a>
+      <a href="#">Building</a>
+      <a href="#">Machinery</a>
+      <a href="#">General Hardware</a>
+      <a href="#">Metal</a>
     </nav>
     <nav class="mobile-nav mobile-nav--secondary">
       <strong>Quick Links</strong>
@@ -256,10 +274,22 @@
           <a href="#" class="btn-outline-sm">View all categories →</a>
         </div>
         <div class="cat-grid">
-          <a href="#" class="cat-card cat-card--tools">
-            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-            <strong>Power Tools</strong>
-            <span>128 products</span>
+          <a href="#" class="cat-card cat-card--adhesives">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l4.24 4.24a6 6 0 1 1-8.48 0L12 2z"/></svg></div>
+            <strong>Adhesives</strong>
+            <span>64 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--abrasives">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg></div>
+            <strong>Abrasives</strong>
+            <span>87 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--paints">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="12" height="7" rx="2"/><path d="M16 9.5h3a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-3"/><path d="M8 15v5"/></svg></div>
+            <strong>Paints</strong>
+            <span>112 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
           <a href="#" class="cat-card cat-card--hand">
@@ -268,40 +298,70 @@
             <span>243 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
+          <a href="#" class="cat-card cat-card--electrical">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <strong>Electricals</strong>
+            <span>189 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
           <a href="#" class="cat-card cat-card--plumbing">
             <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
             <strong>Plumbing</strong>
             <span>312 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
-          <a href="#" class="cat-card cat-card--electrical">
-            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></div>
-            <strong>Electrical</strong>
-            <span>189 products</span>
+          <a href="#" class="cat-card cat-card--sanitary">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-2z"/><path d="M6 12V7a2 2 0 0 1 2-2h0a1 1 0 0 1 1 1v1"/></svg></div>
+            <strong>Sanitaryware</strong>
+            <span>98 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
-          <a href="#" class="cat-card cat-card--paints">
-            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></div>
-            <strong>Paints & Coatings</strong>
-            <span>97 products</span>
+          <a href="#" class="cat-card cat-card--tiles">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>
+            <strong>Tiles</strong>
+            <span>145 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--fasteners">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 19.5 6.5 19.5 17.5 12 22 4.5 17.5 4.5 6.5 12 2"/><circle cx="12" cy="12" r="3.5"/></svg></div>
+            <strong>Fasteners</strong>
+            <span>421 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
           <a href="#" class="cat-card cat-card--safety">
             <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <strong>Safety & PPE</strong>
+            <strong>Safety</strong>
             <span>74 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
-          <a href="#" class="cat-card cat-card--fixings">
-            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-            <strong>Fixings & Fasteners</strong>
-            <span>421 products</span>
+          <a href="#" class="cat-card cat-card--tools">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="10" height="6" rx="2"/><path d="M12 11.5h3l3-3.5v7l-3-3.5h-3"/><circle cx="6" cy="12" r="1.5"/></svg></div>
+            <strong>Power Tools</strong>
+            <span>128 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
           <a href="#" class="cat-card cat-card--building">
             <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
-            <strong>Building Materials</strong>
+            <strong>Building</strong>
             <span>156 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--machinery">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <strong>Machinery</strong>
+            <span>43 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--general">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+            <strong>General Hardware</strong>
+            <span>203 products</span>
+            <div class="cat-card-arrow">→</div>
+          </a>
+          <a href="#" class="cat-card cat-card--metal">
+            <div class="cat-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="4" y1="18" x2="14" y2="18"/></svg></div>
+            <strong>Metal</strong>
+            <span>67 products</span>
             <div class="cat-card-arrow">→</div>
           </a>
         </div>
@@ -1062,6 +1122,57 @@
       const header = document.getElementById('siteHeader');
       header.classList.toggle('site-header--scrolled', window.scrollY > 80);
     }, { passive: true });
+
+    // ── Sub-category Nav (mobile) ─────────────────────────────
+    const SUBCATS = {
+      'Adhesives':              ['Glues & Epoxy', 'Silicone Sealant', 'Putty', 'Tapes'],
+      'Abrasives':              ['Sand Paper', 'Cutting Wheels', 'Grinding Wheels', 'Brushes'],
+      'Paints':                 ['Wall Paint', 'Wood Paint', 'Metal Paint', 'Primers'],
+      'Hand Tools':             ['Hammers', 'Screwdrivers', 'Pliers', 'Wrenches'],
+      'Electricals':            ['Cables & Wires', 'Switches & Sockets', 'Circuit Breakers', 'Lighting'],
+      'Plumbing':               ['Pipes & Fittings', 'Valves', 'Taps & Faucets', 'Water Pumps'],
+      'Sanitaryware & Bathroom':['Toilets', 'Basins & Sinks', 'Showers', 'Accessories'],
+      'Tiles':                  ['Floor Tiles', 'Wall Tiles', 'Tile Adhesive', 'Grout'],
+      'Fasteners':              ['Screws', 'Bolts & Nuts', 'Anchors', 'Nails'],
+      'Safety':                 ['Helmets', 'Gloves', 'Safety Boots', 'Eye Protection'],
+      'Power Tools':            ['Drills', 'Angle Grinders', 'Circular Saws', 'Sanders'],
+      'Building':               ['Cement', 'Bricks & Blocks', 'Roofing', 'Insulation'],
+      'Machinery':              ['Generators', 'Compressors', 'Mixers', 'Welding Equipment'],
+      'General Hardware':       ['Polish & Lubricants', 'Wheelbarrow', 'Ropes', 'Ladders'],
+      'Metal':                  ['Steel Sheets', 'Angle Iron', 'Pipes & Tubes', 'Mesh'],
+    };
+
+    (function initSubNav() {
+      const subNav   = document.getElementById('subNav');
+      const subInner = document.getElementById('subNavInner');
+      let activeChip = null;
+
+      document.querySelectorAll('.cat-nav-item[data-cat]').forEach(chip => {
+        chip.addEventListener('click', function(e) {
+          if (window.innerWidth > 780) return;
+          e.preventDefault();
+          const cat  = this.dataset.cat;
+          const subs = SUBCATS[cat];
+          if (!subs) return;
+
+          if (activeChip === this && subNav.classList.contains('sub-nav--open')) {
+            subNav.classList.remove('sub-nav--open');
+            this.classList.remove('cat-nav-item--active');
+            activeChip = null;
+            return;
+          }
+
+          subInner.innerHTML = subs.map(s =>
+            `<a href="#" class="sub-nav-item">${s}</a>`
+          ).join('');
+          subNav.classList.add('sub-nav--open');
+
+          if (activeChip) activeChip.classList.remove('cat-nav-item--active');
+          this.classList.add('cat-nav-item--active');
+          activeChip = this;
+        });
+      });
+    })();
 
     // ── Year ──────────────────────────────────────────────────
     document.getElementById('year').textContent = new Date().getFullYear();
