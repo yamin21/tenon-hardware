@@ -145,7 +145,6 @@
       <div class="container cat-hero-inner">
         <div class="cat-hero-copy">
           <h1>Power Tools</h1>
-          <p>Professional-grade drills, grinders, saws and sanders from DeWalt, Bosch, Metabo and more.</p>
         </div>
         <span class="cat-hero-count" id="heroCount">128 products</span>
       </div>
@@ -407,7 +406,6 @@
               <strong class="product-price">MVR ${p.price.toLocaleString()}</strong>
               ${p.oldPrice ? `<span class="product-price-old">MVR ${p.oldPrice.toLocaleString()}</span>` : ''}
             </div>
-            <button class="btn-primary btn-full btn-sm product-add-btn" onclick="addToCart('${esc(p.brand + ' ' + p.name)}',${p.price})">Add to Cart</button>
           </div>
         </div>`;
       }).join('');

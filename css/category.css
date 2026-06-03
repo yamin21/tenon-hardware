@@ -12,7 +12,7 @@
 .cat-hero {
   background: var(--bg-soft);
   border-bottom: 1px solid var(--border);
-  padding: 32px 0 28px;
+  padding: 16px 0 14px;
 }
 .cat-hero-inner {
   display: flex;

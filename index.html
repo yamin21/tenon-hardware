@@ -115,23 +115,8 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="search" placeholder="Search products…">
     </div>
-    <nav class="mobile-nav">
+    <nav class="mobile-nav" id="mobileCatNav">
       <strong>Categories</strong>
-      <a href="#">Adhesives</a>
-      <a href="#">Abrasives</a>
-      <a href="#">Paints</a>
-      <a href="#">Hand Tools</a>
-      <a href="#">Electricals</a>
-      <a href="#">Plumbing</a>
-      
-      <a href="#">Tiles</a>
-      <a href="#">Fasteners</a>
-      
-      <a href="#">Power Tools</a>
-      <a href="#">Building</a>
-      
-      <a href="#">General</a>
-      <a href="#">Metal</a>
     </nav>
     <nav class="mobile-nav mobile-nav--secondary">
       <strong>Quick Links</strong>
@@ -1145,6 +1130,37 @@
       'General Hardware':       ['Polish & Lubricants', 'Wheelbarrow', 'Ropes', 'Ladders'],
       'Metal':                  ['Steel Sheets', 'Angle Iron', 'Pipes & Tubes', 'Mesh'],
     };
+
+    // Build mobile category accordion
+    (function buildMobileAccordion() {
+      const nav = document.getElementById('mobileCatNav');
+      if (!nav) return;
+      const chevron = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+      const cats = ['Adhesives','Abrasives','Paints','Hand Tools','Electricals','Plumbing','Tiles','Fasteners','Power Tools','Building','General Hardware','Metal'];
+      cats.forEach(cat => {
+        const subs = SUBCATS[cat] || [];
+        const item = document.createElement('div');
+        item.className = 'mobile-acc-item';
+        const trigger = document.createElement('button');
+        trigger.className = 'mobile-acc-trigger';
+        trigger.innerHTML = `<span>${cat}</span>${subs.length ? chevron : ''}`;
+        const body = document.createElement('div');
+        body.className = 'mobile-acc-body';
+        subs.forEach(sub => {
+          const a = document.createElement('a');
+          a.href = `category.html?cat=${encodeURIComponent(cat)}&sub=${encodeURIComponent(sub)}`;
+          a.textContent = sub;
+          body.appendChild(a);
+        });
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.classList.toggle('is-open');
+          body.classList.toggle('is-open', isOpen);
+        });
+        item.appendChild(trigger);
+        if (subs.length) item.appendChild(body);
+        nav.appendChild(item);
+      });
+    })();
 
     (function initCatNav() {
       const subNav    = document.getElementById('subNav');
