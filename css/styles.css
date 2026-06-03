@@ -469,6 +469,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .cat-dropdown-inner {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 16px 0;
   overflow-x: auto;
