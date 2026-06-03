@@ -102,9 +102,7 @@
 
   <!-- ── Category Dropdown (desktop only) ──────────────────── -->
   <div class="cat-dropdown" id="catDropdown">
-    <div class="container">
-      <div class="cat-dropdown-inner" id="catDropdownInner"></div>
-    </div>
+    <div class="cat-dropdown-inner" id="catDropdownInner"></div>
   </div>
 
   <!-- ── Mobile Menu ──────────────────────────────────────── -->
@@ -1179,6 +1177,8 @@
             dropdown.classList.remove('cat-dropdown--open');
             subNav.classList.add('sub-nav--open');
           } else {
+            const rect = this.getBoundingClientRect();
+            dropdown.style.setProperty('--chip-center', (rect.left + rect.width / 2) + 'px');
             dropInner.innerHTML = subs.map(s => `<a href="#" class="cat-dropdown-item">${s}</a>`).join('');
             subNav.classList.remove('sub-nav--open');
             dropdown.classList.add('cat-dropdown--open');
