@@ -475,7 +475,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   content: '';
   position: absolute;
   top: -5px;
-  left: 50%;
+  left: var(--arrow-left, 50%);
   transform: translateX(-50%) rotate(45deg);
   width: 10px;
   height: 10px;

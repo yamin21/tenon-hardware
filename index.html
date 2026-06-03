@@ -1178,10 +1178,19 @@
             subNav.classList.add('sub-nav--open');
           } else {
             const rect = this.getBoundingClientRect();
-            dropdown.style.setProperty('--chip-center', (rect.left + rect.width / 2) + 'px');
+            const chipCenter = rect.left + rect.width / 2;
             dropInner.innerHTML = subs.map(s => `<a href="#" class="cat-dropdown-item">${s}</a>`).join('');
             subNav.classList.remove('sub-nav--open');
             dropdown.classList.add('cat-dropdown--open');
+            // clamp card so it stays on screen; reposition arrow to still point at chip
+            requestAnimationFrame(() => {
+              const cardW = dropInner.offsetWidth;
+              const pad = 16;
+              const clamped = Math.max(cardW / 2 + pad, Math.min(chipCenter, window.innerWidth - cardW / 2 - pad));
+              dropdown.style.setProperty('--chip-center', clamped + 'px');
+              const arrowPct = Math.max(10, Math.min(90, ((chipCenter - clamped) / cardW + 0.5) * 100));
+              dropInner.style.setProperty('--arrow-left', arrowPct + '%');
+            });
           }
 
           if (activeChip) activeChip.classList.remove('cat-nav-item--active');
