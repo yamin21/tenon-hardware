@@ -100,6 +100,13 @@
     <div class="sub-nav-inner" id="subNavInner"></div>
   </div>
 
+  <!-- ── Category Dropdown (desktop only) ──────────────────── -->
+  <div class="cat-dropdown" id="catDropdown">
+    <div class="container">
+      <div class="cat-dropdown-inner" id="catDropdownInner"></div>
+    </div>
+  </div>
+
   <!-- ── Mobile Menu ──────────────────────────────────────── -->
   <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
   <div class="mobile-menu" id="mobileMenu">
@@ -1142,35 +1149,49 @@
       'Metal':                  ['Steel Sheets', 'Angle Iron', 'Pipes & Tubes', 'Mesh'],
     };
 
-    (function initSubNav() {
-      const subNav   = document.getElementById('subNav');
-      const subInner = document.getElementById('subNavInner');
-      let activeChip = null;
+    (function initCatNav() {
+      const subNav    = document.getElementById('subNav');
+      const subInner  = document.getElementById('subNavInner');
+      const dropdown  = document.getElementById('catDropdown');
+      const dropInner = document.getElementById('catDropdownInner');
+      let activeChip  = null;
+
+      function closeAll() {
+        subNav.classList.remove('sub-nav--open');
+        dropdown.classList.remove('cat-dropdown--open');
+        if (activeChip) { activeChip.classList.remove('cat-nav-item--active'); activeChip = null; }
+      }
 
       document.querySelectorAll('.cat-nav-item[data-cat]').forEach(chip => {
         chip.addEventListener('click', function(e) {
-          if (window.innerWidth > 780) return;
           e.preventDefault();
           const cat  = this.dataset.cat;
           const subs = SUBCATS[cat];
           if (!subs) return;
 
-          if (activeChip === this && subNav.classList.contains('sub-nav--open')) {
-            subNav.classList.remove('sub-nav--open');
-            this.classList.remove('cat-nav-item--active');
-            activeChip = null;
-            return;
-          }
+          const isMobile = window.innerWidth <= 780;
 
-          subInner.innerHTML = subs.map(s =>
-            `<a href="#" class="sub-nav-item">${s}</a>`
-          ).join('');
-          subNav.classList.add('sub-nav--open');
+          // toggle off if same chip clicked again
+          if (activeChip === this) { closeAll(); return; }
+
+          if (isMobile) {
+            subInner.innerHTML = subs.map(s => `<a href="#" class="sub-nav-item">${s}</a>`).join('');
+            dropdown.classList.remove('cat-dropdown--open');
+            subNav.classList.add('sub-nav--open');
+          } else {
+            dropInner.innerHTML = subs.map(s => `<a href="#" class="cat-dropdown-item">${s}</a>`).join('');
+            subNav.classList.remove('sub-nav--open');
+            dropdown.classList.add('cat-dropdown--open');
+          }
 
           if (activeChip) activeChip.classList.remove('cat-nav-item--active');
           this.classList.add('cat-nav-item--active');
           activeChip = this;
         });
+      });
+
+      document.addEventListener('click', e => {
+        if (!e.target.closest('#catNav') && !e.target.closest('#catDropdown')) closeAll();
       });
     })();
 
