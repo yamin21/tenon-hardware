@@ -83,7 +83,7 @@
         <a href="#" class="cat-nav-item" data-cat="Tiles">Tiles</a>
         <a href="#" class="cat-nav-item" data-cat="Fasteners">Fasteners</a>
         <a href="#" class="cat-nav-item" data-cat="Safety">Safety</a>
-        <a href="#" class="cat-nav-item" data-cat="Power Tools">Power Tools</a>
+        <a href="category.html" class="cat-nav-item" data-cat="Power Tools">Power Tools</a>
         <a href="#" class="cat-nav-item" data-cat="Building">Building</a>
         <a href="#" class="cat-nav-item" data-cat="Machinery">Machinery</a>
         <a href="#" class="cat-nav-item" data-cat="General Hardware">General Hardware</a>
@@ -1164,9 +1164,10 @@
 
       document.querySelectorAll('.cat-nav-item[data-cat]').forEach(chip => {
         chip.addEventListener('click', function(e) {
-          e.preventDefault();
           const cat  = this.dataset.cat;
           const subs = SUBCATS[cat];
+          if (this.getAttribute('href') !== '#') return;
+          e.preventDefault();
           if (!subs) return;
 
           const isMobile = window.innerWidth <= 780;
