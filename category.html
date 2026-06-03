@@ -395,16 +395,16 @@
         const esc = s => s.replace(/'/g, "\\'");
         return `
         <div class="product-card">
-          <div class="product-card-img product-card-img--${p.img}">
+          <a href="product.html" class="product-card-img product-card-img--${p.img}">
             ${p.badge ? `<span class="badge ${badgeClass(p.badge)}">${badgeLabel(p.badge)}</span>` : ''}
             <div class="product-actions">
               <button class="action-btn" onclick="toggleWishlist(this,'${esc(p.brand + ' ' + p.name)}')" title="Wishlist">${wishlistSVG}</button>
               <button class="action-btn" onclick="openQuickView('${esc(p.name)}','${esc(p.brand)}',${p.price},${p.oldPrice||'null'},'${p.img}')" title="Quick view">${eyeSVG}</button>
             </div>
-          </div>
+          </a>
           <div class="product-card-body">
             <span class="product-brand">${p.brand}</span>
-            <h3 class="product-name">${p.name}</h3>
+            <h3 class="product-name"><a href="product.html">${p.name}</a></h3>
             <div class="product-rating"><span class="stars">${stars(p.rating)}</span><span class="rating-count">(${p.reviews})</span></div>
             <div class="product-price-row">
               <strong class="product-price">MVR ${p.price.toLocaleString()}</strong>
