@@ -617,34 +617,41 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .mobile-nav a:hover { background: var(--brand-light); color: var(--brand); }
 .mobile-nav--secondary { border-top: 1px solid var(--border); }
 
-.mobile-acc-item {}
-.mobile-acc-trigger {
+.mobile-acc-item { list-style: none; }
+.mobile-acc-item summary.mobile-acc-trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
   font-weight: 500;
   color: var(--text);
   font-size: 0.93rem;
-  background: none;
-  border: none;
   cursor: pointer;
-  text-align: left;
+  list-style: none;
   transition: background var(--transition), color var(--transition);
 }
-.mobile-acc-trigger:hover { background: var(--brand-light); color: var(--brand); }
-.mobile-acc-trigger.is-open { color: var(--brand); }
-.mobile-acc-trigger svg { transition: transform 0.2s; flex-shrink: 0; }
-.mobile-acc-trigger.is-open svg { transform: rotate(180deg); }
+.mobile-acc-item summary.mobile-acc-trigger::-webkit-details-marker { display: none; }
+.mobile-acc-item summary.mobile-acc-trigger::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.mobile-acc-item[open] summary.mobile-acc-trigger::after { transform: rotate(180deg); }
+.mobile-acc-item summary.mobile-acc-trigger:hover { background: var(--brand-light); color: var(--brand); }
+.mobile-acc-item[open] summary.mobile-acc-trigger { color: var(--brand); }
 .mobile-acc-body {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 2px;
   padding: 2px 0 4px 12px;
 }
-.mobile-acc-body.is-open { display: flex; }
 .mobile-acc-body a {
   padding: 8px 12px;
   font-size: 0.87rem;
