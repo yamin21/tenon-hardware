@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeWalt DCF887 18V Impact Driver — Tenon Hardware</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/product.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ── Header ───────────────────────────────────────────── -->
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="Snip20260603_35.png" alt="Tenon Hardware" class="logo">
+      </a>
+      <div class="search-wrap">
+        <form class="search-form" onsubmit="event.preventDefault()">
+          <div class="search-box">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" class="search-input" placeholder="Search tools, materials, brands…" autocomplete="off">
+            <button type="submit" class="search-btn">Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="header-actions">
+        <a href="#" class="header-action" title="My Account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
+        </a>
+        <button class="header-action cart-btn" onclick="toggleCart()" title="Cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count cart-count--hidden" id="cartCount">0</span>
+        </button>
+        <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Category Nav ──────────────────────────────────────── -->
+  <nav class="cat-nav" id="catNav">
+    <div class="container cat-nav-wrap">
+      <button class="cat-nav-arrow cat-nav-arrow--left" id="catNavLeft" onclick="scrollCatNav(-1)" aria-label="Scroll left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="cat-nav-inner" id="catNavInner">
+        <a href="index.html" class="cat-nav-item cat-nav-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          All
+        </a>
+        <a href="#" class="cat-nav-item" data-cat="Adhesives">Adhesives</a>
+        <a href="#" class="cat-nav-item" data-cat="Abrasives">Abrasives</a>
+        <a href="#" class="cat-nav-item" data-cat="Paints">Paints</a>
+        <a href="#" class="cat-nav-item" data-cat="Hand Tools">Hand Tools</a>
+        <a href="#" class="cat-nav-item" data-cat="Electricals">Electricals</a>
+        <a href="#" class="cat-nav-item" data-cat="Plumbing">Plumbing</a>
+        <a href="#" class="cat-nav-item" data-cat="Sanitaryware & Bathroom">Sanitaryware</a>
+        <a href="#" class="cat-nav-item" data-cat="Tiles">Tiles</a>
+        <a href="#" class="cat-nav-item" data-cat="Fasteners">Fasteners</a>
+        <a href="#" class="cat-nav-item" data-cat="Safety">Safety</a>
+        <a href="#" class="cat-nav-item cat-nav-item--active" data-cat="Power Tools">Power Tools</a>
+        <a href="#" class="cat-nav-item" data-cat="Building">Building</a>
+        <a href="#" class="cat-nav-item" data-cat="Machinery">Machinery</a>
+        <a href="#" class="cat-nav-item" data-cat="General Hardware">General Hardware</a>
+        <a href="#" class="cat-nav-item" data-cat="Metal">Metal</a>
+      </div>
+      <button class="cat-nav-arrow cat-nav-arrow--right" id="catNavRight" onclick="scrollCatNav(1)" aria-label="Scroll right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── Sub-Category Nav (mobile) ─────────────────────────── -->
+  <div class="sub-nav" id="subNav">
+    <div class="sub-nav-inner" id="subNavInner"></div>
+  </div>
+
+  <!-- ── Category Dropdown (desktop) ──────────────────────── -->
+  <div class="cat-dropdown" id="catDropdown">
+    <div class="cat-dropdown-inner" id="catDropdownInner"></div>
+  </div>
+
+  <!-- ── Mobile Menu ───────────────────────────────────────── -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+      <img src="Snip20260603_35.png" alt="Tenon Hardware" height="36">
+      <button onclick="toggleMobileMenu()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="mobile-search">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" placeholder="Search products…">
+    </div>
+    <nav class="mobile-nav">
+      <strong>Categories</strong>
+      <a href="#">Adhesives</a><a href="#">Abrasives</a><a href="#">Paints</a>
+      <a href="#">Hand Tools</a><a href="#">Electricals</a><a href="#">Plumbing</a>
+      <a href="#">Sanitaryware & Bathroom</a><a href="#">Tiles</a><a href="#">Fasteners</a>
+      <a href="#">Safety</a><a href="#">Power Tools</a><a href="#">Building</a>
+      <a href="#">Machinery</a><a href="#">General Hardware</a><a href="#">Metal</a>
+    </nav>
+    <nav class="mobile-nav mobile-nav--secondary">
+      <strong>Quick Links</strong>
+      <a href="#">My Account</a>
+      <a href="#">Track Order</a>
+      <a href="#">Contact Us</a>
+    </nav>
+  </div>
+
+  <!-- ── Breadcrumb ────────────────────────────────────────── -->
+  <div class="breadcrumb">
+    <div class="container breadcrumb-inner">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="#">Power Tools</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="#">Impact Drivers</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>DCF887 18V Impact Driver</span>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ── Product Section ───────────────────────────────────── -->
+    <section class="product-section">
+      <div class="container">
+        <div class="product-layout">
+
+          <!-- Gallery -->
+          <div class="product-gallery">
+            <div class="gallery-main" id="galleryMain">
+              <div class="gallery-badge-overlay">
+                <span class="badge badge--sale">22% Off</span>
+                <span class="badge badge--new">New</span>
+              </div>
+              <div class="gallery-placeholder" id="galleryPlaceholder">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="10" height="6" rx="2"/><path d="M12 11.5h3l3-3.5v7l-3-3.5h-3"/><circle cx="6" cy="12" r="1.5"/></svg>
+                <span class="gallery-placeholder-label">DeWalt DCF887</span>
+              </div>
+            </div>
+            <div class="gallery-thumbs">
+              <div class="gallery-thumb gallery-thumb--active" onclick="selectThumb(this, '#fdf3f3')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="10" height="6" rx="2"/><path d="M12 11.5h3l3-3.5v7l-3-3.5h-3"/></svg>
+              </div>
+              <div class="gallery-thumb" onclick="selectThumb(this, '#eef4fd')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="gallery-thumb" onclick="selectThumb(this, '#f5f5f7')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              </div>
+              <div class="gallery-thumb" onclick="selectThumb(this, '#f0fdf4')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="product-info">
+            <div class="product-brand-line">
+              <a href="#" class="product-brand-link">DeWalt</a>
+              <span class="product-sku">SKU: DW-DCF887-XJ</span>
+            </div>
+
+            <h1 class="product-title">DCF887 18V XR Brushless Compact Impact Driver</h1>
+
+            <div class="product-rating-row">
+              <span class="product-stars">★★★★★</span>
+              <span class="product-rating-score">4.9</span>
+              <span class="product-rating-sep">·</span>
+              <a href="#reviews" class="product-rating-count" onclick="openTab('reviews')">12 reviews</a>
+              <span class="product-rating-sep">·</span>
+              <span class="product-in-stock">In Stock</span>
+            </div>
+
+            <div class="product-price-block">
+              <div class="product-price-row">
+                <span class="product-price-main">MVR 3,800</span>
+                <span class="product-price-original">MVR 4,850</span>
+                <span class="product-save-badge">Save 22%</span>
+              </div>
+              <p class="product-price-note">Price includes GST. Free delivery on orders over MVR 500.</p>
+            </div>
+
+            <p class="product-short-desc">
+              The DCF887 delivers unmatched performance in a compact body. Brushless motor technology maximises runtime, motor life and performance — the professional's go-to for fastening on site.
+            </p>
+
+            <ul class="product-features">
+              <li>Brushless motor for up to 57% more run time vs brushed</li>
+              <li>3-speed settings for complete application versatility</li>
+              <li>Precision Drive in speed 1 for controlled fastening</li>
+              <li>1/4″ hex chuck accepts standard bits quickly</li>
+            </ul>
+
+            <div class="product-spec-chips">
+              <div class="product-spec-chip">
+                <span class="product-spec-chip-value">18V</span>
+                <span class="product-spec-chip-label">Voltage</span>
+              </div>
+              <div class="product-spec-chip">
+                <span class="product-spec-chip-value">205 N·m</span>
+                <span class="product-spec-chip-label">Max Torque</span>
+              </div>
+              <div class="product-spec-chip">
+                <span class="product-spec-chip-value">3-Speed</span>
+                <span class="product-spec-chip-label">Settings</span>
+              </div>
+              <div class="product-spec-chip">
+                <span class="product-spec-chip-value">1.1 kg</span>
+                <span class="product-spec-chip-label">Weight</span>
+              </div>
+            </div>
+
+            <p class="product-qty-label">Quantity</p>
+            <div class="product-add-row">
+              <div class="qty-selector">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <span class="qty-value" id="qtyValue">1</span>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+              </div>
+              <button class="btn-add-cart" onclick="addToCartPage()">Add to Cart</button>
+              <button class="btn-wishlist" id="wishlistBtn" onclick="toggleWishlistPage(this)" title="Add to wishlist">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+            </div>
+
+            <div class="product-delivery">
+              <div class="delivery-row">
+                <div class="delivery-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </div>
+                <div class="delivery-text">
+                  <strong>Free Delivery</strong>
+                  <span>On all orders over MVR 500 · Malé & atolls</span>
+                </div>
+              </div>
+              <div class="delivery-row">
+                <div class="delivery-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="delivery-text">
+                  <strong>Same-day Dispatch</strong>
+                  <span>Order before 2:00 pm, Mon–Sat</span>
+                </div>
+              </div>
+              <div class="delivery-row">
+                <div class="delivery-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                </div>
+                <div class="delivery-text">
+                  <strong>30-day Returns</strong>
+                  <span>Hassle-free if you change your mind</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-share">
+              <span class="share-label">Share</span>
+              <button class="share-btn" title="Copy link" onclick="copyLink()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+              <button class="share-btn" title="WhatsApp">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Product Tabs ───────────────────────────────────────── -->
+    <section class="product-tabs-section" id="reviews">
+      <div class="container">
+        <div class="tabs-header">
+          <button class="tab-trigger tab-trigger--active" onclick="openTab('description', this)">Description</button>
+          <button class="tab-trigger" onclick="openTab('specs', this)">Specifications</button>
+          <button class="tab-trigger" onclick="openTab('reviews', this)">Reviews (12)</button>
+        </div>
+
+        <!-- Description -->
+        <div class="tab-panel tab-panel--active" id="tab-description">
+          <div class="product-description" style="max-width:720px">
+            <h3>Professional-grade impact performance</h3>
+            <p>The DeWalt DCF887 Impact Driver is engineered for the demands of professional tradespeople. The brushless motor delivers maximum efficiency — extending motor life and providing up to 57% more runtime compared to brushed alternatives, so you keep working longer between charges.</p>
+            <p>Three-speed settings with Precision Drive in Speed 1 give you complete control for delicate fastening tasks. Whether you're driving long deck screws into hardwood or assembling furniture with fine fixings, the DCF887 adapts to the task with precision.</p>
+            <h3>What's in the box</h3>
+            <ul>
+              <li>DCF887 18V XR Brushless Impact Driver (body only)</li>
+              <li>Belt hook (left or right mountable)</li>
+              <li>1/4″ hex chuck insert bit holder</li>
+              <li>Kit bag</li>
+            </ul>
+            <p style="font-size:0.82rem;color:var(--text-light)">Note: Batteries and charger sold separately. Compatible with all DeWalt 18V XR battery platforms.</p>
+          </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="tab-panel" id="tab-specs">
+          <table class="specs-table" style="max-width:600px">
+            <tr><td>Voltage</td><td>18V</td></tr>
+            <tr><td>Max Torque</td><td>205 N·m</td></tr>
+            <tr><td>No-Load Speed</td><td>0–1,000 / 0–2,800 / 0–3,250 rpm</td></tr>
+            <tr><td>Max Impacts per Minute</td><td>0–1,600 / 0–3,200 / 0–3,800 ipm</td></tr>
+            <tr><td>Chuck Type</td><td>1/4″ Hex</td></tr>
+            <tr><td>Weight (without battery)</td><td>1.1 kg</td></tr>
+            <tr><td>Length</td><td>140 mm</td></tr>
+            <tr><td>Motor Type</td><td>Brushless</td></tr>
+            <tr><td>Number of Speed Settings</td><td>3 + Precision Drive</td></tr>
+            <tr><td>Battery Platform</td><td>DeWalt XR 18V Li-Ion</td></tr>
+            <tr><td>Warranty</td><td>3 Years (DeWalt)</td></tr>
+            <tr><td>Country of Origin</td><td>Czech Republic</td></tr>
+          </table>
+        </div>
+
+        <!-- Reviews -->
+        <div class="tab-panel" id="tab-reviews">
+          <div class="reviews-summary">
+            <div class="reviews-score-block">
+              <div class="reviews-big-score">4.9</div>
+              <div class="reviews-big-stars">★★★★★</div>
+              <div class="reviews-big-count">12 reviews</div>
+            </div>
+            <div class="reviews-bars">
+              <div class="review-bar-row"><span class="review-bar-label">5★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:83%"></div></div><span class="review-bar-count">10</span></div>
+              <div class="review-bar-row"><span class="review-bar-label">4★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:17%"></div></div><span class="review-bar-count">2</span></div>
+              <div class="review-bar-row"><span class="review-bar-label">3★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0%"></div></div><span class="review-bar-count">0</span></div>
+              <div class="review-bar-row"><span class="review-bar-label">2★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0%"></div></div><span class="review-bar-count">0</span></div>
+              <div class="review-bar-row"><span class="review-bar-label">1★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0%"></div></div><span class="review-bar-count">0</span></div>
+            </div>
+          </div>
+          <div class="review-list">
+            <div class="review-card">
+              <div class="review-meta">
+                <span class="reviewer-name">Ahmed Rasheed</span>
+                <span class="review-date">May 2026</span>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <div class="review-title">Best impact driver I've owned</div>
+              <p class="review-body">Been using this on site for 3 months — runs all day on a 5Ah battery. The 3-speed is genuinely useful; Speed 1 with Precision Drive saved me from stripping about a dozen screws on a decking project. Worth every laari.</p>
+              <span class="review-verified">Verified Purchase</span>
+            </div>
+            <div class="review-card">
+              <div class="review-meta">
+                <span class="reviewer-name">Ibrahim Moosa</span>
+                <span class="review-date">April 2026</span>
+              </div>
+              <div class="review-stars">★★★★★</div>
+              <div class="review-title">Compact and powerful</div>
+              <p class="review-body">Surprisingly light for the power it delivers. I use it alongside my DCH273 — both on the same battery platform which is huge. Fast delivery from Tenon, good packaging.</p>
+              <span class="review-verified">Verified Purchase</span>
+            </div>
+            <div class="review-card">
+              <div class="review-meta">
+                <span class="reviewer-name">Hassan Faisal</span>
+                <span class="review-date">March 2026</span>
+              </div>
+              <div class="review-stars">★★★★☆</div>
+              <div class="review-title">Great driver, just need batteries</div>
+              <p class="review-body">Tool itself is excellent — fast, smooth, well-balanced. Knocked a star because the battery isn't included (my mistake, should have read the listing more carefully). Will be buying the 5Ah separately. Tenon staff were helpful when I called about compatibility.</p>
+              <span class="review-verified">Verified Purchase</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Related Products ───────────────────────────────────── -->
+    <section class="related-section">
+      <div class="container">
+        <div class="section-head-flex" style="margin-bottom:32px">
+          <div>
+            <p class="section-note">You might also need</p>
+            <h2 class="section-title" style="font-size:clamp(1.4rem,2vw,1.8rem)">Related products</h2>
+          </div>
+          <a href="#" class="btn-outline-sm">View all Power Tools →</a>
+        </div>
+        <div class="products-grid products-grid--4">
+          <div class="product-card">
+            <div class="product-card-img product-card-img--drill">
+              <div class="product-actions">
+                <button class="action-btn" title="Add to wishlist">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-brand">DeWalt</span>
+              <h3 class="product-name">DCD796 18V Brushless Combi Drill</h3>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(24)</span></div>
+              <div class="product-price-row"><strong class="product-price">MVR 4,200</strong></div>
+              <button class="btn-primary btn-full btn-sm" onclick="addToCart('DeWalt DCD796 Combi Drill', 4200)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-img product-card-img--grinder">
+              <div class="product-actions">
+                <button class="action-btn" title="Add to wishlist">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-brand">DeWalt</span>
+              <h3 class="product-name">DCG405 18V XR Angle Grinder 125mm</h3>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(18)</span></div>
+              <div class="product-price-row"><strong class="product-price">MVR 2,950</strong></div>
+              <button class="btn-primary btn-full btn-sm" onclick="addToCart('DeWalt DCG405 Angle Grinder', 2950)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-img product-card-img--battery">
+              <div class="product-actions">
+                <button class="action-btn" title="Add to wishlist">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-brand">DeWalt</span>
+              <h3 class="product-name">DCB184 18V XR 5.0Ah Li-Ion Battery</h3>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(41)</span></div>
+              <div class="product-price-row"><strong class="product-price">MVR 1,650</strong></div>
+              <button class="btn-primary btn-full btn-sm" onclick="addToCart('DeWalt DCB184 5Ah Battery', 1650)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-img product-card-img--impact">
+              <span class="badge badge--sale">15% Off</span>
+              <div class="product-actions">
+                <button class="action-btn" title="Add to wishlist">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-brand">Bosch</span>
+              <h3 class="product-name">GDX 18V-EC Brushless Impact Driver/Wrench</h3>
+              <div class="product-rating"><span class="stars">★★★★☆</span><span class="rating-count">(9)</span></div>
+              <div class="product-price-row"><strong class="product-price">MVR 3,200</strong><span class="product-price-was">MVR 3,750</span></div>
+              <button class="btn-primary btn-full btn-sm" onclick="addToCart('Bosch GDX 18V-EC', 3200)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand-col">
+        <img src="Snip20260603_35.png" alt="Tenon Hardware" class="footer-logo">
+        <p>Maldives' modern hardware destination. Trusted by contractors, designers, and homeowners since day one.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://wa.me/9603000000" class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <strong>Shop</strong>
+        <a href="#">Power Tools</a><a href="#">Hand Tools</a><a href="#">Plumbing</a>
+        <a href="#">Electrical</a><a href="#">Paints</a><a href="#">Safety</a>
+      </div>
+      <div class="footer-col">
+        <strong>Company</strong>
+        <a href="#">About Us</a><a href="#">Careers</a><a href="#">Blog</a>
+        <a href="#">Store Locator</a><a href="#">Brands</a>
+      </div>
+      <div class="footer-col">
+        <strong>Support</strong>
+        <a href="#">FAQ</a><a href="#">Delivery Info</a><a href="#">Returns Policy</a>
+        <a href="#">Track Order</a><a href="#">Request a Quote</a>
+      </div>
+      <div class="footer-col footer-contact">
+        <strong>Contact Us</strong>
+        <address>
+          <p>123 Hardware Lane<br>Malé, Maldives 20094</p>
+          <a href="tel:+9603000000">📞 +960 300-0000</a>
+          <a href="https://wa.me/9603000000" target="_blank" rel="noopener">💬 WhatsApp</a>
+          <a href="mailto:hello@tenonhardware.mv">✉ hello@tenonhardware.mv</a>
+          <p class="footer-hours">Mon–Sat: 8:00am – 6:00pm</p>
+        </address>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>© <span id="year"></span> Tenon Hardware. All rights reserved.</p>
+        <nav class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Cart Sidebar ───────────────────────────────────────── -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+    <div class="cart-sidebar-header">
+      <h3>Your Cart (<span id="cartItemCount">0</span>)</h3>
+      <button onclick="toggleCart()" aria-label="Close cart">
+        <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="cart-sidebar-body" id="cartBody">
+      <div class="cart-empty-state">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Your cart is empty</p>
+      </div>
+    </div>
+    <div class="cart-sidebar-footer" id="cartFooter" style="display:none">
+      <div class="cart-total-row"><span>Subtotal</span><strong id="cartTotal">MVR 0</strong></div>
+      <p class="cart-delivery-note">🚚 Free delivery on this order</p>
+      <a href="#" class="btn-primary btn-full">Proceed to Checkout</a>
+      <a href="#" class="btn-ghost btn-full" style="margin-top:10px" onclick="toggleCart()">Continue Shopping</a>
+    </div>
+  </aside>
+
+  <!-- ── Scroll to Top ─────────────────────────────────────── -->
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script>
+    // ── Quantity ───────────────────────────────────────────────
+    let qty = 1;
+    function changeQty(dir) {
+      qty = Math.max(1, qty + dir);
+      document.getElementById('qtyValue').textContent = qty;
+    }
+
+    // ── Add to Cart ───────────────────────────────────────────
+    let cartItems = [];
+    function addToCartPage() {
+      const name  = 'DeWalt DCF887 18V Impact Driver';
+      const price = 3800;
+      const existing = cartItems.find(i => i.name === name);
+      if (existing) existing.qty += qty;
+      else cartItems.push({ name, price, qty });
+      renderCart();
+      toggleCart();
+    }
+    function addToCart(name, price) {
+      const existing = cartItems.find(i => i.name === name);
+      if (existing) existing.qty++;
+      else cartItems.push({ name, price, qty: 1 });
+      renderCart();
+    }
+    function renderCart() {
+      const count = cartItems.reduce((s, i) => s + i.qty, 0);
+      const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+      const countEl = document.getElementById('cartCount');
+      countEl.textContent = count;
+      countEl.classList.toggle('cart-count--hidden', count === 0);
+      document.getElementById('cartItemCount').textContent = count;
+      document.getElementById('cartTotal').textContent = 'MVR ' + total.toLocaleString();
+      const body   = document.getElementById('cartBody');
+      const footer = document.getElementById('cartFooter');
+      if (cartItems.length === 0) {
+        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p></div>';
+        footer.style.display = 'none';
+      } else {
+        body.innerHTML = cartItems.map(i => `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <span class="cart-item-name">${i.name}</span>
+              <span class="cart-item-qty">Qty: ${i.qty}</span>
+            </div>
+            <span class="cart-item-price">MVR ${(i.price * i.qty).toLocaleString()}</span>
+          </div>`).join('');
+        footer.style.display = 'block';
+      }
+    }
+
+    // ── Cart Sidebar ──────────────────────────────────────────
+    function toggleCart() {
+      const sidebar  = document.getElementById('cartSidebar');
+      const overlay  = document.getElementById('cartOverlay');
+      const isOpen   = sidebar.classList.toggle('cart-sidebar--open');
+      overlay.classList.toggle('cart-overlay--visible', isOpen);
+      sidebar.setAttribute('aria-hidden', !isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    // ── Wishlist ──────────────────────────────────────────────
+    function toggleWishlistPage(btn) {
+      btn.classList.toggle('wishlisted');
+      const icon = btn.querySelector('svg');
+      if (btn.classList.contains('wishlisted')) {
+        icon.setAttribute('fill', 'currentColor');
+        showToast('Added to wishlist');
+      } else {
+        icon.setAttribute('fill', 'none');
+        showToast('Removed from wishlist');
+      }
+    }
+
+    // ── Gallery ───────────────────────────────────────────────
+    function selectThumb(thumb, bg) {
+      document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-thumb--active'));
+      thumb.classList.add('gallery-thumb--active');
+      document.getElementById('galleryMain').style.background = bg;
+    }
+
+    // ── Tabs ──────────────────────────────────────────────────
+    function openTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('tab-panel--active'));
+      document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('tab-trigger--active'));
+      document.getElementById('tab-' + id).classList.add('tab-panel--active');
+      if (btn) btn.classList.add('tab-trigger--active');
+    }
+
+    // ── Share ─────────────────────────────────────────────────
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!'));
+    }
+
+    // ── Mobile Menu ───────────────────────────────────────────
+    function toggleMobileMenu() {
+      const menu    = document.getElementById('mobileMenu');
+      const overlay = document.getElementById('mobileOverlay');
+      const btn     = document.getElementById('hamburger');
+      const isOpen  = menu.classList.toggle('mobile-menu--open');
+      overlay.classList.toggle('mobile-overlay--visible', isOpen);
+      btn.setAttribute('aria-expanded', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    // ── Cat Nav Arrows ────────────────────────────────────────
+    function scrollCatNav(dir) {
+      document.getElementById('catNavInner').scrollBy({ left: dir * 240, behavior: 'smooth' });
+    }
+    function updateCatNavArrows() {
+      const el = document.getElementById('catNavInner');
+      const atStart = el.scrollLeft <= 4;
+      const atEnd   = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      document.getElementById('catNavLeft').classList.toggle('cat-nav-arrow--visible', !atStart);
+      document.getElementById('catNavRight').classList.toggle('cat-nav-arrow--visible', !atEnd);
+    }
+    document.getElementById('catNavInner').addEventListener('scroll', updateCatNavArrows, { passive: true });
+    window.addEventListener('resize', updateCatNavArrows);
+    updateCatNavArrows();
+
+    // ── Sub-cat / Dropdown ────────────────────────────────────
+    const SUBCATS = {
+      'Adhesives':              ['Glues & Epoxy','Silicone Sealant','Putty','Tapes'],
+      'Abrasives':              ['Sand Paper','Cutting Wheels','Grinding Wheels','Brushes'],
+      'Paints':                 ['Wall Paint','Wood Paint','Metal Paint','Primers'],
+      'Hand Tools':             ['Hammers','Screwdrivers','Pliers','Wrenches'],
+      'Electricals':            ['Cables & Wires','Switches & Sockets','Circuit Breakers','Lighting'],
+      'Plumbing':               ['Pipes & Fittings','Valves','Taps & Faucets','Water Pumps'],
+      'Sanitaryware & Bathroom':['Toilets','Basins & Sinks','Showers','Accessories'],
+      'Tiles':                  ['Floor Tiles','Wall Tiles','Tile Adhesive','Grout'],
+      'Fasteners':              ['Screws','Bolts & Nuts','Anchors','Nails'],
+      'Safety':                 ['Helmets','Gloves','Safety Boots','Eye Protection'],
+      'Power Tools':            ['Drills','Angle Grinders','Circular Saws','Sanders'],
+      'Building':               ['Cement','Bricks & Blocks','Roofing','Insulation'],
+      'Machinery':              ['Generators','Compressors','Mixers','Welding Equipment'],
+      'General Hardware':       ['Polish & Lubricants','Wheelbarrow','Ropes','Ladders'],
+      'Metal':                  ['Steel Sheets','Angle Iron','Pipes & Tubes','Mesh'],
+    };
+    (function initCatNav() {
+      const subNav   = document.getElementById('subNav');
+      const subInner = document.getElementById('subNavInner');
+      const dropdown  = document.getElementById('catDropdown');
+      const dropInner = document.getElementById('catDropdownInner');
+      let activeChip  = null;
+      function closeAll() {
+        subNav.classList.remove('sub-nav--open');
+        dropdown.classList.remove('cat-dropdown--open');
+        if (activeChip) { activeChip.classList.remove('cat-nav-item--active'); activeChip = null; }
+      }
+      document.querySelectorAll('.cat-nav-item[data-cat]').forEach(chip => {
+        chip.addEventListener('click', function(e) {
+          e.preventDefault();
+          const cat  = this.dataset.cat;
+          const subs = SUBCATS[cat];
+          if (!subs) return;
+          if (activeChip === this) { closeAll(); return; }
+          if (window.innerWidth <= 780) {
+            subInner.innerHTML = subs.map(s => `<a href="#" class="sub-nav-item">${s}</a>`).join('');
+            dropdown.classList.remove('cat-dropdown--open');
+            subNav.classList.add('sub-nav--open');
+          } else {
+            const rect = this.getBoundingClientRect();
+            const chipCenter = rect.left + rect.width / 2;
+            dropInner.innerHTML = subs.map(s => `<a href="#" class="cat-dropdown-item">${s}</a>`).join('');
+            subNav.classList.remove('sub-nav--open');
+            dropdown.classList.add('cat-dropdown--open');
+            requestAnimationFrame(() => {
+              const cardW = dropInner.offsetWidth;
+              const pad = 16;
+              const clamped = Math.max(cardW / 2 + pad, Math.min(chipCenter, window.innerWidth - cardW / 2 - pad));
+              dropdown.style.setProperty('--chip-center', clamped + 'px');
+              const arrowPct = Math.max(10, Math.min(90, ((chipCenter - clamped) / cardW + 0.5) * 100));
+              dropInner.style.setProperty('--arrow-left', arrowPct + '%');
+            });
+          }
+          if (activeChip) activeChip.classList.remove('cat-nav-item--active');
+          this.classList.add('cat-nav-item--active');
+          activeChip = this;
+        });
+      });
+      document.addEventListener('click', e => {
+        if (!e.target.closest('#catNav') && !e.target.closest('#catDropdown')) closeAll();
+      });
+    })();
+
+    // ── Toast ─────────────────────────────────────────────────
+    function showToast(msg) {
+      let toast = document.getElementById('toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.classList.add('toast--visible');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('toast--visible'), 3000);
+    }
+
+    // ── Scroll to Top ─────────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scrollTopBtn');
+      const atBottom = (window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 40;
+      btn.classList.toggle('scroll-top-btn--visible', atBottom);
+      document.getElementById('siteHeader').classList.toggle('site-header--scrolled', window.scrollY > 80);
+    }, { passive: true });
+
+    // ── Year ──────────────────────────────────────────────────
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

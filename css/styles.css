@@ -983,6 +983,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .product-card-img--pipe     { background: #eef4fd; }
 .product-card-img--boot     { background: #fdf5f0; }
 .product-card-img--cable    { background: #fdf0f5; }
+.product-card-img--battery  { background: #f0f4fd; }
 
 /* Hover action buttons */
 .product-actions {
