@@ -53,7 +53,7 @@
 
         <button class="header-action cart-btn" onclick="toggleCart()" title="Cart">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-          <span class="cart-count" id="cartCount">0</span>
+          <span class="cart-count cart-count--hidden" id="cartCount">0</span>
         </button>
         <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -956,7 +956,9 @@
     function renderCart() {
       const count = cartItems.reduce((s, i) => s + i.qty, 0);
       const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
-      document.getElementById('cartCount').textContent = count;
+      const countEl = document.getElementById('cartCount');
+      countEl.textContent = count;
+      countEl.classList.toggle('cart-count--hidden', count === 0);
       document.getElementById('cartItemCount').textContent = count;
       document.getElementById('cartTotal').textContent = 'MVR ' + total.toLocaleString();
 

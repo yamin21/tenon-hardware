@@ -348,6 +348,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   line-height: 1;
   border: 2px solid #fff;
 }
+.cart-count--hidden { display: none; }
 .cart-btn { background: none; border: none; }
 
 /* Hamburger */
