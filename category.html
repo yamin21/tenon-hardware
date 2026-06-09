@@ -415,7 +415,7 @@
             ${brand ? `<span class="product-brand">${brand}</span>` : ''}
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row">
-              <strong class="product-price">${p.stock === 0 ? 'Out of Stock' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong>
+              <strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Out of Stock' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong>
               ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
           </div>
