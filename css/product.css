@@ -173,6 +173,7 @@
   line-height: 1.7;
   color: var(--text-muted);
   margin-bottom: 20px;
+  white-space: pre-line;
 }
 .product-features {
   list-style: none;
