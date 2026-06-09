@@ -124,6 +124,7 @@
   <main>
 
     <!-- ── Category Hero ────────────────────────────────────── -->
+    <div id="pageMain" style="visibility:hidden">
     <section class="cat-hero">
       <div class="container cat-hero-inner">
         <div class="cat-hero-copy">
@@ -150,6 +151,7 @@
         </div>
       </div>
     </section>
+    </div>
 
   </main>
 
@@ -340,6 +342,7 @@
         updatePageTitle(null);
       }
 
+      document.getElementById('pageMain').style.visibility = '';
       applyFilters();
     }
 
