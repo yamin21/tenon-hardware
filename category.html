@@ -143,7 +143,7 @@
       <div class="container breadcrumb-inner">
         <a href="index.html">Home</a>
         <span class="breadcrumb-sep">/</span>
-        <span>Power Tools</span>
+        <span>Hardware</span>
       </div>
     </div>
 
@@ -151,7 +151,7 @@
     <section class="cat-hero">
       <div class="container cat-hero-inner">
         <div class="cat-hero-copy">
-          <h1>Power Tools</h1>
+          <h1>Hardware</h1>
         </div>
         <span class="cat-hero-count" id="heroCount">128 products</span>
       </div>
@@ -162,10 +162,6 @@
       <div class="container cat-filter-inner">
         <div class="filter-chips" id="filterChips">
           <button class="filter-chip filter-chip--active" data-filter="all" onclick="filterByChip(this,'all')">All</button>
-          <button class="filter-chip" data-filter="drills" onclick="filterByChip(this,'drills')">Drills</button>
-          <button class="filter-chip" data-filter="grinders" onclick="filterByChip(this,'grinders')">Angle Grinders</button>
-          <button class="filter-chip" data-filter="saws" onclick="filterByChip(this,'saws')">Circular Saws</button>
-          <button class="filter-chip" data-filter="sanders" onclick="filterByChip(this,'sanders')">Sanders</button>
         </div>
         <div class="filter-divider"></div>
         <div class="filter-right">
@@ -318,31 +314,52 @@
   </button>
 
   <script>
-    // ── Product Data ──────────────────────────────────────────
-    const ALL_PRODUCTS = [
-      { id:1,  name:'DCF887 18V Impact Driver',       brand:'DeWalt',  price:3800, oldPrice:4850, badge:'sale',  subcat:'drills',   img:'impact',      rating:4.8, reviews:12 },
-      { id:2,  name:'GBH 18V-26F Rotary Hammer',      brand:'Bosch',   price:4200, oldPrice:null, badge:'new',   subcat:'drills',   img:'drill',       rating:4.7, reviews:8  },
-      { id:3,  name:'SB 18 LT BL Professional Drill', brand:'Metabo',  price:2450, oldPrice:2900, badge:'sale',  subcat:'drills',   img:'drill2',      rating:4.6, reviews:34 },
-      { id:4,  name:'DCD796 Brushless Combi Drill',   brand:'DeWalt',  price:3100, oldPrice:null, badge:null,    subcat:'drills',   img:'washer2',     rating:4.5, reviews:21 },
-      { id:5,  name:'DWE402 115mm Angle Grinder',     brand:'DeWalt',  price:1650, oldPrice:null, badge:'hot',   subcat:'grinders', img:'grinder',     rating:4.7, reviews:56 },
-      { id:6,  name:'GWS 750 115mm Angle Grinder',    brand:'Bosch',   price:980,  oldPrice:null, badge:null,    subcat:'grinders', img:'board2',      rating:4.4, reviews:43 },
-      { id:7,  name:'WB 36-18 LTX BL 230 Grinder',   brand:'Metabo',  price:2100, oldPrice:null, badge:'new',   subcat:'grinders', img:'laser',       rating:4.6, reviews:9  },
-      { id:8,  name:'GWS 18V-10 Cordless Grinder',    brand:'Bosch',   price:2850, oldPrice:3200, badge:'sale',  subcat:'grinders', img:'surge',       rating:4.5, reviews:17 },
-      { id:9,  name:'DCS391 18V Circular Saw',        brand:'DeWalt',  price:3200, oldPrice:null, badge:'hot',   subcat:'saws',     img:'socket',      rating:4.8, reviews:29 },
-      { id:10, name:'GKS 190 Professional Circ. Saw', brand:'Bosch',   price:2750, oldPrice:null, badge:null,    subcat:'saws',     img:'screwdriver', rating:4.6, reviews:38 },
-      { id:11, name:'KS 18 LTX 57 Cordless Saw',      brand:'Metabo',  price:3600, oldPrice:null, badge:'new',   subcat:'saws',     img:'cable',       rating:4.5, reviews:7  },
-      { id:12, name:'DWE6423 Random Orbit Sander',    brand:'DeWalt',  price:1480, oldPrice:null, badge:null,    subcat:'sanders',  img:'paint',       rating:4.6, reviews:62 },
-      { id:13, name:'GEX 125-1 AE Random Sander',     brand:'Bosch',   price:1250, oldPrice:null, badge:null,    subcat:'sanders',  img:'vanity',      rating:4.5, reviews:47 },
-      { id:14, name:'BO5041 Random Orbit Sander',     brand:'Makita',  price:1380, oldPrice:1580, badge:'sale',  subcat:'sanders',  img:'pipe',        rating:4.7, reviews:83 },
-      { id:15, name:'SXE 450 TurboTec Sander',        brand:'Metabo',  price:1920, oldPrice:null, badge:'new',   subcat:'sanders',  img:'boot',        rating:4.4, reviews:14 },
-      { id:16, name:'GKS 18V-57 Cordless Circ. Saw',  brand:'Bosch',   price:4100, oldPrice:4600, badge:'sale',  subcat:'saws',     img:'washer2',     rating:4.8, reviews:22 },
-    ];
+    // ── API ───────────────────────────────────────────────────
+    const API_BASE = 'https://erp.tenon.mv/api';
+    const API_KEY  = '834b2eac6c2e8fccf5e68b159c226af17afe1a5eaa4a1974c3e6e85018456086';
 
+    async function apiFetch(path) {
+      const res = await fetch(API_BASE + path, { headers: { 'x-api-key': API_KEY } });
+      if (!res.ok) throw new Error('API ' + res.status);
+      return (await res.json()).data;
+    }
+
+    // ── State ─────────────────────────────────────────────────
     const PAGE_SIZE = 12;
+    let ALL_PRODUCTS = [];
     let activeFilter = 'all';
-    let activeSort = 'featured';
+    let activeSort   = 'featured';
     let page = 1;
     let filteredProducts = [];
+
+    // ── Init ──────────────────────────────────────────────────
+    async function initCategory() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '<div class="no-results">Loading…</div>';
+
+      const [products, subcats] = await Promise.all([
+        apiFetch('/products?category=hardware'),
+        apiFetch('/categories/hardware/subcategories')
+      ]);
+
+      ALL_PRODUCTS = products;
+
+      // Build filter chips from subcategories
+      const chipsEl = document.getElementById('filterChips');
+      subcats.forEach(sub => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-chip';
+        btn.dataset.filter = sub.slug;
+        btn.textContent = sub.name;
+        btn.onclick = () => filterByChip(btn, sub.slug);
+        chipsEl.appendChild(btn);
+      });
+
+      // Update hero count
+      document.getElementById('heroCount').textContent = products.length + ' products';
+
+      applyFilters();
+    }
 
     function filterByChip(btn, filter) {
       activeFilter = filter;
@@ -358,11 +375,11 @@
     }
 
     function applyFilters() {
-      filteredProducts = ALL_PRODUCTS.filter(p => activeFilter === 'all' || p.subcat === activeFilter);
+      filteredProducts = ALL_PRODUCTS.filter(p =>
+        activeFilter === 'all' || p.subcategorySlug === activeFilter
+      );
       if (activeSort === 'price-asc')  filteredProducts.sort((a,b) => a.price - b.price);
-      else if (activeSort === 'price-desc') filteredProducts.sort((a,b) => b.price - a.price);
-      else if (activeSort === 'rating')    filteredProducts.sort((a,b) => b.rating - a.rating);
-      else if (activeSort === 'newest')    filteredProducts.sort((a,b) => b.id - a.id);
+      if (activeSort === 'price-desc') filteredProducts.sort((a,b) => b.price - a.price);
       renderProducts();
     }
 
@@ -380,36 +397,27 @@
       }
 
       const wishlistSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-      const eyeSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-
-      function stars(r) {
-        const full = Math.floor(r);
-        return '★'.repeat(full) + (r % 1 >= 0.5 ? '★' : '☆') + '☆'.repeat(5 - full - (r % 1 >= 0.5 ? 1 : 0));
-      }
-
-      function badgeLabel(b) {
-        return b === 'hot' ? 'Hot' : b === 'new' ? 'New' : b === 'sale' ? 'Sale' : '';
-      }
-      function badgeClass(b) {
-        return b === 'hot' ? 'badge--hot' : b === 'new' ? 'badge--new' : b === 'sale' ? 'badge--sale' : '';
-      }
+      const eyeSVG     = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
       grid.innerHTML = shown.map(p => {
-        const esc = s => s.replace(/'/g, "\\'");
+        const esc   = s => (s || '').replace(/'/g, "\\'");
+        const img   = p.images && p.images[0] ? p.images[0] : '';
+        const brand = p.brand || '';
         return `
         <div class="product-card">
-          <a href="product.html" class="product-card-img product-card-img--${p.img}">
+          <a href="product.html?id=${p.id}" class="product-card-img product-card-img--real">
+            ${img ? `<img src="${img}" alt="${esc(p.name)}" loading="lazy">` : ''}
             <div class="product-actions">
-              <button class="action-btn" onclick="toggleWishlist(this,'${esc(p.brand + ' ' + p.name)}')" title="Wishlist">${wishlistSVG}</button>
-              <button class="action-btn" onclick="openQuickView('${esc(p.name)}','${esc(p.brand)}',${p.price},${p.oldPrice||'null'},'${p.img}')" title="Quick view">${eyeSVG}</button>
+              <button class="action-btn" onclick="toggleWishlist(this,'${esc(brand + ' ' + p.name)}')" title="Wishlist">${wishlistSVG}</button>
+              <button class="action-btn" onclick="openQuickView('${esc(p.name)}','${esc(brand)}',${p.price},${p.comparePrice||'null'},'${esc(img)}')" title="Quick view">${eyeSVG}</button>
             </div>
           </a>
           <div class="product-card-body">
-            <span class="product-brand">${p.brand}</span>
-            <h3 class="product-name"><a href="product.html">${p.name}</a></h3>
+            ${brand ? `<span class="product-brand">${brand}</span>` : ''}
+            <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row">
               <strong class="product-price">MVR ${p.price.toLocaleString()}</strong>
-              ${p.oldPrice ? `<span class="product-price-old">MVR ${p.oldPrice.toLocaleString()}</span>` : ''}
+              ${p.comparePrice ? `<span class="product-price-old">MVR ${p.comparePrice.toLocaleString()}</span>` : ''}
             </div>
           </div>
         </div>`;
@@ -421,6 +429,8 @@
       page++;
       applyFilters();
     }
+
+    initCategory();
 
     // ── State ─────────────────────────────────────────────────
     let cartItems = [];
