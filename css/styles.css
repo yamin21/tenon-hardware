@@ -984,6 +984,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .products-grid--4 { grid-template-columns: repeat(4, 1fr); }
 
 .product-card {
+  position: relative;
   background: #fff;
   border: none;
   border-radius: var(--radius-lg);
@@ -1060,6 +1061,25 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .action-btn:hover { background: var(--brand); color: #fff; transform: scale(1.1); }
 .action-btn--active { background: var(--brand); color: #fff; }
 .action-btn--active svg { fill: #fff; stroke: #fff; }
+
+/* Quick add-to-cart button */
+.cart-quick-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  box-shadow: var(--shadow-sm);
+  z-index: 3;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+.cart-quick-btn:hover { background: var(--brand); color: #fff; transform: scale(1.1); }
 
 /* Product card body */
 .product-card-body {
