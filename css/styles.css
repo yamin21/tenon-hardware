@@ -1672,7 +1672,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 
 @media (max-width: 560px) {
-  .products-grid--4 { grid-template-columns: 1fr; }
+  .products-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .cat-grid { grid-template-columns: 1fr 1fr; }
   .slide-ctas { flex-direction: column; }
   .newsletter-input-wrap { flex-direction: column; padding: 12px; border-radius: var(--radius-lg); }
