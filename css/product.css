@@ -123,10 +123,10 @@
   text-decoration: none;
 }
 .product-brand-link:hover { text-decoration: underline; }
-.product-sku { font-size: 0.75rem; color: var(--text-light); }
+.product-sku { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; }
 
 .product-title {
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-size: 2rem;
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -153,9 +153,9 @@
 }
 .product-in-stock::before { content: ''; width: 7px; height: 7px; background: #16a34a; border-radius: 50%; display: inline-block; }
 
-.product-price-block { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+.product-price-block { margin-bottom: 22px; }
 .product-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-.product-price-main { font-size: 2rem; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
+.product-price-main { font-size: clamp(1.5rem, 2.2vw, 2rem); font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
 .product-price-original { font-size: 1.1rem; color: var(--text-light); text-decoration: line-through; }
 .product-save-badge {
   font-size: 0.72rem;
@@ -207,7 +207,7 @@
 
 /* Quantity + CTA */
 .product-qty-label { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.product-add-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.product-add-row { display: flex; gap: 12px; margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
 .qty-selector {
   display: flex;
   align-items: center;
