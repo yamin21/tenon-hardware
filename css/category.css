@@ -1,7 +1,7 @@
 /* ── Category Page Styles ─────────────────────────────── */
 
 /* Breadcrumb */
-.breadcrumb { padding: 14px 0; border-bottom: 1px solid var(--border); background: var(--bg-soft); }
+.breadcrumb { padding: 14px 0; background: #fff; }
 .breadcrumb-inner { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-light); }
 .breadcrumb-inner a { color: var(--text-light); text-decoration: none; }
 .breadcrumb-inner a:hover { color: var(--brand); }
