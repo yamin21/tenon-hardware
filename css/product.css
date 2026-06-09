@@ -61,6 +61,20 @@
 }
 .gallery-placeholder svg { opacity: 0.3; }
 .gallery-placeholder-label { font-size: 0.78rem; opacity: 0.5; letter-spacing: 0.05em; }
+.gallery-sku {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  z-index: 2;
+  pointer-events: none;
+}
 .gallery-badge-overlay {
   position: absolute;
   top: 16px;
