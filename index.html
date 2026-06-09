@@ -943,6 +943,7 @@
           a.textContent = sub.name;
           nav.appendChild(a);
         });
+        updateCatNavArrows();
 
         // New arrivals (first 6 with images)
         const withImg = products.filter(p => p.images && p.images[0]);

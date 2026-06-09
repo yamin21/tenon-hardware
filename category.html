@@ -324,6 +324,7 @@
         a.addEventListener('click', e => { e.preventDefault(); filterByChip(a, sub.slug); history.pushState(null, '', '?sub=' + sub.slug); });
         catNav.appendChild(a);
       });
+      updateCatNavArrows();
 
       // Build filter bar chips from subcategories
       const chipsEl = document.getElementById('filterChips');
