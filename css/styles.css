@@ -1075,7 +1075,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .stars { color: #F59E0B; font-size: 0.8rem; letter-spacing: 1px; }
 .rating-count { font-size: 0.75rem; color: var(--text-muted); }
 .product-price-row { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-.product-price { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+.product-price { font-size: 1.05rem; font-weight: 400; color: var(--text); }
 .product-price-old { font-size: 0.84rem; color: var(--text-muted); text-decoration: line-through; }
 
 /* Progress bar */
