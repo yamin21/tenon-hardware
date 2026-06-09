@@ -229,7 +229,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 
 .brand { flex-shrink: 0; }
-.logo  { height: 42px; width: auto; }
+.logo  { height: 28px; width: auto; }
 
 /* Search */
 .search-wrap { flex: 1; min-width: 0; position: relative; }
