@@ -932,8 +932,8 @@
           <div class="product-card-body">
             ${p.brand ? `<span class="product-brand">${p.brand}</span>` : ''}
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
-            <div class="product-price-row"><strong class="product-price">MVR ${Number(p.price).toLocaleString()}</strong></div>
-            <button class="btn-primary btn-full btn-sm product-add-btn" onclick="addToCart('${esc(p.name)}',${p.price})">Add to Cart</button>
+            <div class="product-price-row"><strong class="product-price">${p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price'}</strong></div>
+            <button class="btn-primary btn-full btn-sm product-add-btn" onclick="addToCart('${esc(p.name)}',${p.price??0})">Add to Cart</button>
           </div>
         </div>`;
     }

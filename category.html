@@ -407,15 +407,15 @@
             ${img ? `<img src="${img}" alt="${esc(p.name)}" loading="lazy">` : ''}
             <div class="product-actions">
               <button class="action-btn" onclick="toggleWishlist(this,'${esc(brand + ' ' + p.name)}')" title="Wishlist">${wishlistSVG}</button>
-              <button class="action-btn" onclick="openQuickView('${esc(p.name)}','${esc(brand)}',${p.price},${p.comparePrice||'null'},'${esc(img)}')" title="Quick view">${eyeSVG}</button>
+              <button class="action-btn" onclick="openQuickView('${esc(p.name)}','${esc(brand)}',${p.price??0},${p.comparePrice||'null'},'${esc(img)}')" title="Quick view">${eyeSVG}</button>
             </div>
           </a>
           <div class="product-card-body">
             ${brand ? `<span class="product-brand">${brand}</span>` : ''}
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row">
-              <strong class="product-price">MVR ${p.price.toLocaleString()}</strong>
-              ${p.comparePrice ? `<span class="product-price-old">MVR ${p.comparePrice.toLocaleString()}</span>` : ''}
+              <strong class="product-price">${p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price'}</strong>
+              ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
           </div>
         </div>`;
