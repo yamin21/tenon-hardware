@@ -68,11 +68,6 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           All
         </a>
-        <a href="#" class="cat-nav-item">Aluminium</a>
-        <a href="#" class="cat-nav-item">Furniture</a>
-        <a href="category.html" class="cat-nav-item cat-nav-item--active">Hardware</a>
-        <a href="#" class="cat-nav-item">Service</a>
-        <a href="#" class="cat-nav-item">Timber</a>
       </div>
       <button class="cat-nav-arrow cat-nav-arrow--right" id="catNavRight" onclick="scrollCatNav(1)" aria-label="Scroll right">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -330,6 +325,9 @@
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '<div class="no-results">Loading…</div>';
 
+      const urlSub = new URLSearchParams(window.location.search).get('sub');
+      if (urlSub) activeFilter = urlSub;
+
       const [products, subcats] = await Promise.all([
         apiFetch('/products?category=hardware'),
         apiFetch('/categories/hardware/subcategories')
@@ -337,14 +335,25 @@
 
       ALL_PRODUCTS = products;
 
-      // Build filter chips from subcategories
+      // Build cat nav chips
+      const catNav = document.getElementById('catNavInner');
+      subcats.forEach(sub => {
+        const a = document.createElement('a');
+        a.href = 'category.html?sub=' + sub.slug;
+        a.className = 'cat-nav-item' + (sub.slug === activeFilter ? ' cat-nav-item--active' : '');
+        a.textContent = sub.name;
+        a.addEventListener('click', e => { e.preventDefault(); filterByChip(a, sub.slug); history.pushState(null, '', '?sub=' + sub.slug); });
+        catNav.appendChild(a);
+      });
+
+      // Build filter bar chips from subcategories
       const chipsEl = document.getElementById('filterChips');
       subcats.forEach(sub => {
         const btn = document.createElement('button');
-        btn.className = 'filter-chip';
+        btn.className = 'filter-chip' + (sub.slug === activeFilter ? ' filter-chip--active' : '');
         btn.dataset.filter = sub.slug;
         btn.textContent = sub.name;
-        btn.onclick = () => filterByChip(btn, sub.slug);
+        btn.onclick = () => { filterByChip(btn, sub.slug); history.pushState(null, '', '?sub=' + sub.slug); };
         chipsEl.appendChild(btn);
       });
 
@@ -358,6 +367,7 @@
       activeFilter = filter;
       page = 1;
       document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.filter === filter));
+      document.querySelectorAll('#catNavInner .cat-nav-item:not(.cat-nav-all)').forEach(a => a.classList.toggle('cat-nav-item--active', a.textContent.trim().toLowerCase().replace(/\s+/g, '-') === filter || (new URLSearchParams(a.search)).get('sub') === filter));
       applyFilters();
     }
 
