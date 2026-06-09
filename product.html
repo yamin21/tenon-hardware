@@ -129,69 +129,27 @@
           <!-- Gallery -->
           <div class="product-gallery">
             <div class="gallery-main" id="galleryMain">
-              <span class="gallery-sku">SKU: DW-DCF887-XJ</span>
+              <span class="gallery-sku" id="productSku"></span>
               <div class="gallery-placeholder" id="galleryPlaceholder">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="10" height="6" rx="2"/><path d="M12 11.5h3l3-3.5v7l-3-3.5h-3"/><circle cx="6" cy="12" r="1.5"/></svg>
-                <span class="gallery-placeholder-label">DeWalt DCF887</span>
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               </div>
+              <img id="galleryImg" style="display:none;width:100%;height:100%;object-fit:contain;padding:24px;" alt="">
             </div>
-            <div class="gallery-thumbs">
-              <div class="gallery-thumb gallery-thumb--active" onclick="selectThumb(this, '#fdf3f3')">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              </div>
-              <div class="gallery-thumb" onclick="selectThumb(this, '#eef4fd')">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              </div>
-              <div class="gallery-thumb" onclick="selectThumb(this, '#f5f5f7')">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              </div>
-              <div class="gallery-thumb" onclick="selectThumb(this, '#f0fdf4')">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              </div>
-            </div>
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
           </div>
 
           <!-- Product Info -->
           <div class="product-info">
-            <h1 class="product-title">DCF887 18V XR Brushless Compact Impact Driver</h1>
-
+            <h1 class="product-title" id="productTitle">Loading…</h1>
 
             <div class="product-price-block">
               <div class="product-price-row">
-                <span class="product-price-main">MVR 3,800</span>
+                <span class="product-price-main" id="productPrice"></span>
               </div>
               <p class="product-price-note">Price includes GST.</p>
             </div>
 
-            <p class="product-short-desc">
-              The DCF887 delivers unmatched performance in a compact body. Brushless motor technology maximises runtime, motor life and performance — the professional's go-to for fastening on site.
-            </p>
-
-            <ul class="product-features">
-              <li>Brushless motor for up to 57% more run time vs brushed</li>
-              <li>3-speed settings for complete application versatility</li>
-              <li>Precision Drive in speed 1 for controlled fastening</li>
-              <li>1/4″ hex chuck accepts standard bits quickly</li>
-            </ul>
-
-            <div class="product-spec-chips">
-              <div class="product-spec-chip">
-                <span class="product-spec-chip-value">18V</span>
-                <span class="product-spec-chip-label">Voltage</span>
-              </div>
-              <div class="product-spec-chip">
-                <span class="product-spec-chip-value">205 N·m</span>
-                <span class="product-spec-chip-label">Max Torque</span>
-              </div>
-              <div class="product-spec-chip">
-                <span class="product-spec-chip-value">3-Speed</span>
-                <span class="product-spec-chip-label">Settings</span>
-              </div>
-              <div class="product-spec-chip">
-                <span class="product-spec-chip-value">1.1 kg</span>
-                <span class="product-spec-chip-label">Weight</span>
-              </div>
-            </div>
+            <p class="product-short-desc" id="productDesc" style="display:none"></p>
 
             <p class="product-qty-label">Quantity</p>
             <div class="product-add-row">
@@ -303,7 +261,6 @@
     <div class="container footer-grid">
       <div class="footer-brand-col">
         <img src="logo.svg" class="footer-logo" alt="Tenon Hardware">
-        <p>Maldives' modern hardware destination. Trusted by contractors, designers, and homeowners since day one.</p>
         <div class="social-links">
           <a href="#" class="social-link" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
           <a href="#" class="social-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
@@ -377,6 +334,58 @@
   </button>
 
   <script>
+    // ── API ───────────────────────────────────────────────────
+    const API_BASE = 'https://erp.tenon.mv/api';
+    const API_KEY  = '834b2eac6c2e8fccf5e68b159c226af17afe1a5eaa4a1974c3e6e85018456086';
+    let currentProduct = null;
+
+    async function loadProduct() {
+      const id = new URLSearchParams(window.location.search).get('id');
+      if (!id) return;
+      try {
+        const res = await fetch(API_BASE + '/products/' + id, { headers: { 'x-api-key': API_KEY } });
+        if (!res.ok) throw new Error();
+        const p = (await res.json()).data;
+        currentProduct = p;
+
+        document.title = p.name + ' — Tenon Hardware';
+        document.getElementById('productTitle').textContent = p.name;
+        document.getElementById('productPrice').textContent = 'MVR ' + Number(p.price).toLocaleString();
+        if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+
+        if (p.description) {
+          const descEl = document.getElementById('productDesc');
+          descEl.textContent = p.description;
+          descEl.style.display = '';
+        }
+
+        const images = (p.images || []).filter(Boolean);
+        if (images.length > 0) {
+          const mainImg = document.getElementById('galleryImg');
+          document.getElementById('galleryPlaceholder').style.display = 'none';
+          mainImg.src = images[0];
+          mainImg.alt = p.name;
+          mainImg.style.display = '';
+
+          const thumbsEl = document.getElementById('galleryThumbs');
+          thumbsEl.innerHTML = images.map((src, i) => `
+            <div class="gallery-thumb ${i === 0 ? 'gallery-thumb--active' : ''}" onclick="selectThumbImg(this, '${src}')">
+              <img src="${src}" alt="" style="width:100%;height:100%;object-fit:contain;padding:6px;">
+            </div>`).join('');
+        }
+      } catch(e) {
+        document.getElementById('productTitle').textContent = 'Product not found';
+      }
+    }
+
+    function selectThumbImg(thumb, src) {
+      document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-thumb--active'));
+      thumb.classList.add('gallery-thumb--active');
+      document.getElementById('galleryImg').src = src;
+    }
+
+    loadProduct();
+
     // ── Quantity ───────────────────────────────────────────────
     let qty = 1;
     function changeQty(dir) {
@@ -387,8 +396,8 @@
     // ── Add to Cart ───────────────────────────────────────────
     let cartItems = [];
     function addToCartPage() {
-      const name  = 'DeWalt DCF887 18V Impact Driver';
-      const price = 3800;
+      const name  = currentProduct ? currentProduct.name : 'Product';
+      const price = currentProduct ? currentProduct.price : 0;
       const existing = cartItems.find(i => i.name === name);
       if (existing) existing.qty += qty;
       else cartItems.push({ name, price, qty });
