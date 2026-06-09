@@ -212,7 +212,6 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   z-index: 100;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
   height: var(--header-h);
   transition: box-shadow var(--transition);
 }
@@ -380,7 +379,6 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 /* ── Category Nav ────────────────────────────────────────── */
 .cat-nav {
   background: #fff;
-  border-bottom: 1px solid var(--border);
   position: sticky;
   top: var(--header-h);
   z-index: 90;

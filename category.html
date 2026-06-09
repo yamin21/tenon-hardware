@@ -336,9 +336,6 @@
         chipsEl.appendChild(btn);
       });
 
-      // Update hero count
-      document.getElementById('heroCount').textContent = products.length + ' products';
-
       // Set title/breadcrumb from URL param
       if (urlSub) {
         const match = subcats.find(s => s.slug === urlSub);
@@ -393,7 +390,6 @@
       const total = filteredProducts.length;
       const countStr = total + ' product' + (total !== 1 ? 's' : '');
       meta.textContent = countStr;
-      document.getElementById('heroCount').textContent = countStr;
       document.getElementById('loadMoreWrap').style.display = shown.length < total ? 'flex' : 'none';
 
       if (total === 0) {

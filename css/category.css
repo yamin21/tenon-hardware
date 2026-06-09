@@ -10,9 +10,8 @@
 
 /* Category Hero */
 .cat-hero {
-  background: var(--bg-soft);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0 14px;
+  background: #fff;
+  padding: 16px 0 4px;
 }
 .cat-hero-inner {
   display: flex;
@@ -32,7 +31,7 @@
   flex-shrink: 0;
 }
 .cat-hero-copy { flex: 1; min-width: 0; }
-.cat-breadcrumb-bar { padding: 10px 0; background: #fff; }
+.cat-breadcrumb-bar { padding: 2px 0 10px; background: #fff; }
 .cat-hero-breadcrumb { font-size: 0.8rem; color: var(--text-light); }
 .cat-hero-breadcrumb a { color: var(--text-light); text-decoration: none; }
 .cat-hero-breadcrumb a:hover { color: var(--brand); }
