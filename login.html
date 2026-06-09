@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign In — Tenon Hardware</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .auth-page {
+      min-height: calc(100vh - var(--header-h));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-soft);
+      padding: 40px 16px;
+    }
+    .auth-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 44px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-logo {
+      display: block;
+      margin: 0 auto 28px;
+      height: 28px;
+    }
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .auth-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-field { margin-bottom: 16px; }
+    .auth-label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.93rem;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.18s;
+      box-sizing: border-box;
+    }
+    .auth-input:focus { border-color: var(--brand); }
+    .auth-forgot {
+      display: block;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-top: 4px;
+    }
+    .auth-forgot:hover { color: var(--brand); }
+    .auth-submit {
+      width: 100%;
+      margin-top: 24px;
+      padding: 13px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .auth-submit:hover { background: #a82825; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .auth-footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+    .auth-footer a { color: var(--brand); text-decoration: none; font-weight: 500; }
+    .auth-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    @media (max-width: 480px) {
+      .auth-card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="logo.svg" class="logo" alt="Tenon Hardware">
+      </a>
+      <div></div>
+      <div class="header-actions">
+        <button class="header-action cart-btn" onclick="window.location.href='index.html'" title="Back to shop">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <img src="logo.svg" class="auth-logo" alt="Tenon Hardware">
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to your Tenon account</p>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="auth-field">
+          <label class="auth-label" for="email">Email address</label>
+          <input class="auth-input" type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="password">Password</label>
+          <input class="auth-input" type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+          <a href="#" class="auth-forgot">Forgot password?</a>
+        </div>
+        <button type="submit" class="auth-submit" id="submitBtn">Sign In</button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="#">Contact us</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('submitBtn');
+      const errEl    = document.getElementById('authError');
+
+      errEl.style.display = 'none';
+      btn.textContent = 'Signing in…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('https://erp.tenon.mv/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Invalid email or password.');
+        // Store token and redirect
+        localStorage.setItem('tenon_token', data.token || data.data?.token || '');
+        window.location.href = 'index.html';
+      } catch (err) {
+        errEl.textContent = err.message || 'Something went wrong. Please try again.';
+        errEl.style.display = 'block';
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+      }
+    }
+
+    // Sticky header shadow
+    window.addEventListener('scroll', () => {
+      document.getElementById('siteHeader').classList.toggle('site-header--scrolled', window.scrollY > 10);
+    });
+  </script>
+</body>
+</html>
