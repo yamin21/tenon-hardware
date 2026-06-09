@@ -108,14 +108,10 @@
 
   <!-- ── Breadcrumb ────────────────────────────────────────── -->
   <div class="breadcrumb">
-    <div class="container breadcrumb-inner">
+    <div class="container breadcrumb-inner" id="breadcrumbInner">
       <a href="index.html">Home</a>
       <span class="breadcrumb-sep">/</span>
-      <a href="category.html">Power Tools</a>
-      <span class="breadcrumb-sep">/</span>
-      <a href="#">Impact Drivers</a>
-      <span class="breadcrumb-sep">/</span>
-      <span>DCF887 18V Impact Driver</span>
+      <span>Loading…</span>
     </div>
   </div>
 
@@ -350,8 +346,22 @@
 
         document.title = p.name + ' — Tenon Hardware';
         document.getElementById('productTitle').textContent = p.name;
-        document.getElementById('productPrice').textContent = 'MVR ' + Number(p.price).toLocaleString();
+        document.getElementById('productPrice').textContent = p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price';
         if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+
+        // Breadcrumb
+        const toName = s => (s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+        const catName  = toName(p.categorySlug);
+        const subName  = toName(p.subcategorySlug);
+        const subUrl   = 'category.html?sub=' + encodeURIComponent(p.subcategorySlug || '');
+        document.getElementById('breadcrumbInner').innerHTML =
+          `<a href="index.html">Home</a>
+           <span class="breadcrumb-sep">/</span>
+           <a href="category.html">${catName}</a>
+           <span class="breadcrumb-sep">/</span>
+           <a href="${subUrl}">${subName}</a>
+           <span class="breadcrumb-sep">/</span>
+           <span>${p.name}</span>`;
 
         if (p.description) {
           const descEl = document.getElementById('productDesc');
