@@ -360,7 +360,8 @@
     // ── Quantity ───────────────────────────────────────────────
     let qty = 1;
     function changeQty(dir) {
-      qty = Math.max(1, qty + dir);
+      const max = currentProduct && currentProduct.stock != null ? currentProduct.stock : Infinity;
+      qty = Math.min(Math.max(qty + dir, 1), Math.max(max, 1));
       document.getElementById('qtyValue').textContent = qty;
     }
 
