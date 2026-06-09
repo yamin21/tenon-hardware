@@ -126,22 +126,14 @@
 
   <main>
 
-    <!-- ── Breadcrumb ────────────────────────────────────────── -->
-    <div class="breadcrumb">
-      <div class="container breadcrumb-inner">
-        <a href="index.html">Home</a>
-        <span class="breadcrumb-sep" id="breadcrumbSep">/</span>
-        <span id="breadcrumbCat"></span>
-      </div>
-    </div>
-
     <!-- ── Category Hero ────────────────────────────────────── -->
     <section class="cat-hero">
       <div class="container cat-hero-inner">
         <div class="cat-hero-copy">
+          <div class="cat-hero-breadcrumb"><a href="index.html">Home</a> <span id="breadcrumbSep" style="display:none"> / <span id="breadcrumbCat"></span></span></div>
           <h1 id="heroTitle">All Products</h1>
         </div>
-        <span class="cat-hero-count" id="heroCount">128 products</span>
+        <span class="cat-hero-count" id="heroCount"></span>
       </div>
     </section>
 
@@ -368,12 +360,11 @@
     }
 
     function updatePageTitle(name) {
-      const title = name || 'All Products';
-      document.getElementById('heroTitle').textContent = title;
+      document.getElementById('heroTitle').textContent = name || 'All Products';
       const sep = document.getElementById('breadcrumbSep');
       const bc  = document.getElementById('breadcrumbCat');
-      if (name) { sep.style.display = ''; bc.textContent = name; }
-      else       { sep.style.display = 'none'; bc.textContent = ''; }
+      if (name) { sep.style.display = 'inline'; bc.textContent = name; }
+      else      { sep.style.display = 'none';   bc.textContent = ''; }
     }
 
     function filterByChip(btn, filter) {

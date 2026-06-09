@@ -32,6 +32,9 @@
   flex-shrink: 0;
 }
 .cat-hero-copy { flex: 1; min-width: 0; }
+.cat-hero-breadcrumb { font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
+.cat-hero-breadcrumb a { color: var(--text-light); text-decoration: none; }
+.cat-hero-breadcrumb a:hover { color: var(--brand); }
 .cat-hero-copy h1 {
   font-size: clamp(1.4rem, 2.4vw, 1.9rem);
   font-weight: 600;
