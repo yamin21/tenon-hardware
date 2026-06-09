@@ -148,18 +148,14 @@
     <!-- ── Filter Bar ────────────────────────────────────────── -->
     <div class="cat-filter-bar">
       <div class="container cat-filter-inner">
-        <div class="filter-chips" id="filterChips">
-          <button class="filter-chip filter-chip--active" data-filter="all" onclick="filterByChip(this,'all')">All</button>
-        </div>
-        <div class="filter-divider"></div>
+        <div id="filterChips" style="display:none"></div>
+        <span class="results-meta" id="resultsMeta"></span>
         <div class="filter-right">
-          <span class="results-meta" id="resultsMeta">12 products</span>
           <select class="sort-select" id="sortSelect" onchange="sortProducts(this.value)">
             <option value="featured">Featured</option>
             <option value="price-asc">Price: Low → High</option>
             <option value="price-desc">Price: High → Low</option>
             <option value="newest">Newest</option>
-            <option value="rating">Top Rated</option>
           </select>
         </div>
       </div>
@@ -413,7 +409,9 @@
       const meta = document.getElementById('resultsMeta');
       const shown = filteredProducts.slice(0, page * PAGE_SIZE);
       const total = filteredProducts.length;
-      meta.textContent = total + ' product' + (total !== 1 ? 's' : '');
+      const countStr = total + ' product' + (total !== 1 ? 's' : '');
+      meta.textContent = countStr;
+      document.getElementById('heroCount').textContent = countStr;
       document.getElementById('loadMoreWrap').style.display = shown.length < total ? 'flex' : 'none';
 
       if (total === 0) {
@@ -426,7 +424,8 @@
 
       grid.innerHTML = shown.map(p => {
         const esc   = s => (s || '').replace(/'/g, "\\'");
-        const img   = p.images && p.images[0] ? p.images[0] : '';
+        const rawImg = p.images && p.images[0] ? p.images[0] : '';
+        const img  = rawImg.startsWith('http') ? rawImg : (rawImg ? 'https://erp.tenon.mv/' + rawImg : '');
         const brand = p.brand || '';
         return `
         <div class="product-card">
