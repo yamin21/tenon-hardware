@@ -32,7 +32,8 @@
   flex-shrink: 0;
 }
 .cat-hero-copy { flex: 1; min-width: 0; }
-.cat-hero-breadcrumb { font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
+.cat-breadcrumb-bar { padding: 10px 0; background: #fff; }
+.cat-hero-breadcrumb { font-size: 0.8rem; color: var(--text-light); }
 .cat-hero-breadcrumb a { color: var(--text-light); text-decoration: none; }
 .cat-hero-breadcrumb a:hover { color: var(--brand); }
 .cat-hero-copy h1 {
