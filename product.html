@@ -106,8 +106,6 @@
   <!-- ── Breadcrumb ────────────────────────────────────────── -->
   <div class="breadcrumb">
     <div class="container breadcrumb-inner" id="breadcrumbInner">
-      <a href="index.html">Home</a>
-      <span class="breadcrumb-sep">/</span>
       <span>Loading…</span>
     </div>
   </div>
@@ -350,11 +348,7 @@
         const subName  = toName(p.subcategorySlug);
         const subUrl   = 'category.html?sub=' + encodeURIComponent(p.subcategorySlug || '');
         document.getElementById('breadcrumbInner').innerHTML =
-          `<a href="index.html">Home</a>
-           <span class="breadcrumb-sep">/</span>
-           <a href="category.html">${catName}</a>
-           <span class="breadcrumb-sep">/</span>
-           <a href="${subUrl}">${subName}</a>
+          `<a href="${subUrl}">${subName}</a>
            <span class="breadcrumb-sep">/</span>
            <span>${p.name}</span>`;
 
