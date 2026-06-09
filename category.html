@@ -19,7 +19,7 @@
         <img src="logo.svg" class="logo" alt="Tenon Hardware">
       </a>
       <div class="search-wrap">
-        <form class="search-form" onsubmit="event.preventDefault(); hideSearchSuggestions()">
+        <form class="search-form" onsubmit="event.preventDefault(); doSearch()">
           <div class="search-box">
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" class="search-input" placeholder="Search tools, materials, brands…" id="searchInput" autocomplete="off" onfocus="showSearchSuggestions()" oninput="handleSearchInput(this.value)">
@@ -292,6 +292,7 @@
     let ALL_PRODUCTS = [];
     let activeFilter = 'all';
     let activeSort   = 'featured';
+    let searchQuery  = '';
     let page = 1;
     let filteredProducts = [];
 
@@ -300,8 +301,11 @@
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '<div class="no-results">Loading…</div>';
 
-      const urlSub = new URLSearchParams(window.location.search).get('sub');
+      const params = new URLSearchParams(window.location.search);
+      const urlSub = params.get('sub');
+      const urlQ   = params.get('q');
       if (urlSub) activeFilter = urlSub;
+      if (urlQ) { searchQuery = urlQ; const si = document.getElementById('searchInput'); if(si) si.value = urlQ; }
 
       const [products, subcats] = await Promise.all([
         apiFetch('/products?category=hardware'),
@@ -333,7 +337,9 @@
       });
 
       // Set title/breadcrumb from URL param
-      if (urlSub) {
+      if (urlQ) {
+        updatePageTitle('Search: ' + urlQ);
+      } else if (urlSub) {
         const match = subcats.find(s => s.slug === urlSub);
         if (match) updatePageTitle(match.name);
       } else {
@@ -371,9 +377,12 @@
     }
 
     function applyFilters() {
-      filteredProducts = ALL_PRODUCTS.filter(p =>
-        activeFilter === 'all' || p.subcategorySlug === activeFilter
-      );
+      const q = searchQuery.toLowerCase();
+      filteredProducts = ALL_PRODUCTS.filter(p => {
+        const matchesSub = activeFilter === 'all' || p.subcategorySlug === activeFilter;
+        const matchesQ   = !q || (p.name||'').toLowerCase().includes(q) || (p.brand||'').toLowerCase().includes(q) || (p.sku||'').toLowerCase().includes(q);
+        return matchesSub && matchesQ;
+      });
       if (activeSort === 'price-asc')  filteredProducts.sort((a,b) => a.price - b.price);
       if (activeSort === 'price-desc') filteredProducts.sort((a,b) => b.price - a.price);
       renderProducts();
@@ -546,9 +555,14 @@
     function handleSearchInput(val) {
       if (val.length > 0) showSearchSuggestions(); else hideSearchSuggestions();
     }
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) { searchQuery = q; activeFilter = 'all'; page = 1; updatePageTitle('Search: ' + q); history.pushState(null,'','?q='+encodeURIComponent(q)); applyFilters(); }
+    }
     function setSearch(el) {
-      document.getElementById('searchInput').value = el.textContent;
+      document.getElementById('searchInput').value = el.textContent.trim();
       hideSearchSuggestions();
+      doSearch();
     }
     document.addEventListener('click', e => {
       if (!e.target.closest('.search-wrap')) hideSearchSuggestions();
