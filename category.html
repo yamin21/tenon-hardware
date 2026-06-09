@@ -95,20 +95,8 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="search" placeholder="Search products…">
     </div>
-    <nav class="mobile-nav">
+    <nav class="mobile-nav" id="mobileCatNav">
       <strong>Categories</strong>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Adhesives</summary><div class="mobile-acc-body"><a href="category.html?cat=Adhesives&sub=Glues+%26+Epoxy">Glues & Epoxy</a><a href="category.html?cat=Adhesives&sub=Silicone+Sealant">Silicone Sealant</a><a href="category.html?cat=Adhesives&sub=Putty">Putty</a><a href="category.html?cat=Adhesives&sub=Tapes">Tapes</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Abrasives</summary><div class="mobile-acc-body"><a href="category.html?cat=Abrasives&sub=Sand+Paper">Sand Paper</a><a href="category.html?cat=Abrasives&sub=Cutting+Wheels">Cutting Wheels</a><a href="category.html?cat=Abrasives&sub=Grinding+Wheels">Grinding Wheels</a><a href="category.html?cat=Abrasives&sub=Brushes">Brushes</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Paints</summary><div class="mobile-acc-body"><a href="category.html?cat=Paints&sub=Wall+Paint">Wall Paint</a><a href="category.html?cat=Paints&sub=Wood+Paint">Wood Paint</a><a href="category.html?cat=Paints&sub=Metal+Paint">Metal Paint</a><a href="category.html?cat=Paints&sub=Primers">Primers</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Hand Tools</summary><div class="mobile-acc-body"><a href="category.html?cat=Hand+Tools&sub=Hammers">Hammers</a><a href="category.html?cat=Hand+Tools&sub=Screwdrivers">Screwdrivers</a><a href="category.html?cat=Hand+Tools&sub=Pliers">Pliers</a><a href="category.html?cat=Hand+Tools&sub=Wrenches">Wrenches</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Electricals</summary><div class="mobile-acc-body"><a href="category.html?cat=Electricals&sub=Cables+%26+Wires">Cables & Wires</a><a href="category.html?cat=Electricals&sub=Switches+%26+Sockets">Switches & Sockets</a><a href="category.html?cat=Electricals&sub=Circuit+Breakers">Circuit Breakers</a><a href="category.html?cat=Electricals&sub=Lighting">Lighting</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Plumbing</summary><div class="mobile-acc-body"><a href="category.html?cat=Plumbing&sub=Pipes+%26+Fittings">Pipes & Fittings</a><a href="category.html?cat=Plumbing&sub=Valves">Valves</a><a href="category.html?cat=Plumbing&sub=Taps+%26+Faucets">Taps & Faucets</a><a href="category.html?cat=Plumbing&sub=Water+Pumps">Water Pumps</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Tiles</summary><div class="mobile-acc-body"><a href="category.html?cat=Tiles&sub=Floor+Tiles">Floor Tiles</a><a href="category.html?cat=Tiles&sub=Wall+Tiles">Wall Tiles</a><a href="category.html?cat=Tiles&sub=Tile+Adhesive">Tile Adhesive</a><a href="category.html?cat=Tiles&sub=Grout">Grout</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Fasteners</summary><div class="mobile-acc-body"><a href="category.html?cat=Fasteners&sub=Screws">Screws</a><a href="category.html?cat=Fasteners&sub=Bolts+%26+Nuts">Bolts & Nuts</a><a href="category.html?cat=Fasteners&sub=Anchors">Anchors</a><a href="category.html?cat=Fasteners&sub=Nails">Nails</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Power Tools</summary><div class="mobile-acc-body"><a href="category.html?cat=Power+Tools&sub=Drills">Drills</a><a href="category.html?cat=Power+Tools&sub=Angle+Grinders">Angle Grinders</a><a href="category.html?cat=Power+Tools&sub=Circular+Saws">Circular Saws</a><a href="category.html?cat=Power+Tools&sub=Sanders">Sanders</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Building</summary><div class="mobile-acc-body"><a href="category.html?cat=Building&sub=Cement">Cement</a><a href="category.html?cat=Building&sub=Bricks+%26+Blocks">Bricks & Blocks</a><a href="category.html?cat=Building&sub=Roofing">Roofing</a><a href="category.html?cat=Building&sub=Insulation">Insulation</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">General</summary><div class="mobile-acc-body"><a href="category.html?cat=General&sub=Polish+%26+Lubricants">Polish & Lubricants</a><a href="category.html?cat=General&sub=Wheelbarrow">Wheelbarrow</a><a href="category.html?cat=General&sub=Ropes">Ropes</a><a href="category.html?cat=General&sub=Ladders">Ladders</a></div></details>
-      <details class="mobile-acc-item"><summary class="mobile-acc-trigger">Metal</summary><div class="mobile-acc-body"><a href="category.html?cat=Metal&sub=Steel+Sheets">Steel Sheets</a><a href="category.html?cat=Metal&sub=Angle+Iron">Angle Iron</a><a href="category.html?cat=Metal&sub=Pipes+%26+Tubes">Pipes & Tubes</a><a href="category.html?cat=Metal&sub=Mesh">Mesh</a></div></details>
     </nav>
     <nav class="mobile-nav mobile-nav--secondary">
       <strong>Quick Links</strong>
@@ -309,8 +297,9 @@
 
       ALL_PRODUCTS = products;
 
-      // Build cat nav chips
+      // Build cat nav chips + mobile nav
       const catNav = document.getElementById('catNavInner');
+      const mobileNav = document.getElementById('mobileCatNav');
       subcats.forEach(sub => {
         const a = document.createElement('a');
         a.href = 'category.html?sub=' + sub.slug;
@@ -318,6 +307,11 @@
         a.textContent = sub.name;
         a.addEventListener('click', e => { e.preventDefault(); filterByChip(a, sub.slug); history.pushState(null, '', '?sub=' + sub.slug); });
         catNav.appendChild(a);
+
+        const ma = document.createElement('a');
+        ma.href = 'category.html?sub=' + sub.slug;
+        ma.textContent = sub.name;
+        mobileNav.appendChild(ma);
       });
       updateCatNavArrows();
 
