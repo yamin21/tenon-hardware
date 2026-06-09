@@ -913,7 +913,7 @@
           fetch(ERP_BASE + '/categories/hardware/subcategories', { headers: { 'x-api-key': ERP_KEY } }),
           fetch(ERP_BASE + '/products?category=hardware',        { headers: { 'x-api-key': ERP_KEY } })
         ]);
-        const subs     = (await subRes.json()).data;
+        const subs     = (await subRes.json()).data.sort((a, b) => a.name.localeCompare(b.name));
         const products = (await prodRes.json()).data;
 
         // Cat nav chips + mobile nav

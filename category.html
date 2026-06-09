@@ -290,10 +290,11 @@
       if (urlSub) activeFilter = urlSub;
       if (urlQ) { searchQuery = urlQ; const si = document.getElementById('searchInput'); if(si) si.value = urlQ; }
 
-      const [products, subcats] = await Promise.all([
+      const [products, subcatsRaw] = await Promise.all([
         apiFetch('/products?category=hardware'),
         apiFetch('/categories/hardware/subcategories')
       ]);
+      const subcats = subcatsRaw.sort((a, b) => a.name.localeCompare(b.name));
 
       ALL_PRODUCTS = products;
 

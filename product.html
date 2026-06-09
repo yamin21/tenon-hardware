@@ -592,7 +592,7 @@
     (async () => {
       try {
         const res  = await fetch('https://erp.tenon.mv/api/categories/hardware/subcategories', { headers: { 'x-api-key': '834b2eac6c2e8fccf5e68b159c226af17afe1a5eaa4a1974c3e6e85018456086' } });
-        const subs = (await res.json()).data;
+        const subs = (await res.json()).data.sort((a, b) => a.name.localeCompare(b.name));
         const nav  = document.getElementById('catNavInner');
         const mobileNav = document.getElementById('mobileCatNav');
         const params = new URLSearchParams(window.location.search);
