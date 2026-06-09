@@ -698,15 +698,17 @@
     function toggleWishlistModal() { showToast('♥ Added to wishlist'); }
 
     // ── Quick View Modal ──────────────────────────────────────
-    function openQuickView(title, brand, price, oldPrice, imgKey) {
+    function openQuickView(title, brand, price, oldPrice, imgUrl) {
       modalProduct = { title, brand, price, oldPrice };
       modalQty = 1;
       document.getElementById('modalBrand').textContent = brand;
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalQty').textContent = 1;
-      document.getElementById('modalImg').className = `modal-img product-card-img--${imgKey}`;
+      const imgEl = document.getElementById('modalImg');
+      imgEl.className = 'modal-img';
+      imgEl.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="${title}" style="width:100%;height:100%;object-fit:contain;padding:16px;">` : '';
       const pr = document.getElementById('modalPriceRow');
-      pr.innerHTML = `<strong class="modal-price">MVR ${price.toLocaleString()}</strong>${oldPrice ? `<span class="price-old">MVR ${oldPrice.toLocaleString()}</span>` : ''}`;
+      pr.innerHTML = `<strong class="modal-price">${price != null ? 'MVR ' + Number(price).toLocaleString() : 'Contact for price'}</strong>${oldPrice ? `<span class="price-old">MVR ${Number(oldPrice).toLocaleString()}</span>` : ''}`;
       document.getElementById('quickViewModal').classList.add('quick-view-modal--open');
       document.getElementById('modalOverlay').classList.add('modal-overlay--visible');
       document.body.style.overflow = 'hidden';

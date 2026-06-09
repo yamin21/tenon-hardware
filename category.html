@@ -426,6 +426,7 @@
               <strong class="product-price">${p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price'}</strong>
               ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
+            ${p.price != null ? `<button class="btn-primary btn-full btn-sm product-add-btn" onclick="addToCart('${esc(p.name)}',${p.price})">Add to Cart</button>` : ''}
           </div>
         </div>`;
       }).join('');
@@ -503,15 +504,17 @@
     }
 
     // ── Quick View Modal ──────────────────────────────────────
-    function openQuickView(title, brand, price, oldPrice, imgKey) {
+    function openQuickView(title, brand, price, oldPrice, imgUrl) {
       modalProduct = { title, brand, price, oldPrice };
       modalQty = 1;
       document.getElementById('modalBrand').textContent = brand;
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalQty').textContent = 1;
-      document.getElementById('modalImg').className = `modal-img product-card-img--${imgKey}`;
+      const imgEl = document.getElementById('modalImg');
+      imgEl.className = 'modal-img';
+      imgEl.innerHTML = imgUrl ? `<img src="${imgUrl}" alt="${title}" style="width:100%;height:100%;object-fit:contain;padding:16px;">` : '';
       const pr = document.getElementById('modalPriceRow');
-      pr.innerHTML = `<strong class="modal-price">MVR ${price.toLocaleString()}</strong>${oldPrice ? `<span class="price-old">MVR ${oldPrice.toLocaleString()}</span>` : ''}`;
+      pr.innerHTML = `<strong class="modal-price">${price != null ? 'MVR ' + Number(price).toLocaleString() : 'Contact for price'}</strong>${oldPrice ? `<span class="price-old">MVR ${Number(oldPrice).toLocaleString()}</span>` : ''}`;
       document.getElementById('quickViewModal').classList.add('quick-view-modal--open');
       document.getElementById('modalOverlay').classList.add('modal-overlay--visible');
       document.body.style.overflow = 'hidden';
