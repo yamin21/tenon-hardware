@@ -130,8 +130,8 @@
     <div class="breadcrumb">
       <div class="container breadcrumb-inner">
         <a href="index.html">Home</a>
-        <span class="breadcrumb-sep">/</span>
-        <span>Hardware</span>
+        <span class="breadcrumb-sep" id="breadcrumbSep">/</span>
+        <span id="breadcrumbCat"></span>
       </div>
     </div>
 
@@ -139,7 +139,7 @@
     <section class="cat-hero">
       <div class="container cat-hero-inner">
         <div class="cat-hero-copy">
-          <h1>Hardware</h1>
+          <h1 id="heroTitle">All Products</h1>
         </div>
         <span class="cat-hero-count" id="heroCount">128 products</span>
       </div>
@@ -360,14 +360,36 @@
       // Update hero count
       document.getElementById('heroCount').textContent = products.length + ' products';
 
+      // Set title/breadcrumb from URL param
+      if (urlSub) {
+        const match = subcats.find(s => s.slug === urlSub);
+        if (match) updatePageTitle(match.name);
+      } else {
+        updatePageTitle(null);
+      }
+
       applyFilters();
+    }
+
+    function updatePageTitle(name) {
+      const title = name || 'All Products';
+      document.getElementById('heroTitle').textContent = title;
+      const sep = document.getElementById('breadcrumbSep');
+      const bc  = document.getElementById('breadcrumbCat');
+      if (name) { sep.style.display = ''; bc.textContent = name; }
+      else       { sep.style.display = 'none'; bc.textContent = ''; }
     }
 
     function filterByChip(btn, filter) {
       activeFilter = filter;
       page = 1;
       document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.filter === filter));
-      document.querySelectorAll('#catNavInner .cat-nav-item:not(.cat-nav-all)').forEach(a => a.classList.toggle('cat-nav-item--active', a.textContent.trim().toLowerCase().replace(/\s+/g, '-') === filter || (new URLSearchParams(a.search)).get('sub') === filter));
+      document.querySelectorAll('#catNavInner .cat-nav-item:not(.cat-nav-all)').forEach(a => {
+        const sub = new URL(a.href).searchParams.get('sub');
+        a.classList.toggle('cat-nav-item--active', sub === filter);
+      });
+      const label = filter === 'all' ? null : (btn ? btn.textContent.trim() : null);
+      updatePageTitle(label);
       applyFilters();
     }
 
