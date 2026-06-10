@@ -243,30 +243,8 @@
             <p class="section-note">Browse by category</p>
             <h2 class="section-title">Everything you need to build, fix, and finish.</h2>
           </div>
-          <a href="category.html" class="btn-outline-sm">View all categories →</a>
         </div>
         <div class="cat-grid" id="catGrid"></div>
-      </div>
-    </section>
-
-    <!-- ── New Arrivals ──────────────────────────────────── -->
-    <section class="section new-arrivals-section">
-      <div class="container">
-        <div class="section-head-flex">
-          <div>
-            <p class="section-note">Just landed</p>
-            <h2 class="section-title">New arrivals this week.</h2>
-          </div>
-          <div class="scroll-btns">
-            <button class="scroll-btn" id="scrollLeftBtn" onclick="scrollProducts(-1)" aria-label="Scroll left">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <button class="scroll-btn" id="scrollRightBtn" onclick="scrollProducts(1)" aria-label="Scroll right">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="products-scroll" id="productsScroll"></div>
       </div>
     </section>
 
@@ -307,7 +285,6 @@
       <div class="container">
         <div class="section-head-flex">
           <div>
-            <p class="section-note">Editor's pick</p>
             <h2 class="section-title">Top-rated products.</h2>
           </div>
         </div>
@@ -660,12 +637,6 @@
     window.addEventListener('resize', updateCatNavArrows);
     updateCatNavArrows();
 
-    // ── Product Scroll ────────────────────────────────────────
-    function scrollProducts(dir) {
-      const el = document.getElementById('productsScroll');
-      el.scrollBy({ left: dir * 320, behavior: 'smooth' });
-    }
-
     // ── Tab Filter ────────────────────────────────────────────
     function filterProducts(btn, filter) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-btn--active'));
@@ -868,13 +839,9 @@
         });
         updateCatNavArrows();
 
-        // New arrivals (first 6 with images)
+        // Featured grid
         const withImg = products.filter(p => p.images && p.images[0]);
-        const arrivals = withImg.slice(0, 6);
-        document.getElementById('productsScroll').innerHTML = arrivals.map(p => buildProductCard(p, 'product-card--scroll')).join('');
-
-        // Featured grid (next 8)
-        const featured = withImg.slice(6, 14);
+        const featured = withImg.slice(0, 8);
         document.getElementById('featuredGrid').innerHTML = featured.map(p => buildProductCard(p, '')).join('');
       } catch(e) {}
     })();
