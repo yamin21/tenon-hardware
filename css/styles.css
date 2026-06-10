@@ -857,7 +857,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 
 /* ── Category Grid ───────────────────────────────────────── */
-.categories-section { background: var(--bg); }
+.categories-section { background: var(--bg); padding-bottom: 40px; }
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -1152,7 +1152,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 
 /* ── Brands ──────────────────────────────────────────────── */
 .brands-section {
-  padding: 64px 0;
+  padding: 32px 0;
   background: #fff;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -1193,7 +1193,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 
 /* ── Featured Products ───────────────────────────────────── */
-.featured-section { background: #fff; }
+.featured-section { background: #fff; padding-bottom: 40px; }
 .tab-group { display: flex; gap: 4px; background: var(--bg-soft); border-radius: var(--radius-pill); padding: 4px; }
 .tab-btn {
   padding: 8px 18px;
@@ -1209,7 +1209,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .load-more-wrap { display: flex; justify-content: center; margin-top: 48px; }
 
 /* ── Why Section ─────────────────────────────────────────── */
-.why-section { background: #fff; }
+.why-section { background: #fff; padding-top: 40px; }
 .why-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
