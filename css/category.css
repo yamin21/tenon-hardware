@@ -99,6 +99,13 @@
   background: var(--brand-light);
   font-weight: 600;
 }
+
+#childCatDropdownInner .filter-chip {
+  font-size: 0.78rem;
+}
+#childCatDropdownInner .filter-chip--active {
+  font-weight: 500;
+}
 .filter-divider {
   width: 1px;
   height: 20px;
