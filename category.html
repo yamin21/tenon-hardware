@@ -127,6 +127,12 @@
       </div>
     </div>
 
+    <div class="child-cat-bar" id="childCatBar" style="display:none">
+      <div class="container">
+        <div class="filter-chips" id="childCatChips"></div>
+      </div>
+    </div>
+
     <div id="filterChips" style="display:none"></div>
     <span id="resultsMeta" style="display:none"></span>
 
@@ -273,7 +279,10 @@
     // ── State ─────────────────────────────────────────────────
     const PAGE_SIZE = 12;
     let ALL_PRODUCTS = [];
+    let SUBCATS_LIST = [];
+    let CHILD_CATS = [];
     let activeFilter = 'all';
+    let activeChildFilter = 'all';
     let activeSort   = 'featured';
     let searchQuery  = '';
     let page = 1;
@@ -285,9 +294,11 @@
       grid.innerHTML = '<div class="no-results">Loading…</div>';
 
       const params = new URLSearchParams(window.location.search);
-      const urlSub = params.get('sub');
+      const urlSub   = params.get('sub');
+      const urlChild = params.get('child');
       const urlQ   = params.get('q');
       if (urlSub) activeFilter = urlSub;
+      if (urlChild) activeChildFilter = urlChild;
       if (urlQ) { searchQuery = urlQ; const si = document.getElementById('searchInput'); if(si) si.value = urlQ; }
 
       const [products, subcatsRaw] = await Promise.all([
@@ -295,6 +306,7 @@
         apiFetch('/categories/hardware/subcategories')
       ]);
       const subcats = subcatsRaw.sort((a, b) => a.name.localeCompare(b.name));
+      SUBCATS_LIST = subcats;
 
       ALL_PRODUCTS = products;
 
@@ -332,7 +344,11 @@
         updatePageTitle('Search: ' + urlQ);
       } else if (urlSub) {
         const match = subcats.find(s => s.slug === urlSub);
-        if (match) updatePageTitle(match.name);
+        if (match) {
+          await loadChildCategories(urlSub);
+          const childMatch = urlChild ? CHILD_CATS.find(c => c.slug === urlChild) : null;
+          updatePageTitle(match.name, childMatch ? childMatch.name : null);
+        }
       } else {
         updatePageTitle(null);
       }
@@ -341,16 +357,60 @@
       applyFilters();
     }
 
-    function updatePageTitle(name) {
-      document.getElementById('heroTitle').textContent = name || 'All Products';
+    function updatePageTitle(name, childName) {
+      document.getElementById('heroTitle').textContent = childName || name || 'All Products';
       const sep = document.getElementById('breadcrumbSep');
       const bc  = document.getElementById('breadcrumbCat');
-      if (name) { sep.style.display = 'inline'; bc.textContent = name; }
-      else      { sep.style.display = 'none';   bc.textContent = ''; }
+      if (childName && name) {
+        sep.style.display = 'inline';
+        bc.innerHTML = `<a href="category.html?sub=${activeFilter}">${name}</a> / ${childName}`;
+      } else if (name) {
+        sep.style.display = 'inline'; bc.textContent = name;
+      } else {
+        sep.style.display = 'none';   bc.textContent = '';
+      }
+    }
+
+    // ── Child Category Chips ─────────────────────────────────
+    async function loadChildCategories(subSlug) {
+      const bar = document.getElementById('childCatBar');
+      const chipsEl = document.getElementById('childCatChips');
+      CHILD_CATS = [];
+      if (!subSlug || subSlug === 'all') {
+        bar.style.display = 'none';
+        chipsEl.innerHTML = '';
+        return;
+      }
+      try {
+        CHILD_CATS = await apiFetch('/categories/hardware/subcategories/' + subSlug + '/children') || [];
+      } catch (e) { CHILD_CATS = []; }
+      if (!CHILD_CATS.length) {
+        bar.style.display = 'none';
+        chipsEl.innerHTML = '';
+        return;
+      }
+      chipsEl.innerHTML = '<button class="filter-chip' + (activeChildFilter === 'all' ? ' filter-chip--active' : '') + '" data-child="all">All</button>' +
+        CHILD_CATS.map(c => `<button class="filter-chip${c.slug === activeChildFilter ? ' filter-chip--active' : ''}" data-child="${c.slug}">${c.name}</button>`).join('');
+      chipsEl.querySelectorAll('.filter-chip').forEach(b => b.onclick = () => filterByChild(b.dataset.child));
+      bar.style.display = '';
+    }
+
+    function filterByChild(slug) {
+      activeChildFilter = slug;
+      page = 1;
+      document.querySelectorAll('#childCatChips .filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.child === slug));
+      const params = new URLSearchParams(window.location.search);
+      if (slug === 'all') params.delete('child'); else params.set('child', slug);
+      history.pushState(null, '', '?' + params.toString());
+      const sub = SUBCATS_LIST.find(s => s.slug === activeFilter);
+      const child = CHILD_CATS.find(c => c.slug === slug);
+      updatePageTitle(sub ? sub.name : null, child ? child.name : null);
+      applyFilters();
     }
 
     function filterByChip(btn, filter) {
       activeFilter = filter;
+      activeChildFilter = 'all';
       page = 1;
       document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.filter === filter));
       document.querySelectorAll('#catNavInner .cat-nav-item:not(.cat-nav-all)').forEach(a => {
@@ -359,7 +419,7 @@
       });
       const label = filter === 'all' ? null : (btn ? btn.textContent.trim() : null);
       updatePageTitle(label);
-      applyFilters();
+      loadChildCategories(filter).then(applyFilters);
     }
 
     function sortProducts(sort) {
@@ -371,9 +431,10 @@
     function applyFilters() {
       const q = searchQuery.toLowerCase();
       filteredProducts = ALL_PRODUCTS.filter(p => {
-        const matchesSub = activeFilter === 'all' || p.subcategorySlug === activeFilter;
-        const matchesQ   = !q || (p.name||'').toLowerCase().includes(q) || (p.brand||'').toLowerCase().includes(q) || (p.sku||'').toLowerCase().includes(q);
-        return matchesSub && matchesQ;
+        const matchesSub   = activeFilter === 'all' || p.subcategorySlug === activeFilter;
+        const matchesChild = activeChildFilter === 'all' || p.childCategorySlug === activeChildFilter;
+        const matchesQ     = !q || (p.name||'').toLowerCase().includes(q) || (p.brand||'').toLowerCase().includes(q) || (p.sku||'').toLowerCase().includes(q);
+        return matchesSub && matchesChild && matchesQ;
       });
       if (activeSort === 'price-asc')  filteredProducts.sort((a,b) => a.price - b.price);
       if (activeSort === 'price-desc') filteredProducts.sort((a,b) => b.price - a.price);
@@ -547,7 +608,13 @@
     }
     function doSearch() {
       const q = document.getElementById('searchInput').value.trim();
-      if (q) { searchQuery = q; activeFilter = 'all'; page = 1; updatePageTitle('Search: ' + q); history.pushState(null,'','?q='+encodeURIComponent(q)); applyFilters(); }
+      if (q) {
+        searchQuery = q; activeFilter = 'all'; activeChildFilter = 'all'; page = 1;
+        updatePageTitle('Search: ' + q);
+        loadChildCategories(null);
+        history.pushState(null,'','?q='+encodeURIComponent(q));
+        applyFilters();
+      }
     }
     function setSearch(el) {
       document.getElementById('searchInput').value = el.textContent.trim();

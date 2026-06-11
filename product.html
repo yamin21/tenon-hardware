@@ -294,10 +294,21 @@
         const catName  = toName(p.categorySlug);
         const subName  = toName(p.subcategorySlug);
         const subUrl   = 'category.html?sub=' + encodeURIComponent(p.subcategorySlug || '');
-        document.getElementById('breadcrumbInner').innerHTML =
-          `<a href="${subUrl}">${subName}</a>
-           <span class="breadcrumb-sep">/</span>
-           <span>${p.name}</span>`;
+        if (p.childCategorySlug) {
+          const childName = toName(p.childCategorySlug);
+          const childUrl  = subUrl + '&child=' + encodeURIComponent(p.childCategorySlug);
+          document.getElementById('breadcrumbInner').innerHTML =
+            `<a href="${subUrl}">${subName}</a>
+             <span class="breadcrumb-sep">/</span>
+             <a href="${childUrl}">${childName}</a>
+             <span class="breadcrumb-sep">/</span>
+             <span>${p.name}</span>`;
+        } else {
+          document.getElementById('breadcrumbInner').innerHTML =
+            `<a href="${subUrl}">${subName}</a>
+             <span class="breadcrumb-sep">/</span>
+             <span>${p.name}</span>`;
+        }
 
         document.getElementById('pageSpinner').style.display = 'none';
         document.getElementById('pageMain').style.display = '';

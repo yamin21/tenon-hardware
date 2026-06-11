@@ -55,6 +55,14 @@
   flex-shrink: 0;
 }
 
+/* Child Category Bar */
+.child-cat-bar {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+}
+.child-cat-bar .filter-chips { overflow-x: auto; }
+
 /* Filter Bar */
 .cat-filter-bar {
   background: #fff;
