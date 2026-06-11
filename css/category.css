@@ -102,6 +102,7 @@
 
 #childCatDropdown .cat-dropdown-inner {
   top: 5px;
+  box-shadow: none;
 }
 #childCatDropdownInner .filter-chip {
   font-size: 0.78rem;
