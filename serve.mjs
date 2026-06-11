@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, watch } from 'node:fs/promises';
 import { extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const root = process.cwd();
@@ -49,7 +50,7 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
     let pathname = url.pathname === '/' ? '/index.html' : url.pathname;
-    const filePath = new URL(`.${pathname}`, `file://${root}/`).pathname;
+    const filePath = fileURLToPath(new URL(`.${pathname}`, `file://${root.replace(/\\/g, '/')}/`));
     let content = await readFile(filePath);
     const ext = extname(filePath).toLowerCase();
     const contentType = mimeTypes[ext] || 'application/octet-stream';
