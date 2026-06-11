@@ -82,6 +82,11 @@
     <div class="cat-dropdown-inner" id="catDropdownInner"></div>
   </div>
 
+  <!-- ── Child-Category Dropdown ───────────────────────────── -->
+  <div class="cat-dropdown cat-dropdown--open" id="childCatDropdown" style="display:none">
+    <div class="cat-dropdown-inner" id="childCatDropdownInner"></div>
+  </div>
+
   <!-- ── Mobile Menu ──────────────────────────────────────── -->
   <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
   <div class="mobile-menu" id="mobileMenu">
@@ -125,10 +130,6 @@
       <div class="container">
         <div class="cat-hero-breadcrumb"><a href="index.html">Home</a> <span id="breadcrumbSep" style="display:none"> / <span id="breadcrumbCat"></span></span></div>
       </div>
-    </div>
-
-    <div class="cat-dropdown cat-dropdown--open" id="childCatDropdown" style="display:none">
-      <div class="cat-dropdown-inner" id="childCatDropdownInner"></div>
     </div>
 
     <div id="filterChips" style="display:none"></div>
@@ -274,6 +275,44 @@
       return (await res.json()).data;
     }
 
+    // ── Mobile nav: accordion item with lazy-loaded child categories ──
+    function buildMobileNavItem(sub, kids) {
+      const item = document.createElement('div');
+      item.className = 'mobile-nav-cat';
+
+      const row = document.createElement('div');
+      row.className = 'mobile-nav-cat-row';
+
+      const a = document.createElement('a');
+      a.href = 'category.html?sub=' + sub.slug;
+      a.textContent = sub.name;
+      row.appendChild(a);
+
+      if (kids && kids.length) {
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'mobile-nav-toggle';
+        toggle.setAttribute('aria-label', 'Toggle ' + sub.name + ' subcategories');
+        toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+        const children = document.createElement('div');
+        children.className = 'mobile-nav-children';
+        children.innerHTML = kids.map(c => `<a href="category.html?sub=${sub.slug}&child=${c.slug}">${c.name}</a>`).join('');
+
+        toggle.addEventListener('click', () => {
+          const open = children.classList.toggle('mobile-nav-children--open');
+          toggle.classList.toggle('mobile-nav-toggle--open', open);
+        });
+
+        row.appendChild(toggle);
+        item.appendChild(row);
+        item.appendChild(children);
+      } else {
+        item.appendChild(row);
+      }
+      return item;
+    }
+
     // ── State ─────────────────────────────────────────────────
     const PAGE_SIZE = 12;
     let ALL_PRODUCTS = [];
@@ -311,7 +350,10 @@
       // Build cat nav chips + mobile nav
       const catNav = document.getElementById('catNavInner');
       const mobileNav = document.getElementById('mobileCatNav');
-      subcats.forEach(sub => {
+      const childrenLists = await Promise.all(subcats.map(sub =>
+        apiFetch('/categories/hardware/subcategories/' + sub.slug + '/children').catch(() => [])
+      ));
+      subcats.forEach((sub, i) => {
         const a = document.createElement('a');
         a.href = 'category.html?sub=' + sub.slug;
         a.className = 'cat-nav-item' + (sub.slug === activeFilter ? ' cat-nav-item--active' : '');
@@ -319,10 +361,7 @@
         a.addEventListener('click', e => { e.preventDefault(); filterByChip(a, sub.slug); history.pushState(null, '', '?sub=' + sub.slug); });
         catNav.appendChild(a);
 
-        const ma = document.createElement('a');
-        ma.href = 'category.html?sub=' + sub.slug;
-        ma.textContent = sub.name;
-        mobileNav.appendChild(ma);
+        mobileNav.appendChild(buildMobileNavItem(sub, childrenLists[i]));
       });
       updateCatNavArrows();
 
@@ -373,6 +412,7 @@
     function positionChildDropdown() {
       const dropdown = document.getElementById('childCatDropdown');
       const inner = document.getElementById('childCatDropdownInner');
+      const pageMain = document.getElementById('pageMain');
       const activeChip = document.querySelector('#catNavInner .cat-nav-item--active');
       if (!activeChip) return;
       const rect = activeChip.getBoundingClientRect();
@@ -384,16 +424,21 @@
         dropdown.style.setProperty('--chip-center', clamped + 'px');
         const arrowPct = Math.max(10, Math.min(90, ((chipCenter - clamped) / cardW + 0.5) * 100));
         inner.style.setProperty('--arrow-left', arrowPct + '%');
+        if (dropdown.style.display !== 'none') {
+          pageMain.style.setProperty('--child-dropdown-h', (5 + inner.offsetHeight + 12) + 'px');
+        }
       });
     }
 
     async function loadChildCategories(subSlug) {
       const dropdown = document.getElementById('childCatDropdown');
       const inner = document.getElementById('childCatDropdownInner');
+      const pageMain = document.getElementById('pageMain');
       CHILD_CATS = [];
       if (!subSlug || subSlug === 'all') {
         dropdown.style.display = 'none';
         inner.innerHTML = '';
+        pageMain.classList.remove('has-child-dropdown');
         return;
       }
       try {
@@ -402,12 +447,14 @@
       if (!CHILD_CATS.length) {
         dropdown.style.display = 'none';
         inner.innerHTML = '';
+        pageMain.classList.remove('has-child-dropdown');
         return;
       }
       inner.innerHTML = '<button class="filter-chip' + (activeChildFilter === 'all' ? ' filter-chip--active' : '') + '" data-child="all">All</button>' +
         CHILD_CATS.map(c => `<button class="filter-chip${c.slug === activeChildFilter ? ' filter-chip--active' : ''}" data-child="${c.slug}">${c.name}</button>`).join('');
       inner.querySelectorAll('.filter-chip').forEach(b => b.onclick = () => filterByChild(b.dataset.child));
       dropdown.style.display = '';
+      pageMain.classList.add('has-child-dropdown');
       positionChildDropdown();
     }
 

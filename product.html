@@ -255,6 +255,44 @@
     const API_KEY  = '834b2eac6c2e8fccf5e68b159c226af17afe1a5eaa4a1974c3e6e85018456086';
     let currentProduct = null;
 
+    // ── Mobile nav: accordion item showing child categories ──
+    function buildMobileNavItem(sub, kids) {
+      const item = document.createElement('div');
+      item.className = 'mobile-nav-cat';
+
+      const row = document.createElement('div');
+      row.className = 'mobile-nav-cat-row';
+
+      const a = document.createElement('a');
+      a.href = 'category.html?sub=' + sub.slug;
+      a.textContent = sub.name;
+      row.appendChild(a);
+
+      if (kids && kids.length) {
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'mobile-nav-toggle';
+        toggle.setAttribute('aria-label', 'Toggle ' + sub.name + ' subcategories');
+        toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+        const children = document.createElement('div');
+        children.className = 'mobile-nav-children';
+        children.innerHTML = kids.map(c => `<a href="category.html?sub=${sub.slug}&child=${c.slug}">${c.name}</a>`).join('');
+
+        toggle.addEventListener('click', () => {
+          const open = children.classList.toggle('mobile-nav-children--open');
+          toggle.classList.toggle('mobile-nav-toggle--open', open);
+        });
+
+        row.appendChild(toggle);
+        item.appendChild(row);
+        item.appendChild(children);
+      } else {
+        item.appendChild(row);
+      }
+      return item;
+    }
+
     function buildProductCard(p, extraClass) {
       const raw = p.images && p.images[0] ? p.images[0] : '';
       const img = raw.startsWith('http') ? raw : (raw ? API_BASE.replace('/api','') + '/' + raw : '');
@@ -586,17 +624,18 @@
         const mobileNav = document.getElementById('mobileCatNav');
         const params = new URLSearchParams(window.location.search);
         const activeSub = params.get('sub');
-        subs.forEach(sub => {
+        const childrenLists = await Promise.all(subs.map(sub =>
+          fetch(API_BASE + '/categories/hardware/subcategories/' + sub.slug + '/children', { headers: { 'x-api-key': API_KEY } })
+            .then(r => r.json()).then(j => j.data || []).catch(() => [])
+        ));
+        subs.forEach((sub, i) => {
           const a = document.createElement('a');
           a.href = 'category.html?sub=' + sub.slug;
           a.className = 'cat-nav-item' + (activeSub === sub.slug ? ' cat-nav-item--active' : '');
           a.textContent = sub.name;
           nav.appendChild(a);
 
-          const ma = document.createElement('a');
-          ma.href = 'category.html?sub=' + sub.slug;
-          ma.textContent = sub.name;
-          mobileNav.appendChild(ma);
+          mobileNav.appendChild(buildMobileNavItem(sub, childrenLists[i]));
         });
       } catch(e) {}
     })();

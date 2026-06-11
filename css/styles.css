@@ -615,6 +615,40 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 .mobile-nav a:hover { background: var(--brand-light); color: var(--brand); }
 .mobile-nav--secondary { border-top: 1px solid var(--border); }
 
+.mobile-nav-cat-row {
+  display: flex;
+  align-items: stretch;
+}
+.mobile-nav-cat-row a { flex: 1; }
+.mobile-nav-toggle {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: transform 0.2s ease, color var(--transition);
+}
+.mobile-nav-toggle:hover { color: var(--brand); }
+.mobile-nav-toggle--open { transform: rotate(180deg); }
+.mobile-nav-children {
+  display: none;
+  flex-direction: column;
+  padding-left: 14px;
+  overflow: hidden;
+}
+.mobile-nav-children--open { display: flex; }
+.mobile-nav-children a {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 8px 12px;
+}
+
 .mobile-acc-item { list-style: none; }
 .mobile-acc-item summary.mobile-acc-trigger {
   display: flex;
