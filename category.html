@@ -127,10 +127,8 @@
       </div>
     </div>
 
-    <div class="cat-filter-bar" id="childCatBar" style="display:none">
-      <div class="container cat-filter-inner">
-        <div class="filter-chips" id="childCatChips"></div>
-      </div>
+    <div class="cat-dropdown cat-dropdown--open" id="childCatDropdown" style="display:none">
+      <div class="cat-dropdown-inner" id="childCatDropdownInner"></div>
     </div>
 
     <div id="filterChips" style="display:none"></div>
@@ -371,34 +369,52 @@
       }
     }
 
-    // ── Child Category Chips ─────────────────────────────────
+    // ── Child Category Dropdown ───────────────────────────────
+    function positionChildDropdown() {
+      const dropdown = document.getElementById('childCatDropdown');
+      const inner = document.getElementById('childCatDropdownInner');
+      const activeChip = document.querySelector('#catNavInner .cat-nav-item--active');
+      if (!activeChip) return;
+      const rect = activeChip.getBoundingClientRect();
+      const chipCenter = rect.left + rect.width / 2;
+      requestAnimationFrame(() => {
+        const cardW = inner.offsetWidth;
+        const pad = 16;
+        const clamped = Math.max(cardW / 2 + pad, Math.min(chipCenter, window.innerWidth - cardW / 2 - pad));
+        dropdown.style.setProperty('--chip-center', clamped + 'px');
+        const arrowPct = Math.max(10, Math.min(90, ((chipCenter - clamped) / cardW + 0.5) * 100));
+        inner.style.setProperty('--arrow-left', arrowPct + '%');
+      });
+    }
+
     async function loadChildCategories(subSlug) {
-      const bar = document.getElementById('childCatBar');
-      const chipsEl = document.getElementById('childCatChips');
+      const dropdown = document.getElementById('childCatDropdown');
+      const inner = document.getElementById('childCatDropdownInner');
       CHILD_CATS = [];
       if (!subSlug || subSlug === 'all') {
-        bar.style.display = 'none';
-        chipsEl.innerHTML = '';
+        dropdown.style.display = 'none';
+        inner.innerHTML = '';
         return;
       }
       try {
         CHILD_CATS = await apiFetch('/categories/hardware/subcategories/' + subSlug + '/children') || [];
       } catch (e) { CHILD_CATS = []; }
       if (!CHILD_CATS.length) {
-        bar.style.display = 'none';
-        chipsEl.innerHTML = '';
+        dropdown.style.display = 'none';
+        inner.innerHTML = '';
         return;
       }
-      chipsEl.innerHTML = '<button class="filter-chip' + (activeChildFilter === 'all' ? ' filter-chip--active' : '') + '" data-child="all">All</button>' +
+      inner.innerHTML = '<button class="filter-chip' + (activeChildFilter === 'all' ? ' filter-chip--active' : '') + '" data-child="all">All</button>' +
         CHILD_CATS.map(c => `<button class="filter-chip${c.slug === activeChildFilter ? ' filter-chip--active' : ''}" data-child="${c.slug}">${c.name}</button>`).join('');
-      chipsEl.querySelectorAll('.filter-chip').forEach(b => b.onclick = () => filterByChild(b.dataset.child));
-      bar.style.display = '';
+      inner.querySelectorAll('.filter-chip').forEach(b => b.onclick = () => filterByChild(b.dataset.child));
+      dropdown.style.display = '';
+      positionChildDropdown();
     }
 
     function filterByChild(slug) {
       activeChildFilter = slug;
       page = 1;
-      document.querySelectorAll('#childCatChips .filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.child === slug));
+      document.querySelectorAll('#childCatDropdownInner .filter-chip').forEach(c => c.classList.toggle('filter-chip--active', c.dataset.child === slug));
       const params = new URLSearchParams(window.location.search);
       if (slug === 'all') params.delete('child'); else params.set('child', slug);
       history.pushState(null, '', '?' + params.toString());
@@ -636,8 +652,8 @@
       document.getElementById('catNavLeft').classList.toggle('cat-nav-arrow--visible', !atStart);
       document.getElementById('catNavRight').classList.toggle('cat-nav-arrow--visible', !atEnd);
     }
-    document.getElementById('catNavInner').addEventListener('scroll', updateCatNavArrows, { passive: true });
-    window.addEventListener('resize', updateCatNavArrows);
+    document.getElementById('catNavInner').addEventListener('scroll', () => { updateCatNavArrows(); positionChildDropdown(); }, { passive: true });
+    window.addEventListener('resize', () => { updateCatNavArrows(); positionChildDropdown(); });
     updateCatNavArrows();
 
     // ── Toast ─────────────────────────────────────────────────
