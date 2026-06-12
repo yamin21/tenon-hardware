@@ -65,12 +65,8 @@ async function getCategoryTree(categorySlug) {
     }
   } catch {}
 
-  const subs = (await apiFetch('/categories/' + categorySlug + '/subcategories'))
+  const tree = (await apiFetch('/categories/' + categorySlug + '/tree'))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const childrenLists = await Promise.all(subs.map(sub =>
-    apiFetch('/categories/' + categorySlug + '/subcategories/' + sub.slug + '/children').catch(() => [])
-  ));
-  const tree = subs.map((sub, i) => ({ ...sub, children: childrenLists[i] }));
 
   try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: tree })); } catch {}
   return tree;
