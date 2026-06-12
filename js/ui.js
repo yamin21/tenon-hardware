@@ -94,6 +94,42 @@ function showToast(msg) {
   toast._timer = setTimeout(() => toast.classList.remove('toast--visible'), 3000);
 }
 
+// ── Scroll effects (rAF-throttled to avoid layout thrashing) ──
+// Reading scrollHeight/scrollY on every raw scroll event forces a
+// synchronous layout recalc dozens of times per second. Batch updates
+// to once per animation frame instead.
+function initScrollEffects({ threshold = 10, scrollTopBtn = false } = {}) {
+  const header = document.getElementById('siteHeader');
+  const btn = scrollTopBtn ? document.getElementById('scrollTopBtn') : null;
+  let ticking = false;
+
+  function update() {
+    header.classList.toggle('site-header--scrolled', window.scrollY > threshold);
+    if (btn) {
+      const atBottom = (window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 40;
+      btn.classList.toggle('scroll-top-btn--visible', atBottom);
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+}
+
+function onScrollThrottled(el, handler) {
+  let ticking = false;
+  el.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => { handler(); ticking = false; });
+    }
+  }, { passive: true });
+}
+
 // ── Category nav arrows ───────────────────────────────────
 function scrollCatNav(dir) {
   document.getElementById('catNavInner').scrollBy({ left: dir * 240, behavior: 'smooth' });
