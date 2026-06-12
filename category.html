@@ -508,14 +508,16 @@
     initCategory();
 
     // ── State ─────────────────────────────────────────────────
-    let cartItems = [];
+    let cartItems = loadCart();
     let wishlistItems = [];
     let modalProduct = {};
     let modalQty = 1;
+    renderCart();
 
     // ── Cart ──────────────────────────────────────────────────
     function removeFromCart(name) {
       cartItems = cartItems.filter(i => i.name !== name);
+      saveCart();
       renderCart();
     }
 

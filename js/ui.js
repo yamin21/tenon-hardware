@@ -1,6 +1,22 @@
 // ── Shared UI helpers (header, mobile menu, cart, toast, search, quick view) ──
 // Pages provide: cartItems, renderCart(), and (for quick view) modalProduct/modalQty.
 
+// ── Cart persistence ────────────────────────────────────────
+const CART_STORAGE_KEY = 'tenon_cart';
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCart() {
+  try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems)); } catch {}
+}
+
 function showToast(msg) {
   let toast = document.getElementById('toast');
   if (!toast) {
@@ -92,6 +108,7 @@ function addToCart(name, price) {
   const existing = cartItems.find(i => i.name === name);
   if (existing) existing.qty++;
   else cartItems.push({ name, price, qty: 1 });
+  saveCart();
   renderCart();
   if (!document.getElementById('cartSidebar').classList.contains('cart-sidebar--open')) toggleCart();
 }
