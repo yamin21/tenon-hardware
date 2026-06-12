@@ -494,6 +494,15 @@
       renderCart();
     }
 
+    function changeCartQty(name, delta) {
+      const item = cartItems.find(i => i.name === name);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cartItems = cartItems.filter(i => i.name !== name);
+      saveCart();
+      renderCart();
+    }
+
     function renderCart() {
       const count = cartItems.reduce((s, i) => s + i.qty, 0);
       const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
@@ -509,16 +518,23 @@
         body.innerHTML = `<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#products" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>`;
         footer.style.display = 'none';
       } else {
-        body.innerHTML = cartItems.map(item => `
+        body.innerHTML = cartItems.map(item => { const esc = item.name.replace(/'/g,"\\'"); return `
           <div class="cart-item">
             <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <p class="cart-item-name">${item.name}</p>
-              <p class="cart-item-price">MVR ${item.price.toLocaleString()} × ${item.qty}</p>
+              <div class="cart-item-row">
+                <div class="cart-qty-stepper">
+                  <button onclick="changeCartQty('${esc}', -1)" aria-label="Decrease quantity">−</button>
+                  <span>${item.qty}</span>
+                  <button onclick="changeCartQty('${esc}', 1)" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="cart-item-price">MVR ${(item.price * item.qty).toLocaleString()}</span>
+              </div>
             </div>
-            <button class="cart-item-remove" onclick="removeFromCart('${item.name.replace(/'/g,"\\'")}')">×</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${esc}')" aria-label="Remove item">×</button>
           </div>
-        `).join('');
+        `; }).join('');
         footer.style.display = 'block';
       }
     }

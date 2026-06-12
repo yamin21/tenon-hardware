@@ -395,6 +395,21 @@
       renderCart();
       toggleCart();
     }
+    function removeFromCart(name) {
+      cartItems = cartItems.filter(i => i.name !== name);
+      saveCart();
+      renderCart();
+    }
+
+    function changeCartQty(name, delta) {
+      const item = cartItems.find(i => i.name === name);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cartItems = cartItems.filter(i => i.name !== name);
+      saveCart();
+      renderCart();
+    }
+
     function renderCart() {
       const count = cartItems.reduce((s, i) => s + i.qty, 0);
       const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
@@ -409,15 +424,22 @@
         body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>';
         footer.style.display = 'none';
       } else {
-        body.innerHTML = cartItems.map(i => `
+        body.innerHTML = cartItems.map(item => { const esc = item.name.replace(/'/g,"\\'"); return `
           <div class="cart-item">
-            <div class="cart-item-img">${i.image ? `<img src="${i.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
+            <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
-              <span class="cart-item-name">${i.name}</span>
-              <span class="cart-item-qty">Qty: ${i.qty}</span>
+              <p class="cart-item-name">${item.name}</p>
+              <div class="cart-item-row">
+                <div class="cart-qty-stepper">
+                  <button onclick="changeCartQty('${esc}', -1)" aria-label="Decrease quantity">−</button>
+                  <span>${item.qty}</span>
+                  <button onclick="changeCartQty('${esc}', 1)" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="cart-item-price">MVR ${(item.price * item.qty).toLocaleString()}</span>
+              </div>
             </div>
-            <span class="cart-item-price">MVR ${(i.price * i.qty).toLocaleString()}</span>
-          </div>`).join('');
+            <button class="cart-item-remove" onclick="removeFromCart('${esc}')" aria-label="Remove item">×</button>
+          </div>`; }).join('');
         footer.style.display = 'block';
       }
     }

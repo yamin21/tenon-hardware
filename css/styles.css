@@ -1102,8 +1102,30 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 .cart-item-info { flex: 1; min-width: 0; }
 .cart-item-name  { font-size: 0.88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cart-item-price { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+.cart-item-price { font-size: 0.82rem; color: var(--text-muted); }
+.cart-item-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
+.cart-qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+}
+.cart-qty-stepper button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 16px;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+.cart-qty-stepper button:hover { color: var(--brand); }
+.cart-qty-stepper span { font-size: 0.85rem; font-weight: 600; min-width: 12px; text-align: center; }
 .cart-item-remove {
+  flex-shrink: 0;
   color: var(--text-muted);
   font-size: 1.2rem;
   padding: 4px;
