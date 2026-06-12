@@ -1083,6 +1083,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   background: var(--bg-soft);
+  overflow: hidden;
 }
 .cart-item-info { flex: 1; min-width: 0; }
 .cart-item-name  { font-size: 0.88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1222,6 +1223,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 
 /* ── WhatsApp Float ──────────────────────────────────────── */
 .whatsapp-float {
+  display: none;
   position: fixed;
   bottom: 28px;
   right: 28px;

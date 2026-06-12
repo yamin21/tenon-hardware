@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Checkout — Tenon Hardware</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <style>
+    .checkout-page {
+      min-height: calc(100vh - var(--header-h));
+      padding: 40px 0 80px;
+    }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 0;
+      align-items: start;
+      max-width: 1180px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .checkout-form {
+      padding: 40px 48px;
+      background: #fff;
+    }
+    .checkout-summary {
+      padding: 40px 40px;
+      background: var(--bg-soft);
+      border-left: 1px solid var(--border);
+      min-height: 100%;
+    }
+    .checkout-section { margin-bottom: 32px; }
+    .checkout-section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .checkout-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .checkout-section-head h2 { margin-bottom: 0; }
+    .checkout-link {
+      font-size: 0.85rem;
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .checkout-input, .checkout-select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.93rem;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.18s;
+      margin-bottom: 12px;
+    }
+    .checkout-input:focus, .checkout-select:focus { border-color: var(--brand); }
+    .checkout-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .checkout-row .checkout-input { margin-bottom: 12px; }
+    .checkout-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text);
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .checkout-checkbox input { width: 16px; height: 16px; accent-color: var(--brand); }
+
+    .delivery-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .delivery-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .delivery-tab:last-child { border-right: none; }
+    .delivery-tab--active { background: #fff; color: var(--text); }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .payment-option .payment-cards { display: flex; gap: 6px; }
+    .payment-info {
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      background: var(--bg-soft);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .checkout-note { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 14px; }
+
+    .billing-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .billing-option:first-of-type { border-radius: var(--radius-sm) var(--radius-sm) 0 0; border-bottom: none; }
+    .billing-option:last-of-type { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+    .billing-option--active { background: var(--bg-soft); }
+    .billing-option input { width: 16px; height: 16px; accent-color: var(--brand); }
+
+    .pickup-locations-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .pickup-locations-head .pickup-region {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .pickup-location {
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      border-bottom: none;
+      padding: 14px;
+    }
+    .pickup-location-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+    .pickup-location-address {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0 0 6px;
+    }
+    .pickup-location-ready {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .pickup-more {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .checkout-pay-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 16px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.18s;
+    }
+    .checkout-pay-btn:hover { background: var(--brand-hover); transform: translateY(-1px); }
+
+    .checkout-footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .checkout-footer-links a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: underline;
+    }
+
+    .checkout-summary-items {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .checkout-summary-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .checkout-summary-img {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .checkout-summary-img img { width: 100%; height: 100%; object-fit: contain; }
+    .checkout-summary-img .qty-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--text-light);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkout-summary-info {
+      flex: 1;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .checkout-summary-price {
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .checkout-summary-totals {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    .checkout-total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    .checkout-total-row--grand {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      padding-top: 14px;
+    }
+    .checkout-gst-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 10px 0 0;
+    }
+    .checkout-empty {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .checkout-grid { grid-template-columns: 1fr; border-radius: var(--radius-md); }
+      .checkout-summary { border-left: none; border-bottom: 1px solid var(--border); order: -1; }
+      .checkout-form, .checkout-summary { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader" style="border-bottom: 1px solid var(--brand);">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="logo.svg" class="logo" alt="Tenon Hardware">
+      </a>
+      <div></div>
+      <div class="header-actions"></div>
+    </div>
+  </header>
+
+  <main class="checkout-page">
+    <div class="container">
+      <div class="checkout-grid">
+
+        <div class="checkout-form">
+
+          <section class="checkout-section">
+            <div class="checkout-section-head">
+              <h2>Contact</h2>
+              <a href="login.html" class="checkout-link">Sign in</a>
+            </div>
+            <input type="text" class="checkout-input" placeholder="Email or mobile phone number" required>
+            <label class="checkout-checkbox">
+              <input type="checkbox" checked>
+              Email me with news and offers
+            </label>
+          </section>
+
+          <section class="checkout-section">
+            <h2>Delivery</h2>
+            <div class="delivery-tabs">
+              <button type="button" class="delivery-tab delivery-tab--active" onclick="setDeliveryTab(this, 'ship')">Ship</button>
+              <button type="button" class="delivery-tab" onclick="setDeliveryTab(this, 'pickup')">Pickup</button>
+            </div>
+
+            <div id="shipFields">
+              <select class="checkout-select">
+                <option>Maldives</option>
+              </select>
+              <div class="checkout-row">
+                <input type="text" class="checkout-input" placeholder="First name" required>
+                <input type="text" class="checkout-input" placeholder="Last name" required>
+              </div>
+              <input type="text" class="checkout-input" placeholder="Address" required>
+              <input type="text" class="checkout-input" placeholder="Apartment, suite, etc. (optional)">
+              <div class="checkout-row">
+                <input type="text" class="checkout-input" placeholder="City / Island" required>
+                <input type="text" class="checkout-input" placeholder="Atoll (optional)">
+              </div>
+              <input type="tel" class="checkout-input" placeholder="Phone" required>
+              <label class="checkout-checkbox">
+                <input type="checkbox">
+                Save this information for next time
+              </label>
+            </div>
+
+            <div id="pickupFields" style="display:none">
+              <div class="pickup-locations-head">
+                <span>There is 1 location with your item</span>
+                <span class="pickup-region">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                  Maldives
+                </span>
+              </div>
+              <div class="pickup-location">
+                <div class="pickup-location-head">
+                  <span>Tenon Hardware Showroom</span>
+                  <span>FREE</span>
+                </div>
+                <p class="pickup-location-address">Boduthakurufaanu Magu, Malé 20026, Maldives</p>
+                <div class="pickup-location-ready">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Usually ready in 24 hours
+                </div>
+              </div>
+              <div class="pickup-more">
+                Pickup details will be confirmed by our team
+              </div>
+            </div>
+          </section>
+
+          <section class="checkout-section" id="shippingMethodSection">
+            <h2>Shipping method</h2>
+            <div class="payment-option">
+              <span>Standard delivery</span>
+              <span>FREE</span>
+            </div>
+          </section>
+
+          <section class="checkout-section">
+            <h2>Payment</h2>
+            <p class="checkout-note">All transactions are secure and encrypted.</p>
+            <div class="payment-option">
+              <span>BML Payment Gateway</span>
+              <span class="payment-cards">
+                <svg width="32" height="20" viewBox="0 0 48 32" rx="4"><rect width="48" height="32" rx="4" fill="#1A1F71"/><text x="24" y="21" font-family="Arial" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">VISA</text></svg>
+                <svg width="32" height="20" viewBox="0 0 48 32"><rect width="48" height="32" rx="4" fill="#fff" stroke="var(--border)"/><circle cx="20" cy="16" r="9" fill="#EB001B"/><circle cx="28" cy="16" r="9" fill="#F79E1B" opacity="0.85"/></svg>
+              </span>
+            </div>
+            <p class="payment-info">You'll be redirected to BML Payment Gateway to complete your purchase.</p>
+          </section>
+
+          <section class="checkout-section">
+            <h2>Billing address</h2>
+            <div id="billingShip">
+              <label class="billing-option billing-option--active">
+                <input type="radio" name="billing" checked>
+                Same as shipping address
+              </label>
+              <label class="billing-option">
+                <input type="radio" name="billing">
+                Use a different billing address
+              </label>
+            </div>
+            <div id="billingPickup" style="display:none">
+              <select class="checkout-select">
+                <option>Maldives</option>
+              </select>
+              <div class="checkout-row">
+                <input type="text" class="checkout-input" placeholder="First name" required>
+                <input type="text" class="checkout-input" placeholder="Last name" required>
+              </div>
+              <input type="text" class="checkout-input" placeholder="Company (optional)">
+              <input type="text" class="checkout-input" placeholder="Address" required>
+              <input type="text" class="checkout-input" placeholder="Apartment, suite, etc. (optional)">
+              <div class="checkout-row">
+                <input type="text" class="checkout-input" placeholder="City" required>
+                <input type="text" class="checkout-input" placeholder="Postal code (optional)">
+              </div>
+              <input type="tel" class="checkout-input" placeholder="Phone (optional)">
+            </div>
+          </section>
+
+          <button class="checkout-pay-btn" onclick="placeOrder(event)">Pay now</button>
+
+          <div class="checkout-footer-links">
+            <a href="#">Refund policy</a>
+            <a href="#">Privacy policy</a>
+            <a href="#">Terms of service</a>
+          </div>
+        </div>
+
+        <aside class="checkout-summary">
+          <div class="checkout-summary-items" id="checkoutItems"></div>
+          <div class="checkout-summary-totals">
+            <div class="checkout-total-row">
+              <span>Subtotal</span>
+              <span id="checkoutSubtotal">MVR 0</span>
+            </div>
+            <div class="checkout-total-row">
+              <span>Shipping</span>
+              <span>FREE</span>
+            </div>
+            <div class="checkout-total-row checkout-total-row--grand">
+              <span>Total</span>
+              <span id="checkoutTotal">MVR 0</span>
+            </div>
+            <p class="checkout-gst-note">Price includes GST.</p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function setDeliveryTab(btn, mode) {
+      document.querySelectorAll('.delivery-tab').forEach(t => t.classList.remove('delivery-tab--active'));
+      btn.classList.add('delivery-tab--active');
+
+      const isPickup = mode === 'pickup';
+      document.getElementById('shipFields').style.display = isPickup ? 'none' : '';
+      document.getElementById('pickupFields').style.display = isPickup ? '' : 'none';
+      document.getElementById('shippingMethodSection').style.display = isPickup ? 'none' : '';
+      document.getElementById('billingShip').style.display = isPickup ? 'none' : '';
+      document.getElementById('billingPickup').style.display = isPickup ? '' : 'none';
+    }
+
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem('tenon_cart');
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderCheckoutSummary() {
+      const cartItems = loadCart();
+      const itemsEl = document.getElementById('checkoutItems');
+      const subtotalEl = document.getElementById('checkoutSubtotal');
+      const totalEl = document.getElementById('checkoutTotal');
+
+      if (cartItems.length === 0) {
+        itemsEl.innerHTML = '<div class="checkout-empty">Your cart is empty</div>';
+        subtotalEl.textContent = 'MVR 0';
+        totalEl.textContent = 'MVR 0';
+        return;
+      }
+
+      itemsEl.innerHTML = cartItems.map(item => `
+        <div class="checkout-summary-item">
+          <div class="checkout-summary-img">
+            ${item.image ? `<img src="${item.image}" alt="">` : ''}
+            <span class="qty-badge">${item.qty}</span>
+          </div>
+          <div class="checkout-summary-info">${item.name}</div>
+          <div class="checkout-summary-price">MVR ${(item.price * item.qty).toLocaleString()}</div>
+        </div>
+      `).join('');
+
+      const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+      subtotalEl.textContent = 'MVR ' + subtotal.toLocaleString();
+      totalEl.textContent = 'MVR ' + subtotal.toLocaleString();
+    }
+
+    function placeOrder(e) {
+      e.preventDefault();
+      const cartItems = loadCart();
+      if (cartItems.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+
+      const requiredInputs = document.querySelectorAll('.checkout-form input[required]');
+      for (const input of requiredInputs) {
+        if (input.offsetParent !== null && !input.value.trim()) {
+          input.focus();
+          return;
+        }
+      }
+
+      alert('Redirecting to BML Payment Gateway…');
+    }
+
+    renderCheckoutSummary();
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('siteHeader').classList.toggle('site-header--scrolled', window.scrollY > 10);
+    });
+  </script>
+</body>
+</html>

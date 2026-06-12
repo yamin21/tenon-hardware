@@ -104,10 +104,10 @@ function toggleCart() {
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-function addToCart(name, price) {
+function addToCart(name, price, image) {
   const existing = cartItems.find(i => i.name === name);
   if (existing) existing.qty++;
-  else cartItems.push({ name, price, qty: 1 });
+  else cartItems.push({ name, price, image, qty: 1 });
   saveCart();
   renderCart();
   if (!document.getElementById('cartSidebar').classList.contains('cart-sidebar--open')) toggleCart();
@@ -135,7 +135,7 @@ function setSearch(el) {
 
 // ── Quick view modal ────────────────────────────────────────
 function openQuickView(title, brand, price, oldPrice, imgUrl) {
-  modalProduct = { title, brand, price, oldPrice };
+  modalProduct = { title, brand, price, oldPrice, image: imgUrl };
   modalQty = 1;
   document.getElementById('modalBrand').textContent = brand;
   document.getElementById('modalTitle').textContent = title;
@@ -157,6 +157,6 @@ function closeQuickView() {
 }
 
 function addToCartFromModal() {
-  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.title, modalProduct.price);
+  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.title, modalProduct.price, modalProduct.image);
   closeQuickView();
 }

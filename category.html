@@ -205,7 +205,7 @@
       <div class="cart-empty-state">
         <div class="cart-empty-icon">🛒</div>
         <p>Your cart is empty</p>
-        <a href="index.html" class="btn-primary" onclick="toggleCart()">Continue Shopping</a>
+        <a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a>
       </div>
     </div>
     <div class="cart-sidebar-footer" id="cartFooter" style="display:none">
@@ -213,9 +213,8 @@
         <span>Subtotal</span>
         <strong id="cartTotal">MVR 0</strong>
       </div>
-      <p class="cart-delivery-note">🚚 Free delivery on this order</p>
-      <a href="#" class="btn-primary btn-full">Proceed to Checkout</a>
-      <a href="index.html" class="btn-ghost btn-full" style="margin-top:10px" onclick="toggleCart()">Continue Shopping</a>
+      <a href="checkout.html" class="btn-primary btn-full">Proceed to Checkout</a>
+      <a href="#" class="btn-ghost btn-full" style="margin-top:10px" onclick="toggleCart()">Continue Shopping</a>
     </div>
   </aside>
 
@@ -494,7 +493,7 @@
               ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(brand + ' ' + p.name)}', ${p.price ?? 0})" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(brand + ' ' + p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -532,12 +531,12 @@
       const body = document.getElementById('cartBody');
       const footer = document.getElementById('cartFooter');
       if (cartItems.length === 0) {
-        body.innerHTML = `<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="index.html" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>`;
+        body.innerHTML = `<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>`;
         footer.style.display = 'none';
       } else {
         body.innerHTML = cartItems.map(item => `
           <div class="cart-item">
-            <div class="cart-item-img"></div>
+            <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <p class="cart-item-name">${item.name}</p>
               <p class="cart-item-price">MVR ${item.price.toLocaleString()} × ${item.qty}</p>

@@ -236,12 +236,12 @@
       <div class="cart-empty-state">
         <div class="cart-empty-icon">🛒</div>
         <p>Your cart is empty</p>
+        <a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a>
       </div>
     </div>
     <div class="cart-sidebar-footer" id="cartFooter" style="display:none">
       <div class="cart-total-row"><span>Subtotal</span><strong id="cartTotal">MVR 0</strong></div>
-      <p class="cart-delivery-note">🚚 Free delivery on this order</p>
-      <a href="#" class="btn-primary btn-full">Proceed to Checkout</a>
+      <a href="checkout.html" class="btn-primary btn-full">Proceed to Checkout</a>
       <a href="#" class="btn-ghost btn-full" style="margin-top:10px" onclick="toggleCart()">Continue Shopping</a>
     </div>
   </aside>
@@ -271,7 +271,7 @@
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Out of Stock' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(p.name)}', ${p.price ?? 0})" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
     }
 
@@ -381,9 +381,11 @@
     function addToCartPage() {
       const name  = currentProduct ? currentProduct.name : 'Product';
       const price = currentProduct ? currentProduct.price : 0;
+      const rawImg = currentProduct && currentProduct.images && currentProduct.images[0] ? currentProduct.images[0] : '';
+      const image = shopifyImg(rawImg, 150);
       const existing = cartItems.find(i => i.name === name);
       if (existing) existing.qty += qty;
-      else cartItems.push({ name, price, qty });
+      else cartItems.push({ name, price, image, qty });
       saveCart();
       renderCart();
       toggleCart();
@@ -399,11 +401,12 @@
       const body   = document.getElementById('cartBody');
       const footer = document.getElementById('cartFooter');
       if (cartItems.length === 0) {
-        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p></div>';
+        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>';
         footer.style.display = 'none';
       } else {
         body.innerHTML = cartItems.map(i => `
           <div class="cart-item">
+            <div class="cart-item-img">${i.image ? `<img src="${i.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <span class="cart-item-name">${i.name}</span>
               <span class="cart-item-qty">Qty: ${i.qty}</span>
