@@ -18,13 +18,30 @@ async function getSubcategories(categorySlug) {
   return apiFetch('/categories/' + categorySlug + '/subcategories');
 }
 
+// ── Customer location (multi-warehouse stock routing) ────────
+const LOCATION_KEY = 'tenon_location';
+
+function getLocation() {
+  try { return localStorage.getItem(LOCATION_KEY); } catch { return null; }
+}
+
+function setLocation(loc) {
+  try { localStorage.setItem(LOCATION_KEY, loc); } catch {}
+}
+
+function withLocation(path) {
+  const loc = getLocation();
+  if (!loc) return path;
+  return path + (path.includes('?') ? '&' : '?') + 'location=' + loc;
+}
+
 async function getProducts(params = {}) {
   const qs = new URLSearchParams(params).toString();
-  return apiFetch('/products' + (qs ? '?' + qs : ''));
+  return apiFetch(withLocation('/products' + (qs ? '?' + qs : '')));
 }
 
 async function getProduct(id) {
-  return apiFetch('/products/' + id);
+  return apiFetch(withLocation('/products/' + id));
 }
 
 async function createOrder(order) {

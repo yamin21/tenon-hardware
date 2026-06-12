@@ -46,6 +46,10 @@
         </form>
       </div>
       <div class="header-actions">
+        <button class="location-pill" id="locationPill" onclick="openLocationModal(false)" title="Change location">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Set location</span>
+        </button>
         <a href="login.html" class="header-action" title="My Account">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
         </a>
@@ -296,7 +300,7 @@
       if (urlQ) { searchQuery = urlQ; const si = document.getElementById('searchInput'); if(si) si.value = urlQ; }
 
       const [products, tree] = await Promise.all([
-        apiFetch('/products?category=hardware'),
+        apiFetch(withLocation('/products?category=hardware')),
         getCategoryTree('hardware')
       ]);
       const subcats = tree.map(({ children, ...sub }) => sub);
@@ -504,6 +508,7 @@
       applyFilters();
     }
 
+    initLocationPicker();
     initCategory();
 
     // ── State ─────────────────────────────────────────────────

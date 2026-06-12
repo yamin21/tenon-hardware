@@ -31,6 +31,10 @@
         </form>
       </div>
       <div class="header-actions">
+        <button class="location-pill" id="locationPill" onclick="openLocationModal(false)" title="Change location">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Set location</span>
+        </button>
         <a href="login.html" class="header-action" title="My Account">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
         </a>
@@ -279,7 +283,7 @@
       const id = new URLSearchParams(window.location.search).get('id');
       if (!id) return;
       try {
-        const res = await fetch(API_BASE + '/products/' + id, { headers: { 'x-api-key': API_KEY } });
+        const res = await fetch(API_BASE + withLocation('/products/' + id), { headers: { 'x-api-key': API_KEY } });
         if (!res.ok) throw new Error();
         const p = (await res.json()).data;
         currentProduct = p;
@@ -315,7 +319,7 @@
         document.getElementById('pageMain').style.display = '';
 
         // Related products (same subcategory)
-        fetch(API_BASE + '/products?category=hardware', { headers: { 'x-api-key': API_KEY } })
+        fetch(API_BASE + withLocation('/products?category=hardware'), { headers: { 'x-api-key': API_KEY } })
           .then(r => r.json())
           .then(data => {
             const related = (data.data || [])
@@ -365,6 +369,7 @@
       document.getElementById('galleryImg').src = src;
     }
 
+    initLocationPicker();
     loadProduct();
 
     // ── Quantity ───────────────────────────────────────────────

@@ -19,23 +19,22 @@
     .checkout-grid {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
-      gap: 0;
+      gap: 24px;
       align-items: start;
       max-width: 1180px;
       margin: 0 auto;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
     }
     .checkout-form {
       padding: 40px 48px;
       background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
     }
     .checkout-summary {
       padding: 40px 40px;
       background: var(--bg-soft);
-      border-left: 1px solid var(--border);
-      min-height: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
     }
     .checkout-section { margin-bottom: 32px; }
     .checkout-section h2 {
@@ -90,10 +89,7 @@
     .delivery-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
+      gap: 12px;
       margin-bottom: 12px;
     }
     .delivery-tab {
@@ -106,11 +102,11 @@
       font-weight: 600;
       color: var(--text-muted);
       background: var(--bg-soft);
-      border-right: 1px solid var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
       cursor: pointer;
     }
-    .delivery-tab:last-child { border-right: none; }
-    .delivery-tab--active { background: #fff; color: var(--text); }
+    .delivery-tab--active { background: #C9A37A; color: #fff; border-color: #C9A37A; }
 
     .payment-option {
       display: flex;
@@ -310,14 +306,43 @@
       color: var(--text-muted);
     }
 
+    .checkout-summary-toggle {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .checkout-summary-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-chevron { transition: transform 0.18s; }
+    .checkout-summary-toggle[aria-expanded="true"] .summary-chevron { transform: rotate(180deg); }
+
     @media (max-width: 900px) {
-      .checkout-grid { grid-template-columns: 1fr; border-radius: var(--radius-md); }
-      .checkout-summary { border-left: none; border-bottom: 1px solid var(--border); order: -1; }
-      .checkout-form, .checkout-summary { padding: 28px 24px; }
+      .checkout-grid { grid-template-columns: 1fr; }
+      .checkout-summary { order: -1; }
+      .checkout-form, .checkout-summary { padding: 28px 24px; border-radius: var(--radius-md); }
+      .checkout-summary-toggle { display: flex; }
+      .checkout-summary-details { display: none; margin-top: 20px; }
+      .checkout-summary-details--open { display: block; }
     }
   </style>
 </head>
 <body>
+  <script src="js/api.js"></script>
+  <script>
+    if (!getLocation()) window.location.replace('index.html');
+  </script>
 
   <header class="site-header" id="siteHeader" style="border-bottom: 1px solid var(--brand);">
     <div class="container header-inner">
@@ -462,21 +487,33 @@
         </div>
 
         <aside class="checkout-summary">
-          <div class="checkout-summary-items" id="checkoutItems"></div>
-          <div class="checkout-summary-totals">
-            <div class="checkout-total-row">
-              <span>Subtotal</span>
-              <span id="checkoutSubtotal">MVR 0</span>
+          <button type="button" class="checkout-summary-toggle" id="summaryToggle" onclick="toggleSummary()" aria-expanded="false">
+            <span class="checkout-summary-toggle-label">
+              Order summary
+              <svg class="summary-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+            <span id="summaryToggleTotal">MVR 0</span>
+          </button>
+          <div class="checkout-summary-details" id="summaryDetails">
+            <div class="checkout-summary-items" id="checkoutItems"></div>
+            <div class="checkout-summary-totals">
+              <div class="checkout-total-row">
+                <span>Subtotal</span>
+                <span id="checkoutSubtotal">MVR 0</span>
+              </div>
+              <div class="checkout-total-row">
+                <span>GST (8%)</span>
+                <span id="checkoutGst">MVR 0</span>
+              </div>
+              <div class="checkout-total-row">
+                <span>Shipping</span>
+                <span>FREE</span>
+              </div>
+              <div class="checkout-total-row checkout-total-row--grand">
+                <span>Total</span>
+                <span id="checkoutTotal">MVR 0</span>
+              </div>
             </div>
-            <div class="checkout-total-row">
-              <span>Shipping</span>
-              <span>FREE</span>
-            </div>
-            <div class="checkout-total-row checkout-total-row--grand">
-              <span>Total</span>
-              <span id="checkoutTotal">MVR 0</span>
-            </div>
-            <p class="checkout-gst-note">Price includes GST.</p>
           </div>
         </aside>
 
@@ -506,16 +543,30 @@
       }
     }
 
+    const GST_RATE = 0.08;
+
+    function toggleSummary() {
+      const toggle = document.getElementById('summaryToggle');
+      const details = document.getElementById('summaryDetails');
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      details.classList.toggle('checkout-summary-details--open', !expanded);
+    }
+
     function renderCheckoutSummary() {
       const cartItems = loadCart();
       const itemsEl = document.getElementById('checkoutItems');
       const subtotalEl = document.getElementById('checkoutSubtotal');
+      const gstEl = document.getElementById('checkoutGst');
       const totalEl = document.getElementById('checkoutTotal');
+      const toggleTotalEl = document.getElementById('summaryToggleTotal');
 
       if (cartItems.length === 0) {
         itemsEl.innerHTML = '<div class="checkout-empty">Your cart is empty</div>';
         subtotalEl.textContent = 'MVR 0';
+        gstEl.textContent = 'MVR 0';
         totalEl.textContent = 'MVR 0';
+        toggleTotalEl.textContent = 'MVR 0';
         return;
       }
 
@@ -530,9 +581,15 @@
         </div>
       `).join('');
 
-      const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-      subtotalEl.textContent = 'MVR ' + subtotal.toLocaleString();
-      totalEl.textContent = 'MVR ' + subtotal.toLocaleString();
+      // Item prices already include GST — back out the GST portion for display.
+      const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const subtotal = total / (1 + GST_RATE);
+      const gst = total - subtotal;
+
+      subtotalEl.textContent = 'MVR ' + subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      gstEl.textContent = 'MVR ' + gst.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      totalEl.textContent = 'MVR ' + total.toLocaleString();
+      toggleTotalEl.textContent = 'MVR ' + total.toLocaleString();
     }
 
     function placeOrder(e) {

@@ -17,6 +17,69 @@ function saveCart() {
   try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems)); } catch {}
 }
 
+// ── Location picker (Malé / Thinadhoo stock routing) ──────────
+const LOCATIONS = {
+  male:      { label: 'Malé',      region: 'Greater Malé Region' },
+  thinadhoo: { label: 'Thinadhoo', region: 'Gaafu Dhaalu Atoll' }
+};
+
+function initLocationPicker() {
+  if (!document.getElementById('locationModal')) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="modal-overlay" id="locationOverlay" onclick="closeLocationModal()"></div>
+      <div class="location-modal" id="locationModal">
+        <button class="modal-close" id="locationClose" onclick="closeLocationModal()" aria-label="Close" style="display:none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <h2>Choose your location</h2>
+        <p>We'll show accurate stock and delivery options for your area.</p>
+        <div class="location-options">
+          <button class="location-option" onclick="chooseLocation('male')">
+            <strong>Malé</strong>
+            <span>Greater Malé Region</span>
+          </button>
+          <button class="location-option" onclick="chooseLocation('thinadhoo')">
+            <strong>Thinadhoo</strong>
+            <span>Gaafu Dhaalu Atoll</span>
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(wrap);
+  }
+  updateLocationPill();
+  if (!getLocation()) openLocationModal(true);
+}
+
+function updateLocationPill() {
+  const pill = document.getElementById('locationPill');
+  if (!pill) return;
+  const loc = getLocation();
+  pill.querySelector('span').textContent = loc ? LOCATIONS[loc].label : 'Set location';
+}
+
+function openLocationModal(forced) {
+  document.getElementById('locationOverlay').classList.add('modal-overlay--visible');
+  document.getElementById('locationModal').classList.add('location-modal--open');
+  document.getElementById('locationClose').style.display = forced ? 'none' : '';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLocationModal() {
+  if (!getLocation()) return;
+  document.getElementById('locationOverlay').classList.remove('modal-overlay--visible');
+  document.getElementById('locationModal').classList.remove('location-modal--open');
+  document.body.style.overflow = '';
+}
+
+function chooseLocation(loc) {
+  const changed = getLocation() !== loc;
+  setLocation(loc);
+  updateLocationPill();
+  if (changed) location.reload();
+  else closeLocationModal();
+}
+
 function showToast(msg) {
   let toast = document.getElementById('toast');
   if (!toast) {
