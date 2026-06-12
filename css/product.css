@@ -214,9 +214,21 @@
 }
 @media (max-width: 900px) {
   .product-layout { grid-template-columns: 1fr; gap: 32px; }
-  .product-gallery { position: static; }
-  .gallery-main { aspect-ratio: 4/3; }
-  
+  .product-gallery { position: relative; top: 0; }
+  .gallery-main { aspect-ratio: 4/3; margin-bottom: 0; }
+  .gallery-thumbs {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    flex-direction: column;
+    overflow: visible;
+  }
+  .gallery-thumb {
+    width: 56px;
+    height: 56px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
 }
 @media (max-width: 560px) {
   .product-section { padding: 28px 0 60px; }
