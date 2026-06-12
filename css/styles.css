@@ -1295,48 +1295,6 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 .modal-wishlist-btn:hover { color: var(--brand); }
 
-/* ── WhatsApp Float ──────────────────────────────────────── */
-.whatsapp-float {
-  display: none;
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 90;
-  width: 52px;
-  height: 52px;
-  background: #25D366;
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 28px rgba(37,211,102,0.35);
-  transition: transform var(--transition), box-shadow var(--transition);
-}
-.whatsapp-float:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(37,211,102,0.45); }
-
-/* ── Scroll to Top ───────────────────────────────────────── */
-.scroll-top-btn {
-  position: fixed;
-  bottom: 28px;
-  right: 88px;
-  z-index: 90;
-  width: 44px;
-  height: 44px;
-  background: var(--brand);
-  color: #fff;
-  border-radius: var(--radius-pill);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-brand);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(8px);
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-.scroll-top-btn--visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-.scroll-top-btn:hover { background: var(--brand-hover); }
 
 /* ── Toast ───────────────────────────────────────────────── */
 .toast {
