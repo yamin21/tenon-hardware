@@ -272,6 +272,7 @@
     const PAGE_SIZE = 12;
     let ALL_PRODUCTS = [];
     let SUBCATS_LIST = [];
+    let SUBCAT_TREE = [];
     let CHILD_CATS = [];
     let activeFilter = 'all';
     let activeChildFilter = 'all';
@@ -293,21 +294,20 @@
       if (urlChild) activeChildFilter = urlChild;
       if (urlQ) { searchQuery = urlQ; const si = document.getElementById('searchInput'); if(si) si.value = urlQ; }
 
-      const [products, subcatsRaw] = await Promise.all([
+      const [products, tree] = await Promise.all([
         apiFetch('/products?category=hardware'),
-        apiFetch('/categories/hardware/subcategories')
+        getCategoryTree('hardware')
       ]);
-      const subcats = subcatsRaw.sort((a, b) => a.name.localeCompare(b.name));
+      const subcats = tree.map(({ children, ...sub }) => sub);
       SUBCATS_LIST = subcats;
+      SUBCAT_TREE = tree;
 
       ALL_PRODUCTS = products;
 
       // Build cat nav chips + mobile nav
       const catNav = document.getElementById('catNavInner');
       const mobileNav = document.getElementById('mobileCatNav');
-      const childrenLists = await Promise.all(subcats.map(sub =>
-        apiFetch('/categories/hardware/subcategories/' + sub.slug + '/children').catch(() => [])
-      ));
+      const childrenLists = tree.map(t => t.children);
       subcats.forEach((sub, i) => {
         const a = document.createElement('a');
         a.href = 'category.html?sub=' + sub.slug;
@@ -396,9 +396,8 @@
         pageMain.classList.remove('has-child-dropdown');
         return;
       }
-      try {
-        CHILD_CATS = await apiFetch('/categories/hardware/subcategories/' + subSlug + '/children') || [];
-      } catch (e) { CHILD_CATS = []; }
+      const match = SUBCAT_TREE.find(s => s.slug === subSlug);
+      CHILD_CATS = match ? (match.children || []) : [];
       if (!CHILD_CATS.length) {
         dropdown.style.display = 'none';
         inner.innerHTML = '';
@@ -478,7 +477,7 @@
       grid.innerHTML = shown.map(p => {
         const esc   = s => (s || '').replace(/'/g, "\\'");
         const rawImg = p.images && p.images[0] ? p.images[0] : '';
-        const img  = rawImg.startsWith('http') ? rawImg : (rawImg ? API_BASE.replace('/api','') + '/' + rawImg : '');
+        const img  = shopifyImg(rawImg.startsWith('http') ? rawImg : (rawImg ? API_BASE.replace('/api','') + '/' + rawImg : ''), 400);
         const brand = p.brand || '';
         return `
         <div class="product-card">

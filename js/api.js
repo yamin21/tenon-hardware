@@ -36,3 +36,42 @@ async function createOrder(order) {
   if (!res.ok) throw new Error('Order error: ' + res.status);
   return (await res.json()).data;
 }
+
+// ── Image sizing ──────────────────────────────────────────────
+// Shopify CDN resizes images on the fly via a `width` query param.
+function shopifyImg(url, width) {
+  if (!url || !url.includes('cdn.shopify.com')) return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.set('width', width);
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
+// ── Category tree caching ────────────────────────────────────
+// Subcategories + their children rarely change, so cache the whole
+// tree in localStorage to avoid an N+1 fetch waterfall on every load.
+const CATEGORY_TREE_TTL = 60 * 60 * 1000; // 1 hour
+
+async function getCategoryTree(categorySlug) {
+  const cacheKey = 'cat-tree-' + categorySlug;
+  try {
+    const raw = localStorage.getItem(cacheKey);
+    if (raw) {
+      const { ts, data } = JSON.parse(raw);
+      if (Date.now() - ts < CATEGORY_TREE_TTL) return data;
+    }
+  } catch {}
+
+  const subs = (await apiFetch('/categories/' + categorySlug + '/subcategories'))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const childrenLists = await Promise.all(subs.map(sub =>
+    apiFetch('/categories/' + categorySlug + '/subcategories/' + sub.slug + '/children').catch(() => [])
+  ));
+  const tree = subs.map((sub, i) => ({ ...sub, children: childrenLists[i] }));
+
+  try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: tree })); } catch {}
+  return tree;
+}

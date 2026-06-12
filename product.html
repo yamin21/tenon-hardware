@@ -256,7 +256,7 @@
 
     function buildProductCard(p, extraClass) {
       const raw = p.images && p.images[0] ? p.images[0] : '';
-      const img = raw.startsWith('http') ? raw : (raw ? API_BASE.replace('/api','') + '/' + raw : '');
+      const img = shopifyImg(raw.startsWith('http') ? raw : (raw ? API_BASE.replace('/api','') + '/' + raw : ''), 400);
       const esc = s => (s||'').replace(/"/g,'&quot;').replace(/'/g,"\\'");
       const cartSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>`;
       return `
@@ -340,14 +340,14 @@
         if (images.length > 0) {
           const mainImg = document.getElementById('galleryImg');
           document.getElementById('galleryPlaceholder').style.display = 'none';
-          mainImg.src = images[0];
+          mainImg.src = shopifyImg(images[0], 800);
           mainImg.alt = p.name;
           mainImg.style.display = '';
 
           const thumbsEl = document.getElementById('galleryThumbs');
           thumbsEl.innerHTML = images.map((src, i) => `
-            <div class="gallery-thumb ${i === 0 ? 'gallery-thumb--active' : ''}" onclick="selectThumbImg(this, '${src}')">
-              <img src="${src}" alt="" style="width:100%;height:100%;object-fit:contain;padding:6px;">
+            <div class="gallery-thumb ${i === 0 ? 'gallery-thumb--active' : ''}" onclick="selectThumbImg(this, '${shopifyImg(src, 800)}')">
+              <img src="${shopifyImg(src, 150)}" alt="" style="width:100%;height:100%;object-fit:contain;padding:6px;">
             </div>`).join('');
         }
       } catch(e) {
@@ -461,16 +461,13 @@
     // ── Cat Nav: load hardware subcategories ──────────────────
     (async () => {
       try {
-        const res  = await fetch(API_BASE + '/categories/hardware/subcategories', { headers: { 'x-api-key': API_KEY } });
-        const subs = (await res.json()).data.sort((a, b) => a.name.localeCompare(b.name));
+        const tree = await getCategoryTree('hardware');
+        const subs = tree.map(({ children, ...sub }) => sub);
         const nav  = document.getElementById('catNavInner');
         const mobileNav = document.getElementById('mobileCatNav');
         const params = new URLSearchParams(window.location.search);
         const activeSub = params.get('sub');
-        const childrenLists = await Promise.all(subs.map(sub =>
-          fetch(API_BASE + '/categories/hardware/subcategories/' + sub.slug + '/children', { headers: { 'x-api-key': API_KEY } })
-            .then(r => r.json()).then(j => j.data || []).catch(() => [])
-        ));
+        const childrenLists = tree.map(t => t.children);
         subs.forEach((sub, i) => {
           const a = document.createElement('a');
           a.href = 'category.html?sub=' + sub.slug;
