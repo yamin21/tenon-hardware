@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node serve.mjs"
+    "start": "node scripts/serve.mjs"
   },
   "devDependencies": {
     "puppeteer": "^25.1.0"

@@ -18,7 +18,7 @@ python3 -m http.server 3000
 Node (from project root):
 
 ```bash
-node serve.mjs
+node scripts/serve.mjs
 # then open http://localhost:3000 in your browser
 ```
 
@@ -30,7 +30,7 @@ npm start
 
 Notes
 
-- The logo and palette images are referenced from the project root (Snip20260603_35.png and Snip20260603_37.png). Keep them in the same folder as `index.html` or update the paths in `index.html` and `css/styles.css`.
+- Shared logo/favicon SVGs live in `assets/`. Dev-only helper scripts (local server, Puppeteer screenshots) live in `scripts/`.
 - Colors are defined in `css/styles.css` using CSS variables. Adjust `--brand` for the primary color.
 
 Next steps
