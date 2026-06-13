@@ -268,7 +268,7 @@
           <div class="product-card-body">
             ${p.brand ? `<span class="product-brand">${p.brand}</span>` : ''}
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
-            <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Out of Stock' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
+            <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
           </div>
           ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
@@ -285,7 +285,7 @@
 
         document.title = p.name + ' — Tenon Hardware';
         document.getElementById('productTitle').textContent = p.name;
-        document.getElementById('productPrice').textContent = p.stock === 0 ? 'Out of Stock' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price');
+        document.getElementById('productPrice').textContent = p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price');
         if (p.stock === 0) document.getElementById('productPriceNote').style.display = 'none';
         if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
 
