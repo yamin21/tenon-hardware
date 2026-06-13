@@ -221,9 +221,67 @@ function hideSearchSuggestions() {
   setTimeout(() => document.getElementById('searchSuggestions').classList.remove('search-suggestions--visible'), 150);
 }
 
+let _searchProductsCache = null;
+let _searchDebounceTimer = null;
+
+async function getSearchableProducts() {
+  if (typeof ALL_PRODUCTS !== 'undefined' && Array.isArray(ALL_PRODUCTS) && ALL_PRODUCTS.length) {
+    return ALL_PRODUCTS;
+  }
+  if (!_searchProductsCache) {
+    _searchProductsCache = await getProducts({ category: 'hardware' });
+  }
+  return _searchProductsCache;
+}
+
 function handleSearchInput(val) {
-  if (val.length > 0) showSearchSuggestions();
-  else hideSearchSuggestions();
+  const query = val.trim();
+  const defaults = document.querySelectorAll('#suggestionDefault, #suggestionDefault2');
+  const results = document.getElementById('suggestionResults');
+
+  if (!query) {
+    hideSearchSuggestions();
+    defaults.forEach(el => el.style.display = '');
+    if (results) results.innerHTML = '';
+    return;
+  }
+
+  showSearchSuggestions();
+  defaults.forEach(el => el.style.display = 'none');
+
+  clearTimeout(_searchDebounceTimer);
+  _searchDebounceTimer = setTimeout(() => renderSearchResults(query), 150);
+}
+
+async function renderSearchResults(query) {
+  const results = document.getElementById('suggestionResults');
+  if (!results) return;
+  const q = query.toLowerCase();
+  const products = await getSearchableProducts();
+  const matches = products.filter(p =>
+    (p.name || '').toLowerCase().includes(q) ||
+    (p.brand || '').toLowerCase().includes(q) ||
+    (p.sku || '').toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  if (!matches.length) {
+    results.innerHTML = '<div class="suggestion-empty">No products found</div>';
+    return;
+  }
+
+  results.innerHTML = matches.map(p => {
+    const rawImg = p.images && p.images[0] ? p.images[0] : '';
+    const img = shopifyImg(rawImg.startsWith('http') ? rawImg : (rawImg ? API_BASE.replace('/api', '') + '/' + rawImg : ''), 80);
+    const price = p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price');
+    return `
+      <a href="product.html?id=${p.id}" class="suggestion-result-item">
+        <span class="suggestion-result-img">${img ? `<img src="${img}" alt="" loading="lazy">` : ''}</span>
+        <span class="suggestion-result-info">
+          <span class="suggestion-result-name">${p.name}</span>
+          <span class="suggestion-result-price">${price}</span>
+        </span>
+      </a>`;
+  }).join('');
 }
 
 function setSearch(el) {

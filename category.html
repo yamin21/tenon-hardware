@@ -29,19 +29,20 @@
             <button type="submit" class="search-btn">Search</button>
           </div>
           <div class="search-suggestions" id="searchSuggestions">
-            <div class="suggestion-group">
+            <div class="suggestion-group" id="suggestionDefault">
               <span class="suggestion-label">Popular searches</span>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Power drills</a>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Angle grinders</a>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Circular saws</a>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Random orbit sanders</a>
             </div>
-            <div class="suggestion-group">
+            <div class="suggestion-group" id="suggestionDefault2">
               <span class="suggestion-label">Brands</span>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">DeWalt</a>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Bosch</a>
               <a href="#" class="suggestion-item" onclick="setSearch(this)">Metabo</a>
             </div>
+            <div class="suggestion-results" id="suggestionResults"></div>
           </div>
         </form>
       </div>
