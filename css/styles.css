@@ -977,8 +977,8 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 
 /* ── Footer ──────────────────────────────────────────────── */
 .site-footer {
-  background: #e9e9e9;
-  color: var(--text-muted);
+  background: #1c1c1f;
+  color: #9c9ca3;
 }
 .footer-grid {
   display: grid;
@@ -988,45 +988,42 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 .footer-brand-col {}
 .footer-logo { height: 40px; margin-bottom: 16px; }
-.footer-brand-col p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; margin: 0 0 20px; }
-.social-links { display: flex; gap: 10px; }
+.footer-brand-col p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; margin: 0 0 20px; color: #9c9ca3; }
+.social-links { display: flex; gap: 14px; }
 .social-link {
-  width: 36px;
-  height: 36px;
-  background: var(--text);
-  border: 1px solid var(--text);
-  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  color: #828288;
+  transition: color var(--transition);
 }
-.social-link:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+.social-link:hover { color: #fff; }
 
 .footer-col {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .footer-col strong {
   display: block;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
   margin-bottom: 4px;
 }
 .footer-col a {
-  font-size: 0.88rem;
-  color: var(--text-muted);
+  font-size: 0.92rem;
+  color: #9c9ca3;
   transition: color var(--transition);
 }
-.footer-col a:hover { color: var(--text); }
+.footer-col a:hover { color: #fff; }
 .footer-contact p,
-.footer-contact address p { font-size: 0.88rem; color: var(--text-muted); margin: 0; }
+.footer-contact address p { font-size: 0.92rem; color: #9c9ca3; margin: 0; }
 
 .footer-bottom {
-  border-top: 1px solid var(--border-strong);
+  border-top: 1px solid #33333a;
 }
 .footer-bottom-inner {
   display: flex;
@@ -1036,10 +1033,10 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   padding: 20px 0;
   flex-wrap: wrap;
 }
-.footer-bottom-inner p { font-size: 0.84rem; color: var(--text-muted); margin: 0; }
+.footer-bottom-inner p { font-size: 0.84rem; color: #76767c; margin: 0; }
 .footer-legal { display: flex; gap: 20px; }
-.footer-legal a { font-size: 0.84rem; color: var(--text-muted); transition: color var(--transition); }
-.footer-legal a:hover { color: var(--text); }
+.footer-legal a { font-size: 0.84rem; color: #76767c; transition: color var(--transition); }
+.footer-legal a:hover { color: #fff; }
 
 /* ── Cart Sidebar ────────────────────────────────────────── */
 .cart-overlay {
