@@ -214,6 +214,8 @@ function addToCart(name, price, image) {
 
 // ── Search suggestions ─────────────────────────────────────
 function showSearchSuggestions() {
+  const input = document.getElementById('searchInput');
+  if (!input || !input.value.trim()) return;
   document.getElementById('searchSuggestions').classList.add('search-suggestions--visible');
 }
 
@@ -236,18 +238,15 @@ async function getSearchableProducts() {
 
 function handleSearchInput(val) {
   const query = val.trim();
-  const defaults = document.querySelectorAll('#suggestionDefault, #suggestionDefault2');
   const results = document.getElementById('suggestionResults');
 
   if (!query) {
     hideSearchSuggestions();
-    defaults.forEach(el => el.style.display = '');
     if (results) results.innerHTML = '';
     return;
   }
 
   showSearchSuggestions();
-  defaults.forEach(el => el.style.display = 'none');
 
   clearTimeout(_searchDebounceTimer);
   _searchDebounceTimer = setTimeout(() => renderSearchResults(query), 150);
@@ -282,12 +281,6 @@ async function renderSearchResults(query) {
         </span>
       </a>`;
   }).join('');
-}
-
-function setSearch(el) {
-  document.getElementById('searchInput').value = el.textContent.trim();
-  hideSearchSuggestions();
-  doSearch();
 }
 
 // ── Quick view modal ────────────────────────────────────────

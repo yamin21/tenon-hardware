@@ -237,26 +237,6 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   overflow: hidden;
 }
 .search-suggestions--visible { display: block; }
-.suggestion-group { padding: 14px 18px; }
-.suggestion-group + .suggestion-group { border-top: 1px solid var(--border); }
-.suggestion-label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-.suggestion-item {
-  display: block;
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  color: var(--text);
-  transition: background var(--transition), color var(--transition);
-}
-.suggestion-item:hover { background: var(--brand-light); color: var(--brand); }
 
 .suggestion-results:empty { display: none; }
 .suggestion-results { padding: 8px; max-height: 60vh; overflow-y: auto; }
