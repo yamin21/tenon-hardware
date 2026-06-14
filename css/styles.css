@@ -1381,8 +1381,8 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   .search-wrap { display: none; }
   .header-inner { padding: 0 0; height: var(--header-h); }
   .header-action span:not(.cart-count) { display: none; }
-  .location-pill { padding: 0; width: 40px; justify-content: center; }
-  .location-pill span { display: none; }
+  .location-pill { flex-direction: column; justify-content: center; gap: 1px; width: auto; min-width: 40px; padding: 0 4px; }
+  .location-pill span { display: block; font-size: 0.6rem; font-weight: 600; line-height: 1; white-space: nowrap; }
 .cat-nav-arrow { display: none; }
   
   .sub-nav { display: block; }
