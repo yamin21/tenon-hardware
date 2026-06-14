@@ -988,7 +988,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   padding: 64px 0 48px;
 }
 .footer-brand-col {}
-.footer-logo { height: 40px; margin-bottom: 16px; }
+.footer-logo { height: 40px; margin-bottom: 16px; filter: brightness(0) invert(51%); }
 .footer-brand-col p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; margin: 0 0 20px; color: #9c9ca3; }
 .social-links { display: flex; gap: 14px; }
 .social-link {
