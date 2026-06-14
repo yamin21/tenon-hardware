@@ -372,7 +372,7 @@
       document.getElementById('productVariants').style.display = '';
       const select = document.getElementById('variantSelect');
       select.innerHTML = p.variants.map((v, i) => `
-        <option value="${v.id}"${i === 0 ? ' selected' : ''}>${v.label}${v.stock === 0 ? ' (Out of Stock)' : ''}</option>
+        <option value="${v.id}"${i === 0 ? ' selected' : ''}>${v.label}${v.stock === 0 ? ' (Sold Out)' : ''}</option>
       `).join('');
       selectedVariant = p.variants[0];
     }
