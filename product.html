@@ -142,7 +142,7 @@
 
             <div class="product-variants" id="productVariants" style="display:none">
               <p class="product-qty-label">Size / Option</p>
-              <div class="variant-pills" id="variantPills"></div>
+              <select class="variant-select" id="variantSelect" onchange="selectVariant(this.value)"></select>
             </div>
 
             <p class="product-qty-label">Quantity</p>
@@ -370,19 +370,17 @@
     function renderVariants(p) {
       if (!p.variants || !p.variants.length) return;
       document.getElementById('productVariants').style.display = '';
-      const pills = document.getElementById('variantPills');
-      pills.innerHTML = p.variants.map((v, i) => `
-        <button class="variant-pill${i === 0 ? ' variant-pill--active' : ''}${v.stock === 0 ? ' variant-pill--oos' : ''}" onclick="selectVariant('${v.id}', this)">${v.label}</button>
+      const select = document.getElementById('variantSelect');
+      select.innerHTML = p.variants.map((v, i) => `
+        <option value="${v.id}"${i === 0 ? ' selected' : ''}>${v.label}${v.stock === 0 ? ' (Out of Stock)' : ''}</option>
       `).join('');
       selectedVariant = p.variants[0];
     }
 
-    function selectVariant(variantId, btn) {
+    function selectVariant(variantId) {
       const v = currentProduct.variants.find(x => x.id === variantId);
       if (!v) return;
       selectedVariant = v;
-      document.querySelectorAll('#variantPills .variant-pill').forEach(p => p.classList.remove('variant-pill--active'));
-      btn.classList.add('variant-pill--active');
       qty = 1;
       updatePriceDisplay();
     }

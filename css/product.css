@@ -101,23 +101,21 @@
 
 /* Variants */
 .product-variants { margin-bottom: 22px; }
-.variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.variant-pill {
-  padding: 8px 16px;
+.variant-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 11px 14px;
   border: 1.5px solid var(--border);
-  border-radius: var(--radius-pill);
-  background: #fff;
+  border-radius: var(--radius);
   font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.93rem;
   color: var(--text);
+  background: #fff;
+  outline: none;
   cursor: pointer;
-  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  transition: border-color 0.18s;
 }
-.variant-pill:hover { border-color: var(--brand); }
-.variant-pill--active { border-color: var(--brand); background: var(--brand); color: #fff; }
-.variant-pill--oos { color: var(--text-light); text-decoration: line-through; }
-.variant-pill--oos.variant-pill--active { background: var(--text-light); border-color: var(--text-light); }
+.variant-select:focus { border-color: var(--brand); }
 
 .product-short-desc {
   font-size: 0.9rem;
