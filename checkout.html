@@ -536,7 +536,16 @@
 
     function loadCart() {
       try {
-        const raw = localStorage.getItem('tenon_cart');
+        const loc = getLocation();
+        const key = loc ? 'tenon_cart_' + loc : 'tenon_cart';
+        let raw = localStorage.getItem(key);
+        if (!raw && key !== 'tenon_cart') {
+          raw = localStorage.getItem('tenon_cart');
+          if (raw) {
+            localStorage.setItem(key, raw);
+            localStorage.removeItem('tenon_cart');
+          }
+        }
         return raw ? JSON.parse(raw) : [];
       } catch {
         return [];

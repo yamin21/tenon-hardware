@@ -1,12 +1,26 @@
 // ── Shared UI helpers (header, mobile menu, cart, toast, search, quick view) ──
 // Pages provide: cartItems, renderCart(), and (for quick view) modalProduct/modalQty.
 
-// ── Cart persistence ────────────────────────────────────────
-const CART_STORAGE_KEY = 'tenon_cart';
+// ── Cart persistence (one cart per location, so items in stock at
+// one warehouse can't be carried over and ordered from another) ──
+const CART_STORAGE_KEY_LEGACY = 'tenon_cart';
+
+function cartStorageKey() {
+  const loc = getLocation();
+  return loc ? 'tenon_cart_' + loc : CART_STORAGE_KEY_LEGACY;
+}
 
 function loadCart() {
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const key = cartStorageKey();
+    let raw = localStorage.getItem(key);
+    if (!raw && key !== CART_STORAGE_KEY_LEGACY) {
+      raw = localStorage.getItem(CART_STORAGE_KEY_LEGACY);
+      if (raw) {
+        localStorage.setItem(key, raw);
+        localStorage.removeItem(CART_STORAGE_KEY_LEGACY);
+      }
+    }
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -14,7 +28,7 @@ function loadCart() {
 }
 
 function saveCart() {
-  try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems)); } catch {}
+  try { localStorage.setItem(cartStorageKey(), JSON.stringify(cartItems)); } catch {}
 }
 
 // ── Location picker (Malé / Thinadhoo stock routing) ──────────
