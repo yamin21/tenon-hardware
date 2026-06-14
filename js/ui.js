@@ -37,6 +37,15 @@ const LOCATIONS = {
   thinadhoo: { label: 'Thinadhoo', region: 'Gaafu Dhaalu Atoll' }
 };
 
+const CHECK_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function updateLocationOptions() {
+  const loc = getLocation();
+  document.querySelectorAll('.location-option').forEach(btn => {
+    btn.classList.toggle('location-option--active', btn.dataset.loc === loc);
+  });
+}
+
 function initLocationPicker() {
   if (!document.getElementById('locationModal')) {
     const wrap = document.createElement('div');
@@ -49,19 +58,22 @@ function initLocationPicker() {
         <h2>Choose your location</h2>
         <p>We'll show accurate stock and delivery options for your area.</p>
         <div class="location-options">
-          <button class="location-option" onclick="chooseLocation('male')">
+          <button class="location-option" data-loc="male" onclick="chooseLocation('male')">
             <strong>Malé</strong>
             <span>Greater Malé Region</span>
+            <span class="location-option-check">${CHECK_ICON}</span>
           </button>
-          <button class="location-option" onclick="chooseLocation('thinadhoo')">
+          <button class="location-option" data-loc="thinadhoo" onclick="chooseLocation('thinadhoo')">
             <strong>Thinadhoo</strong>
             <span>Gaafu Dhaalu Atoll</span>
+            <span class="location-option-check">${CHECK_ICON}</span>
           </button>
         </div>
       </div>`;
     document.body.appendChild(wrap);
   }
   updateLocationPill();
+  updateLocationOptions();
   if (!getLocation()) openLocationModal(true);
 }
 
@@ -73,6 +85,7 @@ function updateLocationPill() {
 }
 
 function openLocationModal(forced) {
+  updateLocationOptions();
   document.getElementById('locationOverlay').classList.add('modal-overlay--visible');
   document.getElementById('locationModal').classList.add('location-modal--open');
   document.getElementById('locationClose').style.display = forced ? 'none' : '';
