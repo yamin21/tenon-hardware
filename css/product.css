@@ -99,6 +99,26 @@
 
 .product-price-note { font-size: 0.78rem; color: var(--text-light); margin: 4px 0 0; }
 
+/* Variants */
+.product-variants { margin-bottom: 22px; }
+.variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant-pill {
+  padding: 8px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+}
+.variant-pill:hover { border-color: var(--brand); }
+.variant-pill--active { border-color: var(--brand); background: var(--brand); color: #fff; }
+.variant-pill--oos { color: var(--text-light); text-decoration: line-through; }
+.variant-pill--oos.variant-pill--active { background: var(--text-light); border-color: var(--text-light); }
+
 .product-short-desc {
   font-size: 0.9rem;
   line-height: 1.7;

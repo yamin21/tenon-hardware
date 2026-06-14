@@ -135,8 +135,14 @@
             <div class="product-price-block">
               <div class="product-price-row">
                 <span class="product-price-main" id="productPrice"></span>
+                <span class="product-price-old" id="productPriceOld" style="display:none"></span>
               </div>
               <p class="product-price-note" id="productPriceNote">Price includes GST.</p>
+            </div>
+
+            <div class="product-variants" id="productVariants" style="display:none">
+              <p class="product-qty-label">Size / Option</p>
+              <div class="variant-pills" id="variantPills"></div>
             </div>
 
             <p class="product-qty-label">Quantity</p>
@@ -146,7 +152,7 @@
                 <span class="qty-value" id="qtyValue">1</span>
                 <button class="qty-btn" onclick="changeQty(1)">+</button>
               </div>
-              <button class="btn-add-cart" onclick="addToCartPage()">Add to Cart</button>
+              <button class="btn-add-cart" id="addToCartBtn" onclick="addToCartPage()">Add to Cart</button>
               <button class="btn-wishlist" id="wishlistBtn" onclick="toggleWishlistPage(this)" title="Add to wishlist">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
               </button>
@@ -254,6 +260,7 @@
   <script src="js/ui.js"></script>
   <script>
     let currentProduct = null;
+    let selectedVariant = null;
 
     function buildProductCard(p, extraClass) {
       const raw = p.images && p.images[0] ? p.images[0] : '';
@@ -270,7 +277,7 @@
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
     }
 
@@ -285,9 +292,10 @@
 
         document.title = p.name + ' — Tenon Hardware';
         document.getElementById('productTitle').textContent = p.name;
-        document.getElementById('productPrice').textContent = p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price');
-        if (p.stock === 0) document.getElementById('productPriceNote').style.display = 'none';
         if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+
+        renderVariants(p);
+        updatePriceDisplay();
 
         // Breadcrumb
         const toName = s => (s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
@@ -358,6 +366,69 @@
       }
     }
 
+    // ── Variants ──────────────────────────────────────────────
+    function renderVariants(p) {
+      if (!p.variants || !p.variants.length) return;
+      document.getElementById('productVariants').style.display = '';
+      const pills = document.getElementById('variantPills');
+      pills.innerHTML = p.variants.map((v, i) => `
+        <button class="variant-pill${i === 0 ? ' variant-pill--active' : ''}${v.stock === 0 ? ' variant-pill--oos' : ''}" onclick="selectVariant('${v.id}', this)">${v.label}</button>
+      `).join('');
+      selectedVariant = p.variants[0];
+    }
+
+    function selectVariant(variantId, btn) {
+      const v = currentProduct.variants.find(x => x.id === variantId);
+      if (!v) return;
+      selectedVariant = v;
+      document.querySelectorAll('#variantPills .variant-pill').forEach(p => p.classList.remove('variant-pill--active'));
+      btn.classList.add('variant-pill--active');
+      qty = 1;
+      updatePriceDisplay();
+    }
+
+    // ── Price / stock display ───────────────────────────────────
+    function getActiveValues() {
+      const p = currentProduct;
+      const v = selectedVariant;
+      return {
+        price: v ? v.price : p.price,
+        comparePrice: v ? v.comparePrice : p.comparePrice,
+        stock: v ? v.stock : p.stock,
+      };
+    }
+
+    function updatePriceDisplay() {
+      const { price, comparePrice, stock } = getActiveValues();
+      const priceEl = document.getElementById('productPrice');
+      const oldEl   = document.getElementById('productPriceOld');
+      const noteEl  = document.getElementById('productPriceNote');
+      const addBtn  = document.getElementById('addToCartBtn');
+
+      priceEl.classList.toggle('product-price--oos', stock === 0);
+      if (stock === 0) {
+        priceEl.textContent = 'Sold Out';
+        noteEl.style.display = 'none';
+      } else {
+        priceEl.textContent = price != null ? 'MVR ' + Number(price).toLocaleString() : 'Contact for price';
+        noteEl.style.display = price != null ? '' : 'none';
+      }
+
+      if (comparePrice && stock !== 0) {
+        oldEl.textContent = 'MVR ' + Number(comparePrice).toLocaleString();
+        oldEl.style.display = '';
+      } else {
+        oldEl.style.display = 'none';
+      }
+
+      addBtn.disabled = stock === 0;
+      addBtn.textContent = stock === 0 ? 'Out of Stock' : 'Add to Cart';
+
+      const max = stock != null ? stock : Infinity;
+      qty = Math.min(Math.max(qty, 1), Math.max(max, 1));
+      document.getElementById('qtyValue').textContent = qty;
+    }
+
     function selectThumbImg(thumb, src) {
       document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-thumb--active'));
       thumb.classList.add('gallery-thumb--active');
@@ -370,7 +441,8 @@
     // ── Quantity ───────────────────────────────────────────────
     let qty = 1;
     function changeQty(dir) {
-      const max = currentProduct && currentProduct.stock != null ? currentProduct.stock : Infinity;
+      const { stock } = currentProduct ? getActiveValues() : { stock: null };
+      const max = stock != null ? stock : Infinity;
       qty = Math.min(Math.max(qty + dir, 1), Math.max(max, 1));
       document.getElementById('qtyValue').textContent = qty;
     }
@@ -379,28 +451,32 @@
     let cartItems = loadCart();
     renderCart();
     function addToCartPage() {
-      const name  = currentProduct ? currentProduct.name : 'Product';
-      const price = currentProduct ? currentProduct.price : 0;
-      const rawImg = currentProduct && currentProduct.images && currentProduct.images[0] ? currentProduct.images[0] : '';
+      if (!currentProduct) return;
+      const { price, stock } = getActiveValues();
+      if (stock === 0) return;
+      const v = selectedVariant;
+      const id   = v ? v.id : currentProduct.id;
+      const name = v ? `${currentProduct.name} (${v.label})` : currentProduct.name;
+      const rawImg = currentProduct.images && currentProduct.images[0] ? currentProduct.images[0] : '';
       const image = shopifyImg(rawImg, 150);
-      const existing = cartItems.find(i => i.name === name);
+      const existing = cartItems.find(i => i.id === id);
       if (existing) existing.qty += qty;
-      else cartItems.push({ name, price, image, qty });
+      else cartItems.push({ id, name, price: price ?? 0, image, qty });
       saveCart();
       renderCart();
       toggleCart();
     }
-    function removeFromCart(name) {
-      cartItems = cartItems.filter(i => i.name !== name);
+    function removeFromCart(id) {
+      cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
 
-    function changeCartQty(name, delta) {
-      const item = cartItems.find(i => i.name === name);
+    function changeCartQty(id, delta) {
+      const item = cartItems.find(i => i.id === id);
       if (!item) return;
       item.qty += delta;
-      if (item.qty <= 0) cartItems = cartItems.filter(i => i.name !== name);
+      if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
@@ -419,21 +495,21 @@
         body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>';
         footer.style.display = 'none';
       } else {
-        body.innerHTML = cartItems.map(item => { const esc = item.name.replace(/'/g,"\\'"); return `
+        body.innerHTML = cartItems.map(item => { const id = String(item.id).replace(/'/g,"\\'"); return `
           <div class="cart-item">
             <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <p class="cart-item-name">${item.name}</p>
               <div class="cart-item-row">
                 <div class="cart-qty-stepper">
-                  <button onclick="changeCartQty('${esc}', -1)" aria-label="Decrease quantity">−</button>
+                  <button onclick="changeCartQty('${id}', -1)" aria-label="Decrease quantity">−</button>
                   <span>${item.qty}</span>
-                  <button onclick="changeCartQty('${esc}', 1)" aria-label="Increase quantity">+</button>
+                  <button onclick="changeCartQty('${id}', 1)" aria-label="Increase quantity">+</button>
                 </div>
                 <span class="cart-item-price">MVR ${(item.price * item.qty).toLocaleString()}</span>
               </div>
             </div>
-            <button class="cart-item-remove" onclick="removeFromCart('${esc}')" aria-label="Remove item">×</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${id}')" aria-label="Remove item">×</button>
           </div>`; }).join('');
         footer.style.display = 'block';
       }

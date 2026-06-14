@@ -476,7 +476,7 @@
               ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(brand + ' ' + p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(brand + ' ' + p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -498,17 +498,17 @@
     renderCart();
 
     // ── Cart ──────────────────────────────────────────────────
-    function removeFromCart(name) {
-      cartItems = cartItems.filter(i => i.name !== name);
+    function removeFromCart(id) {
+      cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
 
-    function changeCartQty(name, delta) {
-      const item = cartItems.find(i => i.name === name);
+    function changeCartQty(id, delta) {
+      const item = cartItems.find(i => i.id === id);
       if (!item) return;
       item.qty += delta;
-      if (item.qty <= 0) cartItems = cartItems.filter(i => i.name !== name);
+      if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
@@ -527,21 +527,21 @@
         body.innerHTML = `<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>`;
         footer.style.display = 'none';
       } else {
-        body.innerHTML = cartItems.map(item => { const esc = item.name.replace(/'/g,"\\'"); return `
+        body.innerHTML = cartItems.map(item => { const id = String(item.id).replace(/'/g,"\\'"); return `
           <div class="cart-item">
             <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <p class="cart-item-name">${item.name}</p>
               <div class="cart-item-row">
                 <div class="cart-qty-stepper">
-                  <button onclick="changeCartQty('${esc}', -1)" aria-label="Decrease quantity">−</button>
+                  <button onclick="changeCartQty('${id}', -1)" aria-label="Decrease quantity">−</button>
                   <span>${item.qty}</span>
-                  <button onclick="changeCartQty('${esc}', 1)" aria-label="Increase quantity">+</button>
+                  <button onclick="changeCartQty('${id}', 1)" aria-label="Increase quantity">+</button>
                 </div>
                 <span class="cart-item-price">MVR ${(item.price * item.qty).toLocaleString()}</span>
               </div>
             </div>
-            <button class="cart-item-remove" onclick="removeFromCart('${esc}')" aria-label="Remove item">×</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${id}')" aria-label="Remove item">×</button>
           </div>`; }).join('');
         footer.style.display = 'block';
       }

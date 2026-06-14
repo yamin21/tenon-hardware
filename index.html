@@ -142,7 +142,7 @@
                       <span class="price-old">MVR 2,900</span>
                     </div>
                   </div>
-                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('Metabo SB 18 LT BL Drill', 2450)">Add to Cart</button>
+                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('Metabo SB 18 LT BL Drill', 'Metabo SB 18 LT BL Drill', 2450)">Add to Cart</button>
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@
                       <strong>MVR 2,150</strong>
                     </div>
                   </div>
-                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('Roca L20 Basin Mixer', 2150)">Add to Cart</button>
+                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('Roca L20 Basin Mixer', 'Roca L20 Basin Mixer', 2150)">Add to Cart</button>
                 </div>
               </div>
             </div>
@@ -205,7 +205,7 @@
                       <span class="price-old">MVR 4,500</span>
                     </div>
                   </div>
-                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('ABB RCBO 16A Board', 3500)">Add to Cart</button>
+                  <button class="slide-card-cta btn-primary btn-sm" onclick="addToCart('ABB RCBO 16A Board', 'ABB RCBO 16A Board', 3500)">Add to Cart</button>
                 </div>
               </div>
             </div>
@@ -465,17 +465,17 @@
 
 
     // ── Cart ──────────────────────────────────────────────────
-    function removeFromCart(name) {
-      cartItems = cartItems.filter(i => i.name !== name);
+    function removeFromCart(id) {
+      cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
 
-    function changeCartQty(name, delta) {
-      const item = cartItems.find(i => i.name === name);
+    function changeCartQty(id, delta) {
+      const item = cartItems.find(i => i.id === id);
       if (!item) return;
       item.qty += delta;
-      if (item.qty <= 0) cartItems = cartItems.filter(i => i.name !== name);
+      if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
     }
@@ -495,21 +495,21 @@
         body.innerHTML = `<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><p>Your cart is empty</p><a href="#products" class="btn-primary" onclick="toggleCart()">Continue Shopping</a></div>`;
         footer.style.display = 'none';
       } else {
-        body.innerHTML = cartItems.map(item => { const esc = item.name.replace(/'/g,"\\'"); return `
+        body.innerHTML = cartItems.map(item => { const id = String(item.id).replace(/'/g,"\\'"); return `
           <div class="cart-item">
             <div class="cart-item-img">${item.image ? `<img src="${item.image}" alt="" style="width:100%;height:100%;object-fit:contain;">` : ''}</div>
             <div class="cart-item-info">
               <p class="cart-item-name">${item.name}</p>
               <div class="cart-item-row">
                 <div class="cart-qty-stepper">
-                  <button onclick="changeCartQty('${esc}', -1)" aria-label="Decrease quantity">−</button>
+                  <button onclick="changeCartQty('${id}', -1)" aria-label="Decrease quantity">−</button>
                   <span>${item.qty}</span>
-                  <button onclick="changeCartQty('${esc}', 1)" aria-label="Increase quantity">+</button>
+                  <button onclick="changeCartQty('${id}', 1)" aria-label="Increase quantity">+</button>
                 </div>
                 <span class="cart-item-price">MVR ${(item.price * item.qty).toLocaleString()}</span>
               </div>
             </div>
-            <button class="cart-item-remove" onclick="removeFromCart('${esc}')" aria-label="Remove item">×</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${id}')" aria-label="Remove item">×</button>
           </div>
         `; }).join('');
         footer.style.display = 'block';
@@ -586,7 +586,7 @@
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
     }
 

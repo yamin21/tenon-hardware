@@ -203,10 +203,10 @@ function toggleCart() {
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-function addToCart(name, price, image) {
-  const existing = cartItems.find(i => i.name === name);
+function addToCart(id, name, price, image) {
+  const existing = cartItems.find(i => i.id === id);
   if (existing) existing.qty++;
-  else cartItems.push({ name, price, image, qty: 1 });
+  else cartItems.push({ id, name, price, image, qty: 1 });
   saveCart();
   renderCart();
   if (!document.getElementById('cartSidebar').classList.contains('cart-sidebar--open')) toggleCart();
@@ -307,6 +307,6 @@ function closeQuickView() {
 }
 
 function addToCartFromModal() {
-  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.title, modalProduct.price, modalProduct.image);
+  for (let i = 0; i < modalQty; i++) addToCart(modalProduct.id || modalProduct.title, modalProduct.title, modalProduct.price, modalProduct.image);
   closeQuickView();
 }
