@@ -1229,6 +1229,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--bg-soft);
+  color: var(--text);
   text-align: left;
   cursor: pointer;
   transition: border-color var(--transition), background var(--transition);
