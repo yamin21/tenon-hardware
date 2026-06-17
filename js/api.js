@@ -73,7 +73,7 @@ function shopifyImg(url, width) {
 const CATEGORY_TREE_TTL = 60 * 60 * 1000; // 1 hour
 
 async function getCategoryTree(categorySlug) {
-  const cacheKey = 'cat-tree-' + categorySlug;
+  const cacheKey = 'cat-tree-v2-' + categorySlug;
   try {
     const raw = localStorage.getItem(cacheKey);
     if (raw) {
