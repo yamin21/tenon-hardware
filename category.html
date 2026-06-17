@@ -486,6 +486,8 @@
       applyFilters();
     }
 
+    const _locSeed = new URLSearchParams(location.search).get('_loc');
+    if (_locSeed && ['male','thinadhoo'].includes(_locSeed)) localStorage.setItem('tenon_location', _locSeed);
     initLocationPicker();
     initCategory();
 

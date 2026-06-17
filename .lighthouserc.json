@@ -1,0 +1,27 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/login.html",
+        "http://localhost:3000/index.html?_loc=male"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop",
+        "chromeFlags": "--no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:best-practices": ["warn",  { "minScore": 0.8 }],
+        "categories:accessibility":  ["warn",  { "minScore": 0.75 }],
+        "cumulative-layout-shift":   ["error", { "maxNumericValue": 0.25 }],
+        "uses-http2":                "off",
+        "uses-long-cache-ttl":       "off"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

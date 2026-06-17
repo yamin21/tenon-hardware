@@ -602,6 +602,9 @@
         </div>`;
     }
 
+    // Allow ?_loc=male seed (used by Lighthouse CI to skip the modal)
+    const _locSeed = new URLSearchParams(location.search).get('_loc');
+    if (_locSeed && ['male','thinadhoo'].includes(_locSeed)) localStorage.setItem('tenon_location', _locSeed);
     initLocationPicker();
 
     // ── Cat Nav + Products: load together ────────────────────
