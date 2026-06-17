@@ -70,7 +70,7 @@ function shopifyImg(url, width) {
 // ── Category tree caching ────────────────────────────────────
 // Subcategories + their children rarely change, so cache the whole
 // tree in localStorage to avoid an N+1 fetch waterfall on every load.
-const CATEGORY_TREE_TTL = 60 * 60 * 1000; // 1 hour
+const CATEGORY_TREE_TTL = 60 * 1000; // 1 minute
 
 async function getCategoryTree(categorySlug) {
   const cacheKey = 'cat-tree-v2-' + categorySlug;
