@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /checkout.html
+
+Sitemap: https://tenon.mv/sitemap.xml

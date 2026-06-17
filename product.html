@@ -4,6 +4,56 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>DeWalt DCF887 18V Impact Driver — Tenon Hardware</title>
+  <!-- SEO -->
+  <meta name="description" content="Shop quality hardware products at Tenon Hardware. Trusted brands, competitive prices, fast delivery across the Maldives.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tenon.mv/product.html">
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Tenon Hardware">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="Product — Tenon Hardware">
+  <meta property="og:description" content="Shop quality hardware products at Tenon Hardware. Trusted brands, competitive prices, fast delivery across the Maldives.">
+  <meta property="og:url" content="https://tenon.mv/product.html">
+  <meta property="og:image" content="https://tenon.mv/assets/og-image.svg">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Product — Tenon Hardware">
+  <meta name="twitter:description" content="Shop quality hardware products at Tenon Hardware. Trusted brands, competitive prices, fast delivery across the Maldives.">
+  <meta name="twitter:image" content="https://tenon.mv/assets/og-image.svg">
+  <!-- Schema.org -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "HardwareStore",
+  "name": "Tenon Hardware",
+  "url": "https://tenon.mv",
+  "telephone": "+960-7997970",
+  "email": "sales@tenon.mv",
+  "logo": "https://tenon.mv/assets/logo.svg",
+  "image": "https://tenon.mv/assets/og-image.svg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Boduthakurufaanu Magu",
+    "addressLocality": "Malé",
+    "postalCode": "20026",
+    "addressCountry": "MV"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 4.1755,
+    "longitude": 73.5093
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Maldives"
+  },
+  "priceRange": "$$",
+  "sameAs": [
+    "https://web.facebook.com/tenonmv/",
+    "https://www.instagram.com/tenon.mv",
+    "https://www.youtube.com/@tenonmv",
+    "https://www.tiktok.com/@tenon.mv"
+  ]
+}</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/product.css">
@@ -292,6 +342,41 @@
         document.title = p.name + ' — Tenon Hardware';
         document.getElementById('productTitle').textContent = p.name;
         if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+
+        // Dynamic Product schema for SEO / AI crawlers
+        const img0 = p.images && p.images[0] ? shopifyImg(p.images[0].startsWith('http') ? p.images[0] : (p.images[0] ? API_BASE.replace('/api','') + '/' + p.images[0] : ''), 800) : 'https://tenon.mv/assets/og-image.svg';
+        const productSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: p.name,
+          description: p.description || p.name,
+          sku: p.sku || undefined,
+          brand: p.brand ? { '@type': 'Brand', name: p.brand } : undefined,
+          image: img0,
+          url: 'https://tenon.mv/product.html?id=' + p.id,
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'MVR',
+            price: p.price != null ? p.price : undefined,
+            availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            seller: { '@type': 'Organization', name: 'Tenon Hardware' },
+          },
+        };
+        const el = document.createElement('script');
+        el.type = 'application/ld+json';
+        el.textContent = JSON.stringify(productSchema);
+        document.head.appendChild(el);
+
+        // Update OG/Twitter meta with actual product data
+        const setMeta = (sel, val) => { const m = document.querySelector(sel); if (m && val) m.setAttribute('content', val); };
+        setMeta('meta[property="og:title"]', p.name + ' — Tenon Hardware');
+        setMeta('meta[name="twitter:title"]', p.name + ' — Tenon Hardware');
+        setMeta('meta[property="og:image"]', img0);
+        setMeta('meta[name="twitter:image"]', img0);
+        setMeta('meta[property="og:description"]', p.description || ('Shop ' + p.name + ' at Tenon Hardware. Fast delivery across the Maldives.'));
+        setMeta('meta[name="twitter:description"]', p.description || ('Shop ' + p.name + ' at Tenon Hardware. Fast delivery across the Maldives.'));
+        setMeta('meta[property="og:url"]', 'https://tenon.mv/product.html?id=' + p.id);
+        setMeta('link[rel="canonical"]', 'https://tenon.mv/product.html?id=' + p.id);
 
         renderVariants(p);
         updatePriceDisplay();
