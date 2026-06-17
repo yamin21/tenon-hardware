@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
 
@@ -20,7 +20,7 @@
     <div class="container header-inner">
 
       <a class="brand" href="#">
-        <img src="assets/logo.svg" class="logo" alt="Tenon Hardware">
+        <img src="assets/logo.svg" class="logo" alt="Tenon Hardware" width="120" height="28">
       </a>
 
       <div class="search-wrap">
@@ -460,7 +460,10 @@
       autoSlideTimer = setInterval(() => goToSlide(currentSlide + 1), 5000);
     }
     resetAutoSlide();
-
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearInterval(autoSlideTimer);
+      else resetAutoSlide();
+    });
 
     // ── Cart ──────────────────────────────────────────────────
     function removeFromCart(id) {
@@ -566,10 +569,21 @@
     // ── Scroll to Top + Compact header ─────────────────────────
     initScrollEffects({ threshold: 80 });
 
+    // ── Brands marquee: pause when off-screen or tab hidden ────
+    const brandsTrack = document.querySelector('.brands-track');
+    if (brandsTrack) {
+      new IntersectionObserver(([e]) => {
+        brandsTrack.style.animationPlayState = e.isIntersecting ? 'running' : 'paused';
+      }, { threshold: 0 }).observe(brandsTrack);
+      document.addEventListener('visibilitychange', () => {
+        brandsTrack.style.animationPlayState = document.hidden ? 'paused' : 'running';
+      });
+    }
+
     // ── Year ──────────────────────────────────────────────────
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    function buildProductCard(p, extraClass) {
+    function buildProductCard(p, extraClass, eager = false) {
       const raw = p.images && p.images[0] ? p.images[0] : '';
       const img = shopifyImg(raw.startsWith('http') ? raw : (raw ? API_BASE.replace('/api','') + '/' + raw : ''), 400);
       const esc = s => (s||'').replace(/"/g,'&quot;').replace(/'/g,"\\'");
@@ -577,7 +591,7 @@
       return `
         <div class="product-card${extraClass ? ' '+extraClass : ''}">
           <a href="product.html?id=${p.id}" class="product-card-img product-card-img--real">
-            ${img ? `<img src="${img}" alt="${esc(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:contain;padding:12px;">` : ''}
+            ${img ? `<img src="${img}" alt="${esc(p.name)}" loading="${eager ? 'eager' : 'lazy'}" fetchpriority="${eager ? 'high' : 'auto'}" style="width:100%;height:100%;object-fit:contain;padding:12px;">` : ''}
           </a>
           <div class="product-card-body">
             ${p.brand ? `<span class="product-brand">${p.brand}</span>` : ''}
@@ -646,7 +660,7 @@
         // Featured grid
         const withImg = products.filter(p => p.images && p.images[0]);
         const featured = withImg.slice(0, 8);
-        document.getElementById('featuredGrid').innerHTML = featured.map(p => buildProductCard(p, '')).join('');
+        document.getElementById('featuredGrid').innerHTML = featured.map((p, i) => buildProductCard(p, '', i < 4)).join('');
       } catch(e) {}
     })();
 

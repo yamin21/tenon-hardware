@@ -901,6 +901,7 @@ h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
 }
 .brands-strip { overflow: hidden; }
 .brands-track {
+  will-change: transform;
   display: flex;
   gap: 16px;
   animation: scrollBrands 28s linear infinite;
