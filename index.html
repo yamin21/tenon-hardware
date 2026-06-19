@@ -105,9 +105,16 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <span>Set location</span>
         </button>
-        <a href="login.html" class="header-action" title="My Account">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
-        </a>
+        <div class="header-action-wrap">
+          <a href="login.html" class="header-action" title="My Account" id="accountLink" onclick="handleAccountClick(event)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
+          </a>
+          <div class="account-dropdown" id="accountDropdown">
+            <div class="account-dropdown-name" id="accountName"></div>
+            <a href="orders.html">My Orders</a>
+            <button onclick="handleSignOut(event)">Sign out</button>
+          </div>
+        </div>
 
         <button class="header-action cart-btn" onclick="toggleCart()" title="Cart">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -162,7 +169,9 @@
     </nav>
     <nav class="mobile-nav mobile-nav--secondary">
       <strong>Quick Links</strong>
-      <a href="login.html">My Account</a>
+      <a href="login.html" id="mobileAccountLink">My Account</a>
+      <a href="orders.html" id="mobileOrdersLink" hidden>My Orders</a>
+      <a href="#" id="mobileSignoutLink" onclick="handleSignOut(event)" hidden>Sign out</a>
       <a href="contact.html">Contact Us</a>
     </nav>
     <div class="mobile-contact">
@@ -499,6 +508,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/api.js"></script>
   <script src="js/ui.js"></script>
   <script>

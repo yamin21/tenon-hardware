@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My Orders — Tenon Hardware</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <style>
+    .orders-page {
+      min-height: calc(100vh - var(--header-h));
+      background: var(--bg-soft);
+      padding: 40px 16px;
+    }
+    .orders-container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .orders-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+    .order-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .order-number { font-weight: 700; color: var(--text); }
+    .order-date { font-size: 0.83rem; color: var(--text-muted); }
+    .order-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--bg-soft);
+      color: var(--text-muted);
+      text-transform: capitalize;
+    }
+    .order-items { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 10px; }
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      font-size: 0.92rem;
+    }
+    .order-total strong { font-size: 1.05rem; color: var(--text); }
+    .orders-empty {
+      text-align: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+    .orders-empty a { color: var(--brand); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.svg" class="logo" alt="Tenon Hardware" width="120" height="28">
+      </a>
+      <div></div>
+      <div class="header-actions">
+        <button class="header-action cart-btn" onclick="window.location.href='index.html'" title="Back to shop">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="orders-page">
+    <div class="orders-container">
+      <h1 class="orders-title">My Orders</h1>
+      <div id="ordersList">Loading…</div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    function statusLabel(s) {
+      return (s || '').replace(/_/g, ' ');
+    }
+
+    async function loadOrders() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const listEl = document.getElementById('ordersList');
+      try {
+        const orders = await getMyOrders();
+
+        if (!orders.length) {
+          listEl.innerHTML = `
+            <div class="orders-empty">
+              You haven't placed any orders yet.<br>
+              <a href="index.html">Start shopping</a>
+            </div>`;
+          return;
+        }
+
+        listEl.innerHTML = orders.map(o => `
+          <div class="order-card">
+            <div class="order-card-top">
+              <div>
+                <span class="order-number">#${o.order_number}</span>
+                <span class="order-date">&nbsp;·&nbsp;${new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              </div>
+              <span class="order-status">${statusLabel(o.status)}</span>
+            </div>
+            <div class="order-items">${o.items.length} item${o.items.length === 1 ? '' : 's'} — ${o.fulfillment === 'pickup' ? 'Pickup' : 'Delivery'}</div>
+            <div class="order-total">
+              <span>Total</span>
+              <strong>MVR ${Number(o.total).toLocaleString()}</strong>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        listEl.innerHTML = `<div class="orders-empty">Could not load your orders. Please try again later.</div>`;
+      }
+    }
+
+    loadOrders();
+
+    // Sticky header shadow
+    window.addEventListener('scroll', () => {
+      document.getElementById('siteHeader').classList.toggle('site-header--scrolled', window.scrollY > 10);
+    });
+  </script>
+</body>
+</html>

@@ -337,3 +337,46 @@ function addToCartFromModal() {
   for (let i = 0; i < modalQty; i++) addToCart(modalProduct.id || modalProduct.title, modalProduct.title, modalProduct.price, modalProduct.image);
   closeQuickView();
 }
+
+// ── Account menu (header dropdown + mobile menu) ──────────────
+let accountIsLoggedIn = false;
+
+async function initAccountMenu() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  accountIsLoggedIn = true;
+
+  const name = session.user.user_metadata?.first_name || 'there';
+  const nameEl = document.getElementById('accountName');
+  if (nameEl) nameEl.textContent = 'Hi, ' + name;
+
+  const acctLink = document.getElementById('mobileAccountLink');
+  const ordersLink = document.getElementById('mobileOrdersLink');
+  const signoutLink = document.getElementById('mobileSignoutLink');
+  if (acctLink) acctLink.hidden = true;
+  if (ordersLink) ordersLink.hidden = false;
+  if (signoutLink) signoutLink.hidden = false;
+}
+
+function handleAccountClick(e) {
+  if (!accountIsLoggedIn) return; // not logged in — let the default link to login.html happen
+  e.preventDefault();
+  document.getElementById('accountDropdown').classList.toggle('account-dropdown--open');
+}
+
+async function handleSignOut(e) {
+  e.preventDefault();
+  await sb.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('accountDropdown');
+  const link = document.getElementById('accountLink');
+  if (!dropdown || !dropdown.classList.contains('account-dropdown--open')) return;
+  if (!dropdown.contains(e.target) && !link.contains(e.target)) {
+    dropdown.classList.remove('account-dropdown--open');
+  }
+});
+
+initAccountMenu();

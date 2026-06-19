@@ -59,6 +59,17 @@ async function createOrder(order) {
   return (await res.json()).data;
 }
 
+async function getMyOrders() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Not signed in');
+
+  const res = await fetch(API_BASE + '/orders', {
+    headers: { 'x-api-key': API_KEY, 'Authorization': 'Bearer ' + session.access_token }
+  });
+  if (!res.ok) throw new Error('Orders error: ' + res.status);
+  return (await res.json()).data;
+}
+
 // ── Image sizing ──────────────────────────────────────────────
 // Shopify CDN resizes images on the fly via a `width` query param.
 function shopifyImg(url, width) {
