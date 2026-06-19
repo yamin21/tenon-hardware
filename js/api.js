@@ -45,9 +45,14 @@ async function getProduct(id) {
 }
 
 async function createOrder(order) {
+  const headers = { 'x-api-key': API_KEY, 'Content-Type': 'application/json' };
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) headers['Authorization'] = 'Bearer ' + session.access_token;
+
   const res = await fetch(API_BASE + '/orders', {
     method: 'POST',
-    headers: { 'x-api-key': API_KEY, 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(order)
   });
   if (!res.ok) throw new Error('Order error: ' + res.status);
