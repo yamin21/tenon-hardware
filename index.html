@@ -549,7 +549,7 @@
     function changeCartQty(id, delta) {
       const item = cartItems.find(i => i.id === id);
       if (!item) return;
-      item.qty += delta;
+      item.qty = Math.min(item.qty + delta, item.maxQty ?? Infinity);
       if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
@@ -672,7 +672,7 @@
             <h3 class="product-name"><a href="product.html?id=${p.id}">${p.name}</a></h3>
             <div class="product-price-row"><strong class="product-price${p.stock === 0 ? ' product-price--oos' : ''}">${p.stock === 0 ? 'Sold Out' : (p.price != null ? 'MVR ' + Number(p.price).toLocaleString() : 'Contact for price')}</strong></div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(p.name)}', ${p.price ?? 0}, '${esc(img)}', ${p.stock != null ? p.stock : 'null'})" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
     }
 

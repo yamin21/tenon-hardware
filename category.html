@@ -536,7 +536,7 @@
               ${p.comparePrice ? `<span class="product-price-old">MVR ${Number(p.comparePrice).toLocaleString()}</span>` : ''}
             </div>
           </div>
-          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(brand + ' ' + p.name)}', ${p.price ?? 0}, '${esc(img)}')" title="Add to cart">${cartSVG}</button>` : ''}
+          ${p.stock !== 0 ? `<button class="cart-quick-btn" onclick="addToCart('${p.id}', '${esc(brand + ' ' + p.name)}', ${p.price ?? 0}, '${esc(img)}', ${p.stock != null ? p.stock : 'null'})" title="Add to cart">${cartSVG}</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -569,7 +569,7 @@
     function changeCartQty(id, delta) {
       const item = cartItems.find(i => i.id === id);
       if (!item) return;
-      item.qty += delta;
+      item.qty = Math.min(item.qty + delta, item.maxQty ?? Infinity);
       if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();

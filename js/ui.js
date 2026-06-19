@@ -230,10 +230,11 @@ function toggleCart() {
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-function addToCart(id, name, price, image) {
+function addToCart(id, name, price, image, stock) {
+  const maxQty = stock != null ? stock : Infinity;
   const existing = cartItems.find(i => i.id === id);
-  if (existing) existing.qty++;
-  else cartItems.push({ id, name, price, image, qty: 1 });
+  if (existing) existing.qty = Math.min(existing.qty + 1, existing.maxQty ?? maxQty);
+  else cartItems.push({ id, name, price, image, qty: Math.min(1, Math.max(maxQty, 1)), maxQty });
   saveCart();
   renderCart();
   if (!document.getElementById('cartSidebar').classList.contains('cart-sidebar--open')) toggleCart();

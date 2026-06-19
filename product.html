@@ -546,14 +546,15 @@
       if (!currentProduct) return;
       const { price, stock } = getActiveValues();
       if (stock === 0) return;
+      const maxQty = stock != null ? stock : Infinity;
       const v = selectedVariant;
       const id   = v ? v.id : currentProduct.id;
       const name = v ? `${currentProduct.name} (${v.label})` : currentProduct.name;
       const rawImg = currentProduct.images && currentProduct.images[0] ? currentProduct.images[0] : '';
       const image = shopifyImg(rawImg, 150);
       const existing = cartItems.find(i => i.id === id);
-      if (existing) existing.qty += qty;
-      else cartItems.push({ id, name, price: price ?? 0, image, qty });
+      if (existing) existing.qty = Math.min(existing.qty + qty, existing.maxQty ?? maxQty);
+      else cartItems.push({ id, name, price: price ?? 0, image, qty, maxQty });
       saveCart();
       renderCart();
       toggleCart();
@@ -567,7 +568,7 @@
     function changeCartQty(id, delta) {
       const item = cartItems.find(i => i.id === id);
       if (!item) return;
-      item.qty += delta;
+      item.qty = Math.min(item.qty + delta, item.maxQty ?? Infinity);
       if (item.qty <= 0) cartItems = cartItems.filter(i => i.id !== id);
       saveCart();
       renderCart();
