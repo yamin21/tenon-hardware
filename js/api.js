@@ -70,6 +70,38 @@ async function getMyOrders() {
   return (await res.json()).data;
 }
 
+// ── Wishlist (requires sign-in) ────────────────────────────────
+async function authHeader() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) throw new Error('Not signed in');
+  return { 'x-api-key': API_KEY, 'Authorization': 'Bearer ' + session.access_token };
+}
+
+async function getWishlist() {
+  const res = await fetch(API_BASE + '/wishlist', { headers: await authHeader() });
+  if (!res.ok) throw new Error('Wishlist error: ' + res.status);
+  return (await res.json()).data;
+}
+
+async function addToWishlist(stockItemId) {
+  const headers = await authHeader();
+  headers['Content-Type'] = 'application/json';
+  const res = await fetch(API_BASE + '/wishlist', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ stock_item_id: stockItemId })
+  });
+  if (!res.ok) throw new Error('Wishlist error: ' + res.status);
+}
+
+async function removeFromWishlist(stockItemId) {
+  const res = await fetch(API_BASE + '/wishlist/' + encodeURIComponent(stockItemId), {
+    method: 'DELETE',
+    headers: await authHeader()
+  });
+  if (!res.ok) throw new Error('Wishlist error: ' + res.status);
+}
+
 // ── Image sizing ──────────────────────────────────────────────
 // Shopify CDN resizes images on the fly via a `width` query param.
 function shopifyImg(url, width) {

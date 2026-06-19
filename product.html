@@ -91,6 +91,7 @@
           </a>
           <div class="account-dropdown" id="accountDropdown">
             <a href="orders.html">My Orders</a>
+            <a href="wishlist.html">Wishlist</a>
             <button onclick="handleSignOut(event)">Sign out</button>
           </div>
         </div>
@@ -149,6 +150,7 @@
       <strong>Quick Links</strong>
       <a href="login.html" id="mobileAccountLink">My Account</a>
       <a href="orders.html" id="mobileOrdersLink" hidden>My Orders</a>
+      <a href="wishlist.html" id="mobileWishlistLink" hidden>Wishlist</a>
       <a href="#" id="mobileSignoutLink" onclick="handleSignOut(event)" hidden>Sign out</a>
       <a href="contact.html">Contact Us</a>
     </nav>
@@ -390,6 +392,7 @@
 
         renderVariants(p);
         updatePriceDisplay();
+        checkWishlistState();
 
         // Breadcrumb
         const toName = s => (s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
@@ -609,16 +612,47 @@
     }
 
     // ── Wishlist ──────────────────────────────────────────────
-    function toggleWishlistPage(btn) {
-      btn.classList.toggle('wishlisted');
-      const icon = btn.querySelector('svg');
-      if (btn.classList.contains('wishlisted')) {
-        icon.setAttribute('fill', 'currentColor');
-        showToast('Added to wishlist');
-      } else {
-        icon.setAttribute('fill', 'none');
-        showToast('Removed from wishlist');
+    async function toggleWishlistPage(btn) {
+      if (!currentProduct) return;
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
       }
+
+      const icon = btn.querySelector('svg');
+      const isWishlisted = btn.classList.contains('wishlisted');
+      btn.disabled = true;
+      try {
+        if (isWishlisted) {
+          await removeFromWishlist(currentProduct.id);
+          btn.classList.remove('wishlisted');
+          icon.setAttribute('fill', 'none');
+          showToast('Removed from wishlist');
+        } else {
+          await addToWishlist(currentProduct.id);
+          btn.classList.add('wishlisted');
+          icon.setAttribute('fill', 'currentColor');
+          showToast('Added to wishlist');
+        }
+      } catch (err) {
+        showToast('Could not update wishlist');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function checkWishlistState() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session || !currentProduct) return;
+      try {
+        const items = await getWishlist();
+        if (items.some(i => i.id === currentProduct.id)) {
+          const btn = document.getElementById('wishlistBtn');
+          btn.classList.add('wishlisted');
+          btn.querySelector('svg').setAttribute('fill', 'currentColor');
+        }
+      } catch {}
     }
 
     // ── Gallery ───────────────────────────────────────────────

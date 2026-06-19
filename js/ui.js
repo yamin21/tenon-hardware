@@ -349,9 +349,11 @@ async function initAccountMenu() {
 
   const acctLink = document.getElementById('mobileAccountLink');
   const ordersLink = document.getElementById('mobileOrdersLink');
+  const wishlistLink = document.getElementById('mobileWishlistLink');
   const signoutLink = document.getElementById('mobileSignoutLink');
   if (acctLink) acctLink.hidden = true;
   if (ordersLink) ordersLink.hidden = false;
+  if (wishlistLink) wishlistLink.hidden = false;
   if (signoutLink) signoutLink.hidden = false;
 }
 
