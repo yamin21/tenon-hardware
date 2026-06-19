@@ -346,10 +346,6 @@ async function initAccountMenu() {
   if (!session) return;
   accountIsLoggedIn = true;
 
-  const name = session.user.user_metadata?.first_name || 'there';
-  const nameEl = document.getElementById('accountName');
-  if (nameEl) nameEl.textContent = 'Hi, ' + name;
-
   const acctLink = document.getElementById('mobileAccountLink');
   const ordersLink = document.getElementById('mobileOrdersLink');
   const signoutLink = document.getElementById('mobileSignoutLink');
