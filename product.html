@@ -452,7 +452,7 @@
 
           const thumbsEl = document.getElementById('galleryThumbs');
           thumbsEl.innerHTML = images.map((src, i) => `
-            <div class="gallery-thumb ${i === 0 ? 'gallery-thumb--active' : ''}" onclick="selectThumbImg(this, '${shopifyImg(src, 800)}')">
+            <div class="gallery-thumb ${i === 0 ? 'gallery-thumb--active' : ''}" data-src="${src}" onclick="selectThumbImg(this, '${shopifyImg(src, 800)}')">
               <img src="${shopifyImg(src, 150)}" alt="" style="width:100%;height:100%;object-fit:contain;padding:6px;">
             </div>`).join('');
         }
@@ -480,6 +480,10 @@
       selectedVariant = v;
       qty = 1;
       updatePriceDisplay();
+
+      document.getElementById('galleryImg').src = shopifyImg(v.image, 800);
+      const thumbs = document.querySelectorAll('.gallery-thumb');
+      thumbs.forEach(t => t.classList.toggle('gallery-thumb--active', t.dataset.src === v.image));
     }
 
     // ── Price / stock display ───────────────────────────────────
