@@ -443,6 +443,11 @@
         }
 
         const images = (p.images || []).filter(Boolean);
+        const variantIdByImage = new Map();
+        (p.variants || []).forEach(v => {
+          if (v.image && !variantIdByImage.has(v.image)) variantIdByImage.set(v.image, v.id);
+        });
+
         const seenImgs = new Set(images);
         const variantThumbs = [];
         (p.variants || []).forEach(v => {
@@ -451,7 +456,7 @@
             variantThumbs.push({ src: v.image, variantId: v.id });
           }
         });
-        const galleryThumbs = images.map(src => ({ src, variantId: null })).concat(variantThumbs);
+        const galleryThumbs = images.map(src => ({ src, variantId: variantIdByImage.get(src) || null })).concat(variantThumbs);
 
         if (galleryThumbs.length > 0) {
           const mainImg = document.getElementById('galleryImg');
