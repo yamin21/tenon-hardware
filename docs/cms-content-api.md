@@ -180,20 +180,37 @@ page load" data that pattern exists for. A short TTL (60s) still
 satisfies "instant" for staff (next page load within a minute reflects
 the change) without hitting the ERP API on every single navigation.
 
-## Reported as settled (per the relayed reply — not independently verified)
+## Independently verified against the live API (2026-06-23)
 
-- Auth, caching, revision history, and `cookie-policy` scope, as
-  stated in "Status" above.
-- A slug with no content yet returns a normal 404, per ERP, as the
-  expected/intended behavior during rollout.
+Curled `erp.tenon.mv/api/cms/*` directly (full results in PR/commit
+history, not reproduced here):
+
+- Base API connectivity fine (`/api/categories` returns 200).
+- `/api/cms/pages/:slug` is a real, live route — returns a custom
+  `{"error":"Page not found"}` JSON body, not a generic framework
+  404, so the route itself exists and is wired up.
+- `Cache-Control: public, max-age=60` confirmed present on the
+  response headers, exactly as relayed.
+- Confirmed public: identical response with or without `x-api-key`.
+- **No content has been entered into the CMS for any page yet** —
+  `about-us`, `terms-of-service`, `privacy-policy`, `refund-policy`,
+  `shipping-policy`, and `cookie-policy` all currently 404 identically.
+  This isn't specific to `cookie-policy` being dropped; nothing has
+  been populated at all yet.
+- `/api/cms/landing` also 404s (`{"error":"Landing content not found"}`)
+  — same situation.
+- Side effect of the above: a permanently-dropped slug
+  (`cookie-policy`) and a slug that just hasn't been populated yet
+  (`about-us`) currently return byte-identical 404s. The API has no
+  way to distinguish "will never exist" from "exists but empty" today
+  — flagged to ERP, not yet resolved.
 
 ## Still open
 
-- Icon/theme enums above are corrections we still need to send back
-  to ERP — they haven't seen `message-circle`/`default` yet. Don't
-  treat these as agreed until they confirm.
-- Nothing in this doc has been checked against the actual running
-  endpoints from this side (no request has been made to
-  `erp.tenon.mv/api/cms/*` yet). Worth doing before frontend
-  integration work starts, rather than coding against the relayed
-  description alone.
+- Icon/theme enum corrections (`message-circle`, `default`) — sent
+  back to ERP, not yet confirmed on their end.
+- Real response shape for a *populated* page (does `body_html`
+  actually come back sanitized as described? do `hero_slides`/
+  `why_choose_us` use the field names we agreed on?) is still
+  unverified — there's no live content to inspect yet. Re-test once
+  ERP has entered at least one real page through the admin UI.
