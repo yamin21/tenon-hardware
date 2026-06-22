@@ -1,0 +1,25 @@
+/* ── Account pages (orders, wishlist) ──────────────────────── */
+.orders-page {
+  min-height: calc(100vh - var(--header-h));
+  background: var(--bg-soft);
+  padding: 40px 16px;
+}
+.orders-container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.orders-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.orders-empty {
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 48px 24px;
+  color: var(--text-muted);
+}
+.orders-empty a { color: var(--brand); font-weight: 600; text-decoration: none; }
