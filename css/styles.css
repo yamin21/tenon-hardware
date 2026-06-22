@@ -49,6 +49,7 @@ button { cursor: pointer; background: none; border: none; padding: 0; }
 address { font-style: normal; }
 ul,ol { margin: 0; padding: 0; list-style: none; }
 h1,h2,h3,h4 { margin: 0; line-height: 1.15; }
+h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
 
 /* ── Layout ─────────────────────────────────────────────── */
 .container {
