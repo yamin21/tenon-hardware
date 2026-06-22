@@ -753,13 +753,10 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 
 /* Carousel controls */
 .carousel-dots {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 8px;
-  z-index: 10;
+  padding: 16px 0;
 }
 .dot {
   width: 8px;
