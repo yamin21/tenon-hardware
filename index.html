@@ -210,7 +210,7 @@
             <h2 class="section-title">Everything you need to build, fix, and finish.</h2>
           </div>
         </div>
-        <div class="cat-grid" id="catGrid"></div>
+        <div class="cat-mosaic" id="catGrid"></div>
       </div>
     </section>
 
@@ -547,42 +547,16 @@
         const subs     = tree.map(({ children, ...sub }) => sub);
         const products = (await prodRes.json()).data;
 
-        // Category grid (icons + accent colours per subcategory).
-        // Single source of truth, keyed by category *name* (not slug) since
-        // slugs from the API have drifted from display names in the past
-        // and silently fell back to a generic icon. Path data is sourced
-        // straight from @tabler/icons-react so icons stay swappable by name.
-        const CATEGORY_ICONS = {
-          'abrasives':          { accent: '#fee2e2', paths: ['M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M7 12a5 5 0 0 1 5 -5', 'M12 17a5 5 0 0 0 5 -5'] }, // IconDisc
-          'adhesives':          { accent: '#fef3c7', paths: ['M10 5h4v-2a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v2', 'M14 3.5c0 1.626 .507 3.212 1.45 4.537l.05 .07a8.093 8.093 0 0 1 1.5 4.694v6.199a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-6.2c0 -1.682 .524 -3.322 1.5 -4.693l.05 -.07a7.823 7.823 0 0 0 1.45 -4.537', 'M7 14.803a2.4 2.4 0 0 0 1 -.803a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 1 -.805'] }, // IconBottle
-          'aluminium':          { accent: '#f1f5f9', paths: ['M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12', 'M4 12l16 0', 'M12 4l0 16'] }, // IconBorderAll
-          'buildware':          { accent: '#dcfce7', paths: ['M3 21v-13l9 -4l9 4v13', 'M13 13h4v8h-10v-6h6', 'M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3'] }, // IconBuildingWarehouse
-          'electricals':        { accent: '#fff7ed', paths: ['M9.785 6l8.215 8.215l-2.054 2.054a5.81 5.81 0 1 1 -8.215 -8.215l2.054 -2.054', 'M4 20l3.5 -3.5', 'M15 4l-3.5 3.5', 'M20 9l-3.5 3.5'] }, // IconPlug
-          'fasteners':          { accent: '#e4e4e7', paths: ['M19 6.84a2.007 2.007 0 0 1 1 1.754v6.555c0 .728 -.394 1.4 -1.03 1.753l-6 3.844a1.995 1.995 0 0 1 -1.94 0l-6 -3.844a2.006 2.006 0 0 1 -1.03 -1.752v-6.557c0 -.728 .394 -1.399 1.03 -1.753l6 -3.582a2.049 2.049 0 0 1 2 0l6 3.582h-.03', 'M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0'] }, // IconNut (a literal nut reads clearer than a bare IconHexagon)
-          'furniture hardware': { accent: '#fdf4ff', paths: ['M14 12v.01', 'M3 21h18', 'M6 21v-16a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v16'] }, // IconDoor
-          'general':            { accent: '#f3e8ff', paths: ['M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9', 'M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2', 'M12 12l0 .01', 'M3 13a20 20 0 0 0 18 0'] }, // IconBriefcase (Tabler has no IconToolbox)
-          'home':               { accent: '#e0f2fe', paths: ['M5 12l-2 0l9 -9l9 9l-2 0', 'M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7', 'M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6'] }, // IconHome
-          'metal':              { accent: '#f1f5f9', paths: ['M12 4l-8 4l8 4l8 -4l-8 -4', 'M4 12l8 4l8 -4', 'M4 16l8 4l8 -4'] }, // IconStack2 (Tabler has no IconBeam)
-          'paint & coatings':   { accent: '#ede9fe', paths: ['M5 5a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -2', 'M19 6h1a2 2 0 0 1 2 2a5 5 0 0 1 -5 5l-5 0v2', 'M10 16a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -4'] }, // IconPaint
-          'plumbing':           { accent: '#dbeafe', paths: ['M3 4h8', 'M4 4v5a6 6 0 0 0 6 6h3a1 1 0 0 1 1 1v4', 'M10 4v4a1 1 0 0 0 1 1h3a6 6 0 0 1 6 6v5', 'M13 20h8', 'M12 9v6'] }, // IconPipeline (Tabler has no IconPipe)
-          'safety':             { accent: '#fef9c3', paths: ['M12 4a9 9 0 0 1 5.656 16h-11.312a9 9 0 0 1 5.656 -16', 'M20 9h-8.8a1 1 0 0 0 -.968 1.246c.507 2 1.596 3.418 3.268 4.254c2 1 4.333 1.5 7 1.5'] }, // IconHelmet
-          'tapes':              { accent: '#fee2e2', paths: ['M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0'] }, // IconCircleDot
-          'tools':              { accent: '#dbeafe', paths: ['M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4', 'M14.5 5.5l4 4', 'M12 8l-5 -5l-4 4l5 5', 'M7 8l-1.5 1.5', 'M16 12l5 5l-4 4l-5 -5', 'M16 17l-1.5 1.5'] } // IconTools
-        };
-        const DEFAULT_CATEGORY_ICON = { accent: '#f0f0f5', paths: ['M4 4h6v6h-6l0 -6', 'M14 4h6v6h-6l0 -6', 'M4 14h6v6h-6l0 -6', 'M14 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0'] }; // IconCategory
-        const renderCategoryIcon = paths =>
-          `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${paths.map(d => `<path d="${d}"/>`).join('')}</svg>`;
-
+        // Category mosaic. Tiles are grey until a category has an
+        // image_url (pushed from the CMS once that's wired up) — tile
+        // sizing comes from CSS nth-child position, not per-category
+        // config, so this needs no changes when categories are added,
+        // renamed, or reordered.
         const catGrid = document.getElementById('catGrid');
-        catGrid.innerHTML = subs.map(sub => {
-          const meta = CATEGORY_ICONS[sub.name.trim().toLowerCase()] || DEFAULT_CATEGORY_ICON;
-          return `
-            <a href="category.html?sub=${sub.slug}" class="cat-card" style="--cat-accent:${meta.accent}">
-              <div class="cat-card-icon">${renderCategoryIcon(meta.paths)}</div>
-              <strong>${sub.name}</strong>
-              <div class="cat-card-arrow">→</div>
-            </a>`;
-        }).join('');
+        catGrid.innerHTML = subs.map(sub => `
+          <a href="category.html?sub=${sub.slug}" class="cat-tile"${sub.image_url ? ` style="background-image:url('${sub.image_url}')"` : ''}>
+            <span class="cat-tile-label">${sub.name}</span>
+          </a>`).join('');
 
         // Cat nav chips + mobile nav
         const nav = document.getElementById('catNavInner');
