@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile, watch } from 'node:fs/promises';
 import { extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { stitch } from './lib/stitch.mjs';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const root = process.cwd();
@@ -55,7 +56,8 @@ const server = createServer(async (req, res) => {
     const ext = extname(filePath).toLowerCase();
     const contentType = mimeTypes[ext] || 'application/octet-stream';
     if (ext === '.html') {
-      content = Buffer.from(content.toString().replace('</body>', `${liveReloadScript}</body>`));
+      const stitched = await stitch(content.toString());
+      content = Buffer.from(stitched.replace('</body>', `${liveReloadScript}</body>`));
     }
     res.writeHead(200, { 'Content-Type': contentType });
     res.end(content);
