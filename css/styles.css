@@ -773,7 +773,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
    the API returns. Tiles are grey until a category has an image_url
    (pushed from the CMS) — background-image is only set inline when
    one exists, so an empty value just shows the placeholder colour. */
-.categories-section { background: var(--bg); padding-bottom: 40px; }
+.categories-section { background: var(--bg); padding-top: 24px; padding-bottom: 40px; }
 .categories-section .section-title { font-size: 1.8rem; font-weight: 700; }
 .cat-mosaic {
   display: grid;
