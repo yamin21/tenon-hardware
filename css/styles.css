@@ -774,6 +774,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
    (pushed from the CMS) — background-image is only set inline when
    one exists, so an empty value just shows the placeholder colour. */
 .categories-section { background: var(--bg); padding-bottom: 40px; }
+.categories-section .section-title { font-size: 1.8rem; font-weight: 700; }
 .cat-mosaic {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
