@@ -6,19 +6,31 @@ document defines the contract; the actual CMS (admin UI, database,
 these endpoints) is built in the ERP (`erp.tenon.mv`), a separate
 codebase from this storefront repo.
 
-## Decisions already made
+## Status: per ERP team's reply (2026-06-23, relayed by Yamin)
 
+The ERP team reported back that both endpoints below are built. The
+points in this section are *as relayed*, not independently verified
+against their actual running API — confirm directly with them before
+treating anything here as final, especially before real content goes
+live:
+
+- **Auth:** both routes are public, no `x-api-key` required.
+  `Cache-Control: public, max-age=60`.
+- **Revision history:** one level of undo on policy pages (previous
+  version restorable, not full history). No undo on homepage content.
+- **`cookie-policy` will never be added** — dropped from their plans.
+  It 404s permanently. [cookie-policy.html](../cookie-policy.html)
+  stays fully hardcoded forever; do not wire it up to this API.
 - **Scope, phase 1:** policy/info pages (Terms, Privacy, Refund,
-  Shipping, Cookie Policy, About Us) and landing-page copy (hero
-  slides, "why choose us" cards).
+  Shipping, About Us — **not** Cookie Policy, see above) and
+  landing-page copy (hero slides, "why choose us" cards).
 - **Publish latency:** instant. Staff hit save, the next page load
   reflects it — no rebuild, no deploy. This rules out baking CMS
   content into the static build; it has to be a runtime fetch.
 - **Pattern:** identical to how this site already loads dynamic data
-  — `js/api.js`'s `apiFetch()` helper (`x-api-key` header, `{ data }`
-  response envelope, `API_BASE = https://erp.tenon.mv/api`). The CMS
-  endpoints should follow the same conventions so the frontend code
-  reuses the existing fetch plumbing.
+  — `js/api.js`'s `apiFetch()` helper (`{ data }` response envelope,
+  `API_BASE = https://erp.tenon.mv/api`), minus the `x-api-key` header
+  for these specific routes since they're public.
 
 ## Phase 1a: Policy pages
 
@@ -28,7 +40,8 @@ build this first.
 **Endpoint:** `GET /api/cms/pages/:slug`
 
 **Slugs:** `terms-of-service`, `privacy-policy`, `refund-policy`,
-`shipping-policy`, `cookie-policy`, `about-us`
+`shipping-policy`, `about-us`. (`cookie-policy` is not and will never
+be one of these — see "Status" above.)
 
 **Response:**
 ```json
@@ -124,19 +137,30 @@ are just `tag`/`title`/`body`/CTAs/`theme`. Whoever eventually
 reworks the live homepage to consume this API should remove that
 card rather than carry the bug forward.
 
-**On the `why_choose_us.icon` field:** staff authoring in a CMS admin
-can't hand-write SVG path data. Recommend a constrained icon picker —
-a fixed named set (e.g. `check-circle`, `truck`, `headset`,
-`clipboard-list`) that the frontend maps to a fixed SVG, the same
-approach already used for [the category icons](../index.html) (see
-`CATEGORY_ICONS` in index.html). The ERP should NOT accept arbitrary
-SVG/HTML in this field.
+**`why_choose_us.icon` — verified against our codebase:** should be
+`check-circle`, `truck`, `message-circle`, `clipboard-list`. Per the
+relayed reply, the ERP's first pass used `headset` instead — checked
+directly against the actual SVG on the live homepage
+([index.html:280](../index.html#L280), "Expert Support" card) and
+it's a chat-bubble shape, not a headset. We need to send
+`message-circle` back to them as the correction. Staff can't
+hand-write SVG path data, so this must stay a constrained picker,
+never arbitrary SVG/HTML — same approach already used for the
+category icons (`CATEGORY_ICONS` in index.html).
 
-**`theme` field:** maps to the existing `slide--tools` /
-`slide--plumbing` / `slide--electrical` background classes in
-[css/styles.css](../css/styles.css). Either constrain it to a fixed
-enum matching existing themes, or treat new values as "use a default
-theme" rather than erroring.
+**`theme` — verified against our codebase:** should be `tools`,
+`plumbing`, `electrical`, `default`. Per the relayed reply, the ERP's
+first pass used `hardware` and `paint`, neither of which exist — the
+real values map to the `slide--tools`/`slide--plumbing`/
+`slide--electrical` background classes in
+[css/styles.css:672-674](../css/styles.css#L672), confirmed by
+reading the file directly. `default` is new on our side: there was no
+fallback background for an unrecognized theme (a `.carousel-slide`
+with no modifier class rendered with no background at all, breaking
+the white-text-on-dark-gradient design) — added `.slide--default` as
+a neutral fallback gradient (verified by screenshot) so an "unknown
+value → default" behavior on their end will actually render correctly
+once we send them this enum.
 
 ## What stays static (not CMS-driven)
 
@@ -156,17 +180,20 @@ page load" data that pattern exists for. A short TTL (60s) still
 satisfies "instant" for staff (next page load within a minute reflects
 the change) without hitting the ERP API on every single navigation.
 
-## Open questions for whoever builds the ERP side
+## Reported as settled (per the relayed reply — not independently verified)
 
-- Auth: do these endpoints need the same `x-api-key` as the rest of
-  `/api`, or should CMS content be publicly cacheable (e.g. behind a
-  CDN) since it's not user-specific? Public + CDN-cacheable is
-  probably right for SEO/perf, but confirm before exposing it
-  differently from the rest of the API.
-- What happens on a 404 for a slug that's never been created in the
-  CMS yet (e.g. mid-rollout, only some policy pages migrated)? The
-  frontend fallback behavior above assumes a 404 is a normal,
-  expected case, not an error to alert on.
-- Versioning/rollback: does the ERP admin need an "undo" or revision
-  history for edits? Out of scope for this frontend contract, but
-  worth deciding before staff start using it for real legal text.
+- Auth, caching, revision history, and `cookie-policy` scope, as
+  stated in "Status" above.
+- A slug with no content yet returns a normal 404, per ERP, as the
+  expected/intended behavior during rollout.
+
+## Still open
+
+- Icon/theme enums above are corrections we still need to send back
+  to ERP — they haven't seen `message-circle`/`default` yet. Don't
+  treat these as agreed until they confirm.
+- Nothing in this doc has been checked against the actual running
+  endpoints from this side (no request has been made to
+  `erp.tenon.mv/api/cms/*` yet). Worth doing before frontend
+  integration work starts, rather than coding against the relayed
+  description alone.

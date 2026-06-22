@@ -672,6 +672,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 .slide--tools     { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a0a0a 100%); }
 .slide--plumbing  { background: linear-gradient(135deg, #0c2340 0%, #0d3b66 50%, #0a1a2e 100%); }
 .slide--electrical{ background: linear-gradient(135deg, #1a0c00 0%, #3d1a00 50%, #1a0a00 100%); }
+.slide--default   { background: linear-gradient(135deg, #111111 0%, #1f1f1f 50%, #0a0a0a 100%); }
 
 .slide-inner {
   display: grid;
