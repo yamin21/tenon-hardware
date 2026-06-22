@@ -1433,10 +1433,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 @media (max-width: 560px) {
   .products-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .products-grid--5 { grid-template-columns: repeat(2, 1fr); }
-  .cat-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
-  .cat-tile:nth-of-type(8n+1),
-  .cat-tile:nth-of-type(8n+4),
-  .cat-tile:nth-of-type(8n+5) { grid-column: span 1; grid-row: span 1; }
+  .cat-mosaic { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 105px; }
   .slide-ctas { flex-direction: column; }
   
   
