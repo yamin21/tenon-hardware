@@ -117,13 +117,12 @@ Two specific asks for how staff author this:
    erroring, but a fixed enum on your side (or just letting us define
    the allowed list) avoids drift.
 
-**Explicitly out of scope for Phase 2:** each hero slide currently
-also shows a "featured product" mini-card (a real product's image,
-price, and an Add to Cart button). That's tied to live product/cart
-data, not marketing copy, and we think it's a different feature with
-its own design questions (e.g. "pin product X to slide Y by product
-ID"). We'd rather keep that hardcoded by a developer for now and
-scope it separately later, rather than bundle it into this CMS effort.
+Note: the hero is pure marketing copy, no product data — the homepage
+today happens to also show a decorative "featured product" mini-card
+on each slide, but that's purely cosmetic (a CSS-drawn shape, not a
+real photo, and the Add to Cart button isn't wired to a real catalog
+item). It's not part of what we're asking you to build; we're dropping
+it when we move the homepage onto this CMS.
 
 ---
 

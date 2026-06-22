@@ -111,14 +111,18 @@ blocks. Build after 1a is working.
 }
 ```
 
-**Deliberately out of scope for phase 1b:** the hero slide's "featured
-product" mini-card (badge, product image, brand, name, price,
-Add to Cart button — see [index.html:104-120](../index.html#L104-L120)
-for the current hardcoded version). That widget references real
-product/cart data, not marketing copy, and conflates two different
-problems. Recommend leaving it hardcoded by a developer for now, and
-revisiting as a separate feature (e.g. "pin a real product to a hero
-slide by product ID") once the basic CMS is live.
+**Hero slides are pure marketing copy — no product card.** The current
+homepage hardcodes a decorative "featured product" mini-card on each
+slide (badge, image, brand, price, an Add to Cart button — see
+[index.html:104-120](../index.html#L104-L120)). It's purely cosmetic
+today: the image is a CSS shape, not a photo, and the Add to Cart
+button passes a fabricated string as the cart line's `id`
+(`addToCart('Metabo SB 18 LT BL Drill', ...)`), not a real product ID
+— so clicking it actually adds an unfulfillable fake item to the
+cart. The CMS-driven hero model drops this concept entirely; slides
+are just `tag`/`title`/`body`/CTAs/`theme`. Whoever eventually
+reworks the live homepage to consume this API should remove that
+card rather than carry the bug forward.
 
 **On the `why_choose_us.icon` field:** staff authoring in a CMS admin
 can't hand-write SVG path data. Recommend a constrained icon picker —
@@ -141,7 +145,6 @@ theme" rather than erroring.
   concerns, not editorial content. Changing them needs a developer.
 - Header, footer, navigation — structural chrome, already deduplicated
   into [partials/](../partials/). Unrelated to this CMS effort.
-- The hero slide's featured-product card (see above).
 
 ## Caching
 
