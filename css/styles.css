@@ -91,7 +91,6 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 /* ── Buttons ─────────────────────────────────────────────── */
 .btn-primary,
 .btn-ghost,
-.btn-ghost-light,
 .btn-outline-sm,
 .btn-outline-lg {
   display: inline-flex;
@@ -119,13 +118,6 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   padding: 12px 24px;
 }
 .btn-ghost:hover { border-color: var(--text); transform: translateY(-1px); }
-
-.btn-ghost-light {
-  border: 2px solid rgba(255,255,255,0.4);
-  color: #fff;
-  padding: 12px 24px;
-}
-.btn-ghost-light:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.7); transform: translateY(-1px); }
 
 .btn-outline-sm {
   font-size: 0.88rem;
