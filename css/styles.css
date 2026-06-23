@@ -661,19 +661,6 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 .slide--default   { background: linear-gradient(135deg, #111111 0%, #1f1f1f 50%, #0a0a0a 100%); }
 
 .slide-copy { color: #fff; }
-.slide-tag {
-  display: inline-block;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.9);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  margin-bottom: 20px;
-}
 .slide-copy h1 {
   font-size: clamp(2rem, 3.2vw, 3.4rem);
   font-weight: 800;
