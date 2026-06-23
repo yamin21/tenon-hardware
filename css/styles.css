@@ -702,11 +702,13 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 .dot--active { background: var(--brand); }
 
 /* ── Category Mosaic ─────────────────────────────────────────
-   Bento-style grid. Tile sizing comes from nth-child position, not
-   per-category config, so it auto-adapts to however many categories
-   the API returns. Tiles are grey until a category has an image_url
-   (pushed from the CMS) — background-image is only set inline when
-   one exists, so an empty value just shows the placeholder colour. */
+   Bento-style grid. Tile sizing (2x2 "big" tiles vs plain 1x1, and
+   avoiding gaps in a partial last row) is computed in JS — see
+   layoutCategoryMosaic() in index.html — so it auto-adapts to however
+   many categories the API returns and to the current column count.
+   Tiles are grey until a category has an image_url (pushed from the
+   CMS) — background-image is only set inline when one exists, so an
+   empty value just shows the placeholder colour. */
 .categories-section { background: var(--bg); padding-top: 24px; padding-bottom: 40px; }
 .categories-section .section-title { font-size: 1.8rem; font-weight: 700; }
 .cat-mosaic {
@@ -727,17 +729,13 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   transition: box-shadow var(--transition);
 }
 .cat-tile:hover, .cat-tile:focus-visible { box-shadow: 0 16px 40px rgba(17,17,17,0.18); }
-.cat-tile:nth-of-type(8n+1) { grid-column: span 2; grid-row: span 2; }
-.cat-tile:nth-of-type(8n+4) { grid-column: span 2; }
-.cat-tile:nth-of-type(8n+5) { grid-row: span 2; }
-/* Dense packing can leave the last tile alone in a partial row, with
-   nothing after it to backfill the rest — stretch it to fill the row
-   instead of leaving an orphaned small square. 1/-1 spans to whatever
-   the last column line actually is, so this keeps working whether
-   there are 4 columns (desktop) or 3 (tablet/mobile), and however many
-   categories exist. Comes after the rules above so it wins on the
-   rare tile that's both :last-child and matches one of them. */
-.cat-tile:last-child { grid-column: 1 / -1; grid-row: span 1; }
+/* Tile sizing (which ones get a 2x2 "big" treatment, and stretching
+   the last row's tile to avoid a gap) is computed in JS — see
+   layoutCategoryMosaic() in index.html. A pure-CSS nth-of-type
+   pattern can't guarantee a gap-free layout for an arbitrary,
+   changing category count (verified empirically: even a plain
+   2x2-or-1x1-only pattern left gaps for several counts) — only an
+   approach that knows the actual tile count and column count can. */
 .cat-tile-label {
   position: absolute;
   inset: auto 0 0 0;

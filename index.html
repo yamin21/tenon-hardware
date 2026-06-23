@@ -362,6 +362,51 @@
       ).join('');
       track.innerHTML = items + items;
     }
+
+    // Computes which category tiles get the 2x2 "big" treatment and
+    // stretches the last tile to close out a partial final row — so
+    // the mosaic is gap-free for whatever category count and column
+    // count are currently in play. A pure-CSS nth-of-type pattern
+    // can't guarantee this (see the comment in styles.css): verified
+    // empirically that even a plain 2x2-or-1x1-only pattern left gaps
+    // for several tile counts, since dense packing alone doesn't know
+    // ahead of time how the count will divide.
+    function layoutCategoryMosaic() {
+      const grid = document.getElementById('catGrid');
+      const tiles = [...grid.querySelectorAll('.cat-tile')];
+      tiles.forEach((t) => { t.style.gridColumn = ''; t.style.gridRow = ''; });
+      if (!tiles.length) return;
+
+      const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      if (cols < 2) return;
+
+      // A 2x2 tile's footprint (2 rows) leaves (2*cols - 4) single
+      // cells alongside it — exactly enough for that many 1x1 tiles
+      // to backfill with zero gaps. Only start a "big" band when
+      // there's room to complete it; otherwise trailing tiles stay
+      // plain 1x1.
+      const bandSize = 1 + Math.max(0, 2 * cols - 4);
+      let i = 0;
+      while (i + bandSize <= tiles.length) {
+        tiles[i].style.gridColumn = 'span 2';
+        tiles[i].style.gridRow = 'span 2';
+        i += bandSize;
+      }
+
+      // If there's a leftover partial row, stretch the last tile to
+      // close it out rather than leaving it (and the blank space
+      // beside it) looking orphaned.
+      const remaining = tiles.length - i;
+      const partial = remaining % cols;
+      if (partial !== 0) {
+        tiles[tiles.length - 1].style.gridColumn = `span ${cols - partial + 1}`;
+      }
+    }
+    let mosaicResizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(mosaicResizeTimer);
+      mosaicResizeTimer = setTimeout(layoutCategoryMosaic, 150);
+    });
     // Fetched once, shared with the category mosaic further down (for
     // featured_categories) so /api/cms/landing is only requested once.
     const landingPromise = getLandingContent().catch(() => null);
@@ -544,9 +589,9 @@
         const products = (await prodRes.json()).data;
 
         // Category mosaic. Tiles are grey until a category has an
-        // image_url — tile sizing comes from CSS nth-child position,
-        // not per-category config, so this needs no changes when
-        // categories are added, renamed, or reordered.
+        // image_url. Tile sizing is computed by layoutCategoryMosaic()
+        // after rendering, not per-category config, so this needs no
+        // changes when categories are added, renamed, or reordered.
         //
         // featured_categories (from /api/cms/landing) is an ordered
         // list of slugs curating which categories show here; an empty
@@ -563,6 +608,7 @@
           <a href="category.html?sub=${sub.slug}" class="cat-tile"${sub.image_url ? ` style="background-image:url('${sub.image_url}')"` : ''}>
             <span class="cat-tile-label">${sub.name}</span>
           </a>`).join('');
+        layoutCategoryMosaic();
 
         // Cat nav chips + mobile nav
         const nav = document.getElementById('catNavInner');
