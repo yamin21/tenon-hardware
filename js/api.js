@@ -136,3 +136,22 @@ async function getCategoryTree(categorySlug) {
   try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: tree })); } catch {}
   return tree;
 }
+
+// ── CMS-managed landing content (hero slides, etc.) ────────────
+// No cache here, unlike the category tree above — staff expect a
+// change to show up on the very next page load, not within a minute.
+//
+// image_url values from the CMS are relative paths (e.g.
+// "cms/hero/169...jpg"), not full URLs. CMS_ASSET_BASE is an
+// unconfirmed guess at the asset host — update this once ERP
+// confirms where these are actually served from.
+const CMS_ASSET_BASE = 'https://erp.tenon.mv';
+
+function resolveCmsAsset(path) {
+  if (!path) return '';
+  return /^https?:\/\//.test(path) ? path : CMS_ASSET_BASE + '/' + path.replace(/^\/+/, '');
+}
+
+async function getLandingContent() {
+  return apiFetch('/cms/landing');
+}

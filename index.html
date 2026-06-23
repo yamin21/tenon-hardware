@@ -310,6 +310,56 @@
       }, { passive: true });
     })();
 
+    // CMS-driven hero slides. Leaves the hardcoded slides above
+    // untouched if the fetch fails or returns none — same fallback
+    // pattern as the policy pages.
+    function escHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function renderHeroSlides(slides) {
+      const track = document.getElementById('carouselTrack');
+      const dots = document.getElementById('carouselDots');
+      const scrim = 'linear-gradient(100deg, rgba(17,17,17,.78), rgba(17,17,17,.4) 50%, rgba(17,17,17,.15))';
+
+      track.innerHTML = slides.map(slide => {
+        const bg = resolveCmsAsset(slide.image_url);
+        const style = `background-image:${scrim}${bg ? `, url('${bg}')` : ''}`;
+        const cta = slide.cta && slide.cta.label
+          ? `<div class="slide-ctas"><a href="${escHtml(slide.cta.href || '#')}" class="btn-primary">${escHtml(slide.cta.label)}</a></div>`
+          : '';
+        return `
+          <div class="carousel-slide carousel-slide--photo" style="${style}">
+            <div class="container">
+              <div class="slide-copy">
+                ${slide.title ? `<h1>${escHtml(slide.title)}</h1>` : ''}
+                ${slide.body ? `<p>${escHtml(slide.body)}</p>` : ''}
+                ${cta}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      dots.innerHTML = slides.map((_, i) =>
+        `<button class="dot${i === 0 ? ' dot--active' : ''}" onclick="goToSlide(${i})" aria-label="Slide ${i + 1}"></button>`
+      ).join('');
+      dots.style.display = slides.length > 1 ? '' : 'none';
+
+      slideCount = slides.length;
+      currentSlide = 0;
+      track.style.transform = 'translateX(0%)';
+      resetAutoSlide();
+    }
+    (async () => {
+      try {
+        const landing = await getLandingContent();
+        if (landing && Array.isArray(landing.hero_slides) && landing.hero_slides.length) {
+          renderHeroSlides(landing.hero_slides);
+        }
+      } catch (e) {
+        // Keep the hardcoded fallback slides already in the HTML.
+      }
+    })();
+
     // ── Cart ──────────────────────────────────────────────────
     function removeFromCart(id) {
       cartItems = cartItems.filter(i => i.id !== id);

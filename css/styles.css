@@ -659,6 +659,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 .slide--plumbing  { background: linear-gradient(135deg, #0c2340 0%, #0d3b66 50%, #0a1a2e 100%); }
 .slide--electrical{ background: linear-gradient(135deg, #1a0c00 0%, #3d1a00 50%, #1a0a00 100%); }
 .slide--default   { background: linear-gradient(135deg, #111111 0%, #1f1f1f 50%, #0a0a0a 100%); }
+.carousel-slide--photo { background-color: #111111; background-size: cover; background-position: center; }
 
 .slide-copy { color: #fff; }
 .slide-copy h1 {
