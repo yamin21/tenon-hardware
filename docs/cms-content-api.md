@@ -119,10 +119,25 @@ blocks. Build after 1a is working.
         "body": "Every product is hand-picked from trusted global brands. No knockoffs, no compromises — just proven quality."
       }
     ],
+    "brands": [
+      { "name": "Metabo", "logo_url": "https://.../cms/brands/metabo.png" }
+    ],
     "updated_at": "2026-06-20T09:00:00Z"
   }
 }
 ```
+
+**`brands`** (added after the initial build — not in the original spec
+the ERP built against, confirm they've added support): an ordered list
+replacing the homepage's "Trusted brands we carry" marquee, which
+today is 10 hardcoded text placeholders (Metabo, Bosch, DeWalt,
+Karcher, ABB, Roca, Yato, WD-40, Nippon, Telwin — see
+[index.html:160-169](../index.html#L160-L169)). Array order is display
+order. `logo_url` follows the same convention as hero/category
+images — a relative storage path, resolved client-side via
+`resolveCmsAsset()`. No logo files exist yet on our side, so an empty
+or missing `brands` array correctly falls back to the current
+hardcoded text placeholders (verified — see commit history).
 
 **Hero slides are pure marketing copy — no product card.** The current
 homepage hardcodes a decorative "featured product" mini-card on each
@@ -214,3 +229,6 @@ history, not reproduced here):
   `why_choose_us` use the field names we agreed on?) is still
   unverified — there's no live content to inspect yet. Re-test once
   ERP has entered at least one real page through the admin UI.
+- `brands` (above) is new — frontend is built and verified against a
+  simulated response, but ERP hasn't built their side yet. Needs their
+  confirmation before any real logo will show.

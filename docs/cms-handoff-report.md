@@ -124,6 +124,26 @@ real photo, and the Add to Cart button isn't wired to a real catalog
 item). It's not part of what we're asking you to build; we're dropping
 it when we move the homepage onto this CMS.
 
+### Phase 3 (new ask): brand logos
+
+The homepage has a "Trusted brands we carry" marquee — today it's 10
+hardcoded text placeholders (Metabo, Bosch, DeWalt, etc.), no real
+logos. We'd like this added to `GET /api/cms/landing` as a new field:
+
+```json
+"brands": [
+  { "name": "Metabo", "logo_url": "https://.../cms/brands/metabo.png" }
+]
+```
+
+Same conventions as hero/category images — array order is display
+order, `logo_url` should be a full resolvable URL (like you already
+do for hero/category images, not the relative-path version from
+earlier). We don't have real logo files yet on our side, so there's
+no urgency — our frontend already falls back to the current hardcoded
+placeholders when this field is empty or missing, so nothing breaks
+either way in the meantime.
+
 ---
 
 ## Open questions for you to weigh in on

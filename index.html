@@ -350,6 +350,18 @@
       track.style.transform = 'translateX(0%)';
       resetAutoSlide();
     }
+
+    // Replaces the hardcoded text-placeholder brand boxes with real
+    // logos once the CMS has them. Duplicates the list once, same as
+    // the hardcoded markup, so the infinite-scroll loop stays seamless.
+    function renderBrands(brands) {
+      const track = document.querySelector('.brands-track');
+      if (!track) return;
+      const items = brands.map(b =>
+        `<div class="brand-logo"><img src="${resolveCmsAsset(b.logo_url)}" alt="${escHtml(b.name || '')}" loading="lazy"></div>`
+      ).join('');
+      track.innerHTML = items + items;
+    }
     // Fetched once, shared with the category mosaic further down (for
     // featured_categories) so /api/cms/landing is only requested once.
     const landingPromise = getLandingContent().catch(() => null);
@@ -370,6 +382,10 @@
         renderHeroSlides(landing.hero_slides);
       }
       // Otherwise keep the hardcoded fallback slides already in the HTML.
+      if (landing && Array.isArray(landing.brands) && landing.brands.length) {
+        renderBrands(landing.brands);
+      }
+      // Otherwise keep the hardcoded text-placeholder brand boxes.
       revealHero();
     });
     setTimeout(revealHero, 2000);
