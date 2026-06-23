@@ -872,7 +872,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   transition: border-color var(--transition), color var(--transition), box-shadow var(--transition);
 }
 .brand-logo:hover { border-color: var(--brand); color: var(--brand); box-shadow: var(--shadow-sm); }
-.brand-logo img { max-width: 80%; max-height: 70%; object-fit: contain; }
+.brand-logo img { max-width: 95%; max-height: 90%; object-fit: contain; }
 @keyframes scrollBrands {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
