@@ -846,7 +846,13 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   display: block;
   margin-bottom: 24px;
 }
-.brands-strip { overflow: hidden; }
+/* Hidden until JS decides what to show and (for real CMS logos) the
+   images have actually finished loading — avoids the hardcoded text
+   placeholders flashing before real logos replace them, and logos
+   popping in one at a time as each image downloads. visibility (not
+   display) so layout space is reserved; a noscript override below
+   covers JS-disabled visitors, same pattern as the hero carousel. */
+.brands-strip { overflow: hidden; visibility: hidden; }
 .brands-track {
   will-change: transform;
   display: flex;

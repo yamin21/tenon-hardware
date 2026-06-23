@@ -180,6 +180,7 @@
             <div class="brand-logo">Telwin</div>
           </div>
         </div>
+        <noscript><style>.brands-strip { visibility: visible; }</style></noscript>
       </div>
     </section>
 
@@ -354,13 +355,19 @@
     // Replaces the hardcoded text-placeholder brand boxes with real
     // logos once the CMS has them. Duplicates the list once, same as
     // the hardcoded markup, so the infinite-scroll loop stays seamless.
+    // No loading="lazy" — this is a small, always-present marquee, and
+    // lazy-loading caused logos to pop in at unpredictable times since
+    // the track scrolls via CSS transform rather than real scrolling.
+    // Returns the inserted <img> elements so the caller can wait for
+    // them to actually finish loading before revealing the section.
     function renderBrands(brands) {
       const track = document.querySelector('.brands-track');
-      if (!track) return;
+      if (!track) return [];
       const items = brands.map(b =>
-        `<div class="brand-logo"><img src="${resolveCmsAsset(b.logo_url)}" alt="${escHtml(b.name || '')}" loading="lazy"></div>`
+        `<div class="brand-logo"><img src="${resolveCmsAsset(b.logo_url)}" alt="${escHtml(b.name || '')}"></div>`
       ).join('');
       track.innerHTML = items + items;
+      return [...track.querySelectorAll('img')];
     }
 
     // Computes which category tiles get the 2x2 "big" treatment and
@@ -422,18 +429,42 @@
       document.getElementById('heroSection').style.visibility = 'visible';
       document.getElementById('carouselDots').style.visibility = 'visible';
     }
+
+    // Same idea for the brand-logo strip, but it also waits for the
+    // real <img>s to actually finish loading (not just for the JSON
+    // fetch) — otherwise logos would still pop in one at a time as
+    // each image downloads after the section is revealed.
+    let brandsRevealed = false;
+    function revealBrands() {
+      if (brandsRevealed) return;
+      brandsRevealed = true;
+      document.querySelector('.brands-strip').style.visibility = 'visible';
+    }
+    function waitForImages(imgs) {
+      return Promise.all(imgs.map((img) => img.complete ? Promise.resolve() : new Promise((resolve) => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+      })));
+    }
+
     landingPromise.then((landing) => {
       if (landing && Array.isArray(landing.hero_slides) && landing.hero_slides.length) {
         renderHeroSlides(landing.hero_slides);
       }
       // Otherwise keep the hardcoded fallback slides already in the HTML.
-      if (landing && Array.isArray(landing.brands) && landing.brands.length) {
-        renderBrands(landing.brands);
-      }
-      // Otherwise keep the hardcoded text-placeholder brand boxes.
       revealHero();
+
+      if (landing && Array.isArray(landing.brands) && landing.brands.length) {
+        const imgs = renderBrands(landing.brands);
+        waitForImages(imgs).then(revealBrands);
+      } else {
+        // No images to wait for — the hardcoded text placeholders are
+        // already fine to show as-is.
+        revealBrands();
+      }
     });
     setTimeout(revealHero, 2000);
+    setTimeout(revealBrands, 2000);
 
     // ── Cart ──────────────────────────────────────────────────
     function removeFromCart(id) {
