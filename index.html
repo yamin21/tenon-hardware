@@ -349,15 +349,16 @@
       track.style.transform = 'translateX(0%)';
       resetAutoSlide();
     }
+    // Fetched once, shared with the category mosaic further down (for
+    // featured_categories) so /api/cms/landing is only requested once.
+    const landingPromise = getLandingContent().catch(() => null);
+
     (async () => {
-      try {
-        const landing = await getLandingContent();
-        if (landing && Array.isArray(landing.hero_slides) && landing.hero_slides.length) {
-          renderHeroSlides(landing.hero_slides);
-        }
-      } catch (e) {
-        // Keep the hardcoded fallback slides already in the HTML.
+      const landing = await landingPromise;
+      if (landing && Array.isArray(landing.hero_slides) && landing.hero_slides.length) {
+        renderHeroSlides(landing.hero_slides);
       }
+      // Otherwise keep the hardcoded fallback slides already in the HTML.
     })();
 
     // ── Cart ──────────────────────────────────────────────────
@@ -505,20 +506,31 @@
     // ── Cat Nav + Products: load together ────────────────────
     (async () => {
       try {
-        const [tree, prodRes] = await Promise.all([
+        const [tree, prodRes, landing] = await Promise.all([
           getCategoryTree('hardware'),
-          fetch(API_BASE + withLocation('/products?category=hardware'), { headers: { 'x-api-key': API_KEY } })
+          fetch(API_BASE + withLocation('/products?category=hardware'), { headers: { 'x-api-key': API_KEY } }),
+          landingPromise
         ]);
         const subs     = tree.map(({ children, ...sub }) => sub);
         const products = (await prodRes.json()).data;
 
         // Category mosaic. Tiles are grey until a category has an
-        // image_url (pushed from the CMS once that's wired up) — tile
-        // sizing comes from CSS nth-child position, not per-category
-        // config, so this needs no changes when categories are added,
-        // renamed, or reordered.
+        // image_url — tile sizing comes from CSS nth-child position,
+        // not per-category config, so this needs no changes when
+        // categories are added, renamed, or reordered.
+        //
+        // featured_categories (from /api/cms/landing) is an ordered
+        // list of slugs curating which categories show here; an empty
+        // or missing list falls back to showing every subcategory
+        // (today's behavior). Unmatched slugs are skipped rather than
+        // erroring, since stale references are expected over time.
+        const featuredSlugs = Array.isArray(landing?.featured_categories) ? landing.featured_categories : [];
+        const mosaicSubs = featuredSlugs.length
+          ? featuredSlugs.map(slug => subs.find(s => s.slug === slug)).filter(Boolean)
+          : subs;
+
         const catGrid = document.getElementById('catGrid');
-        catGrid.innerHTML = subs.map(sub => `
+        catGrid.innerHTML = mosaicSubs.map(sub => `
           <a href="category.html?sub=${sub.slug}" class="cat-tile"${sub.image_url ? ` style="background-image:url('${sub.image_url}')"` : ''}>
             <span class="cat-tile-label">${sub.name}</span>
           </a>`).join('');
