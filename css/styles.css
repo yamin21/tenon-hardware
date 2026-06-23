@@ -727,7 +727,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   position: absolute;
   inset: auto 0 0 0;
   padding: 16px;
-  color: var(--brand);
+  color: #fff;
   font-weight: 700;
   font-size: 0.95rem;
   transition: opacity var(--transition), transform var(--transition);
