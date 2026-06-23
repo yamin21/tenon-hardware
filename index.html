@@ -138,6 +138,7 @@
       <button class="dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
       <button class="dot" onclick="goToSlide(2)" aria-label="Slide 3"></button>
     </div>
+    <noscript><style>.hero-carousel, #carouselDots { visibility: visible; }</style></noscript>
 
 
     <!-- ── Shop by Category ──────────────────────────────── -->
@@ -353,13 +354,25 @@
     // featured_categories) so /api/cms/landing is only requested once.
     const landingPromise = getLandingContent().catch(() => null);
 
-    (async () => {
-      const landing = await landingPromise;
+    // The hero starts hidden (see .hero-carousel in styles.css) so the
+    // hardcoded slides never flash before a CMS fetch replaces them.
+    // Reveal happens here, whichever way it resolves; a timeout is a
+    // safety net so a slow/hung connection doesn't hide it forever.
+    let heroRevealed = false;
+    function revealHero() {
+      if (heroRevealed) return;
+      heroRevealed = true;
+      document.getElementById('heroSection').style.visibility = 'visible';
+      document.getElementById('carouselDots').style.visibility = 'visible';
+    }
+    landingPromise.then((landing) => {
       if (landing && Array.isArray(landing.hero_slides) && landing.hero_slides.length) {
         renderHeroSlides(landing.hero_slides);
       }
       // Otherwise keep the hardcoded fallback slides already in the HTML.
-    })();
+      revealHero();
+    });
+    setTimeout(revealHero, 2000);
 
     // ── Cart ──────────────────────────────────────────────────
     function removeFromCart(id) {

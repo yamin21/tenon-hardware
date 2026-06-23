@@ -642,7 +642,14 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 }
 
 /* ── Hero Carousel ───────────────────────────────────────── */
-.hero-carousel { position: relative; overflow: hidden; }
+/* Hidden until JS decides whether to render CMS slides or keep these
+   hardcoded ones — avoids a flash of the hardcoded slides on every
+   load, right before the CMS fetch (if it has real data) replaces
+   them. visibility (not display) so layout space is reserved and
+   nothing shifts when revealed. JS always reveals this, success or
+   failure, so a noscript fallback covers JS-disabled visitors. */
+.hero-carousel { position: relative; overflow: hidden; visibility: hidden; }
+#carouselDots { visibility: hidden; }
 .carousel-viewport { overflow: hidden; }
 .carousel-track {
   display: flex;
