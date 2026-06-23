@@ -939,6 +939,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 
 /* ── Featured Products ───────────────────────────────────── */
 .featured-section { background: #fff; padding-bottom: 40px; }
+.featured-section .section-title { font-size: 1.8rem; font-weight: 700; }
 
 .tab-btn {
   padding: 8px 18px;
