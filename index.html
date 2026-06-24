@@ -454,6 +454,13 @@
     // for good). Both big and tall need a 2-row-tall footprint, so
     // they can share a band: at cols>=3 there's always room for one
     // of each per band, with 1x1 tiles backfilling whatever's left.
+    //
+    // Every other band's leading 2x2 footprint is rendered as two
+    // side-by-side tall tiles instead of one big square — same cell
+    // budget (2 cols x 2 rows either way), more visual rhythm. At
+    // cols==2 there's no room left for the extra single tall or any
+    // small filler once the footprint itself fills both columns, so
+    // bands there are just the alternating footprint, back to back.
     function layoutCategoryMosaic() {
       const grid = document.getElementById('catGrid');
       const tiles = [...grid.querySelectorAll('.cat-tile')];
@@ -463,17 +470,27 @@
       const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
       if (cols < 2) return;
 
-      const useTall = cols >= 3;
-      const bandUsed = useTall ? 4 + 2 : 4; // big (4 cells) [+ tall (2 cells)]
-      const smallPerBand = Math.max(0, 2 * cols - bandUsed);
-      const tilesPerBand = (useTall ? 2 : 1) + smallPerBand;
+      const useExtraTall = cols >= 3;
+      const smallPerBand = Math.max(0, 2 * cols - 4 - (useExtraTall ? 2 : 0));
 
-      let i = 0;
-      while (i + tilesPerBand <= tiles.length) {
-        tiles[i].style.gridColumn = 'span 2';
-        tiles[i].style.gridRow = 'span 2';
-        if (useTall) tiles[i + 1].style.gridRow = 'span 2';
+      let i = 0, bandIndex = 0;
+      while (true) {
+        const useDoubleTall = bandIndex % 2 === 1;
+        const footprintTiles = useDoubleTall ? 2 : 1;
+        const tilesPerBand = footprintTiles + (useExtraTall ? 1 : 0) + smallPerBand;
+        if (i + tilesPerBand > tiles.length) break;
+
+        if (useDoubleTall) {
+          tiles[i].style.gridRow = 'span 2';
+          tiles[i + 1].style.gridRow = 'span 2';
+        } else {
+          tiles[i].style.gridColumn = 'span 2';
+          tiles[i].style.gridRow = 'span 2';
+        }
+        if (useExtraTall) tiles[i + footprintTiles].style.gridRow = 'span 2';
+
         i += tilesPerBand;
+        bandIndex++;
       }
 
       // If there's a leftover partial row, stretch the last tile to
