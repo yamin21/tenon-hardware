@@ -493,13 +493,31 @@
         bandIndex++;
       }
 
-      // If there's a leftover partial row, stretch the last tile to
-      // close it out rather than leaving it (and the blank space
-      // beside it) looking orphaned.
+      // If there's a leftover partial row, close it out by spreading
+      // the extra width across *all* the tiles still left (not just
+      // stretching the one last tile, which could end up spanning
+      // most of the row at only 1 row tall — badly letterboxed). Each
+      // also gets a 2nd row of height, which keeps their width:height
+      // ratio close to the "big"/"tall" tiles used everywhere else in
+      // the mosaic, rather than going flat and wide. Needs explicit
+      // grid-column/row placement (not just `span`) since the auto-
+      // placement algorithm has no way to know we want these specific
+      // leftover tiles distributed evenly across the row.
       const remaining = tiles.length - i;
+      const fullTrailingRows = Math.floor(remaining / cols);
       const partial = remaining % cols;
       if (partial !== 0) {
-        tiles[tiles.length - 1].style.gridColumn = `span ${cols - partial + 1}`;
+        const startRow = bandIndex * 2 + 1 + fullTrailingRows;
+        const partialTiles = tiles.slice(tiles.length - partial);
+        const baseSpan = Math.floor(cols / partial);
+        const extra = cols - baseSpan * partial; // first `extra` tiles get +1 column
+        let col = 1;
+        partialTiles.forEach((tile, idx) => {
+          const span = baseSpan + (idx < extra ? 1 : 0);
+          tile.style.gridColumn = `${col} / span ${span}`;
+          tile.style.gridRow = `${startRow} / span 2`;
+          col += span;
+        });
       }
     }
     let mosaicResizeTimer = null;
