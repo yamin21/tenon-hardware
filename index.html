@@ -436,14 +436,24 @@
       return [...track.querySelectorAll('img')];
     }
 
-    // Computes which category tiles get the 2x2 "big" treatment and
-    // stretches the last tile to close out a partial final row — so
-    // the mosaic is gap-free for whatever category count and column
-    // count are currently in play. A pure-CSS nth-of-type pattern
-    // can't guarantee this (see the comment in styles.css): verified
-    // empirically that even a plain 2x2-or-1x1-only pattern left gaps
-    // for several tile counts, since dense packing alone doesn't know
-    // ahead of time how the count will divide.
+    // Computes which category tiles get the 2x2 "big" / 1x2 "tall"
+    // treatment and stretches the last tile to close out a partial
+    // final row — so the mosaic is gap-free for whatever category
+    // count and column count are currently in play. A pure-CSS
+    // nth-of-type pattern can't guarantee this (see the comment in
+    // styles.css): verified empirically that even a plain
+    // 2x2-or-1x1-only pattern left gaps for several tile counts,
+    // since dense packing alone doesn't know ahead of time how the
+    // count will divide.
+    //
+    // A 1x2 "tall" tile mixed in alongside "big" restores some of the
+    // staggered variety a uniform big+small grid lacks, without the
+    // problem a 2x1 "wide" tile had (this layout's column width is
+    // close to 2 row-heights, so tall reads as roughly square — wide
+    // read as a ~4:1 letterboxed crop, which is why wide stays gone
+    // for good). Both big and tall need a 2-row-tall footprint, so
+    // they can share a band: at cols>=3 there's always room for one
+    // of each per band, with 1x1 tiles backfilling whatever's left.
     function layoutCategoryMosaic() {
       const grid = document.getElementById('catGrid');
       const tiles = [...grid.querySelectorAll('.cat-tile')];
@@ -453,17 +463,17 @@
       const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
       if (cols < 2) return;
 
-      // A 2x2 tile's footprint (2 rows) leaves (2*cols - 4) single
-      // cells alongside it — exactly enough for that many 1x1 tiles
-      // to backfill with zero gaps. Only start a "big" band when
-      // there's room to complete it; otherwise trailing tiles stay
-      // plain 1x1.
-      const bandSize = 1 + Math.max(0, 2 * cols - 4);
+      const useTall = cols >= 3;
+      const bandUsed = useTall ? 4 + 2 : 4; // big (4 cells) [+ tall (2 cells)]
+      const smallPerBand = Math.max(0, 2 * cols - bandUsed);
+      const tilesPerBand = (useTall ? 2 : 1) + smallPerBand;
+
       let i = 0;
-      while (i + bandSize <= tiles.length) {
+      while (i + tilesPerBand <= tiles.length) {
         tiles[i].style.gridColumn = 'span 2';
         tiles[i].style.gridRow = 'span 2';
-        i += bandSize;
+        if (useTall) tiles[i + 1].style.gridRow = 'span 2';
+        i += tilesPerBand;
       }
 
       // If there's a leftover partial row, stretch the last tile to
