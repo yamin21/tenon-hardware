@@ -278,14 +278,81 @@
     renderCart();
 
     // ── Carousel ──────────────────────────────────────────────
-    function goToSlide(index) {
-      currentSlide = (index + slideCount) % slideCount;
-      document.getElementById('carouselTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+    // Sequential "next/prev" moves (autoplay, swipe) should always
+    // animate the same direction, including when wrapping past the
+    // last/first slide. Jumping the transform straight from the last
+    // index back to 0 does the opposite — it animates backward, since
+    // translateX is increasing instead of continuing to decrease.
+    // (Most visible with exactly 2 slides, since every other
+    // transition is then a wrap.) Fixed with the standard trick: a
+    // hidden clone of slide 0 right after the last real slide, and a
+    // clone of the last slide right before slide 0. Wrapping animates
+    // onto the relevant clone — continuing the same direction — then
+    // silently snaps (no transition) to the real slide once that
+    // animation ends, which is invisible since the clone looks
+    // identical to the real slide it's standing in for.
+    //
+    // trackPosition is offset by +1 from the logical currentSlide
+    // because of the leading clone; goToSlide() (used by dots) jumps
+    // directly with no wrap animation, since a direct jump to an
+    // arbitrary slide isn't a "continue in this direction" gesture.
+    let trackPosition = 1;
+    function setupLoopClones() {
+      const track = document.getElementById('carouselTrack');
+      track.querySelectorAll('[data-loop-clone]').forEach((c) => c.remove());
+      const real = [...track.children];
+      if (real.length < 2) return;
+      const firstClone = real[0].cloneNode(true);
+      const lastClone = real[real.length - 1].cloneNode(true);
+      firstClone.setAttribute('data-loop-clone', '');
+      lastClone.setAttribute('data-loop-clone', '');
+      track.insertBefore(lastClone, real[0]);
+      track.appendChild(firstClone);
+    }
+    function setTrackTransform(pos, animate = true) {
+      const track = document.getElementById('carouselTrack');
+      if (!animate) track.style.transition = 'none';
+      track.style.transform = `translateX(-${pos * 100}%)`;
+      if (!animate) {
+        track.offsetHeight; // force reflow so the next move re-enables transition cleanly
+        track.style.transition = '';
+      }
+    }
+    function updateDots() {
       document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('dot--active', i === currentSlide));
     }
+    function goToSlide(index) {
+      currentSlide = (index + slideCount) % slideCount;
+      trackPosition = currentSlide + 1;
+      setTrackTransform(trackPosition);
+      updateDots();
+    }
+    function advanceSlide(dir) {
+      if (slideCount <= 1) return;
+      const next = currentSlide + dir;
+      if (next >= 0 && next < slideCount) {
+        currentSlide = next;
+        trackPosition = currentSlide + 1;
+        setTrackTransform(trackPosition);
+      } else {
+        currentSlide = (next + slideCount) % slideCount;
+        trackPosition = dir > 0 ? slideCount + 1 : 0;
+        setTrackTransform(trackPosition);
+        const track = document.getElementById('carouselTrack');
+        const handler = () => {
+          track.removeEventListener('transitionend', handler);
+          trackPosition = currentSlide + 1;
+          setTrackTransform(trackPosition, false);
+        };
+        track.addEventListener('transitionend', handler);
+      }
+      updateDots();
+    }
+    setupLoopClones();
+    setTrackTransform(trackPosition, false);
     function resetAutoSlide() {
       clearInterval(autoSlideTimer);
-      autoSlideTimer = setInterval(() => goToSlide(currentSlide + 1), 5000);
+      autoSlideTimer = setInterval(() => advanceSlide(1), 5000);
     }
     resetAutoSlide();
     document.addEventListener('visibilitychange', () => {
@@ -303,7 +370,7 @@
       viewport.addEventListener('touchend', (e) => {
         const dx = e.changedTouches[0].clientX - touchStartX;
         if (Math.abs(dx) > 40) {
-          goToSlide(currentSlide + (dx < 0 ? 1 : -1));
+          advanceSlide(dx < 0 ? 1 : -1);
           resetAutoSlide();
         }
       }, { passive: true });
@@ -345,7 +412,9 @@
 
       slideCount = slides.length;
       currentSlide = 0;
-      track.style.transform = 'translateX(0%)';
+      setupLoopClones();
+      trackPosition = slideCount > 1 ? 1 : 0;
+      setTrackTransform(trackPosition, false);
       resetAutoSlide();
     }
 
