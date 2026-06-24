@@ -581,6 +581,16 @@
     // ── Year ──────────────────────────────────────────────────
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Maldives doesn't observe DST, so a fixed UTC+5 offset is safe.
+    // Computing the date this way (rather than new Date().toISOString(),
+    // which is UTC, or local getters, which follow the visitor's own
+    // device timezone) means the rotation flips at midnight Maldives
+    // time for every visitor, regardless of where they're browsing from.
+    function maldivesDateString(d) {
+      const shifted = new Date(d.getTime() + 5 * 60 * 60 * 1000);
+      return shifted.toISOString().slice(0, 10);
+    }
+
     // Deterministic per-day shuffle for the featured products grid —
     // same order for every visitor on a given calendar day (so it
     // doesn't feel random/inconsistent within a day), automatically
@@ -679,7 +689,7 @@
 
         // Featured grid — a different random 8 each calendar day.
         const withImg = products.filter(p => p.images && p.images[0]);
-        const today = new Date().toISOString().slice(0, 10);
+        const today = maldivesDateString(new Date());
         const featured = seededShuffle(withImg, today).slice(0, 8);
         document.getElementById('featuredGrid').innerHTML = featured.map((p, i) => buildProductCard(p, '', i < 4)).join('');
       } catch(e) {}
