@@ -19,6 +19,13 @@ async function getSubcategories(categorySlug) {
 }
 
 // ── Customer location (multi-warehouse stock routing) ────────
+// Off until the multi-warehouse feature is ready to launch — flip
+// back to true to re-enable the picker (header pill, forced first-
+// visit modal, checkout's location requirement). getLocation() stays
+// null for everyone while this is off, which withLocation() already
+// handles gracefully (omits the param rather than erroring).
+const LOCATION_PICKER_ENABLED = false;
+
 const LOCATION_KEY = 'tenon_location';
 
 function getLocation() {

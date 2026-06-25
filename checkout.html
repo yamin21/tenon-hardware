@@ -393,7 +393,7 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/api.js"></script>
   <script>
-    if (!getLocation()) window.location.replace('index.html');
+    if (LOCATION_PICKER_ENABLED && !getLocation()) window.location.replace('index.html');
   </script>
 
   <header class="site-header" id="siteHeader" style="border-bottom: 1px solid var(--brand);">

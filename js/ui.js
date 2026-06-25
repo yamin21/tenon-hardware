@@ -47,6 +47,10 @@ function updateLocationOptions() {
 }
 
 function initLocationPicker() {
+  if (!LOCATION_PICKER_ENABLED) {
+    document.getElementById('locationPill')?.style.setProperty('display', 'none');
+    return;
+  }
   if (!document.getElementById('locationModal')) {
     const wrap = document.createElement('div');
     wrap.innerHTML = `
