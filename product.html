@@ -352,14 +352,47 @@
     }
 
     // ── Variants ──────────────────────────────────────────────
+    // Variant labels like '#6 x 1/2"' / '#8 x 1-1/2"' come back from the
+    // API in whatever order they were entered, not size order — and the
+    // length part isn't even formatted consistently (some use a space
+    // for mixed numbers, e.g. "2 1/2", others a hyphen, e.g. "1-1/2").
+    // Parse the leading "#<gauge>" and the fractional-inch length out
+    // of each label and sort numerically; if any label in the set
+    // doesn't match this shape (other products use entirely different
+    // variant naming, e.g. colors/sizes), bail out and keep the
+    // original order rather than risk a wrong partial sort.
+    function parseFractionalInches(str) {
+      const m = str.match(/^(\d+)[\s-](\d+)\/(\d+)$/) || str.match(/^(\d+)\/(\d+)$/) || str.match(/^(\d+)$/);
+      if (!m) return null;
+      if (m.length === 4) return parseInt(m[1]) + parseInt(m[2]) / parseInt(m[3]);
+      if (m.length === 3) return parseInt(m[1]) / parseInt(m[2]);
+      return parseInt(m[1]);
+    }
+    function variantSortKey(label) {
+      const gauge = label.match(/^#(\d+)/);
+      const length = label.match(/(\d[\d\s\-/]*)"/);
+      if (!gauge || !length) return null;
+      const lengthVal = parseFractionalInches(length[1].trim());
+      if (lengthVal === null) return null;
+      return [parseInt(gauge[1]), lengthVal];
+    }
+    function sortVariants(variants) {
+      const keys = variants.map(v => variantSortKey(v.label));
+      if (keys.some(k => k === null)) return variants;
+      return variants
+        .map((v, i) => ({ v, k: keys[i] }))
+        .sort((a, b) => a.k[0] - b.k[0] || a.k[1] - b.k[1])
+        .map(x => x.v);
+    }
     function renderVariants(p) {
       if (!p.variants || !p.variants.length) return;
       document.getElementById('productVariants').style.display = '';
+      const sorted = sortVariants(p.variants);
       const select = document.getElementById('variantSelect');
-      select.innerHTML = p.variants.map((v, i) => `
+      select.innerHTML = sorted.map((v, i) => `
         <option value="${v.id}"${i === 0 ? ' selected' : ''}>${v.label}${v.stock === 0 ? ' (Sold Out)' : ''}</option>
       `).join('');
-      selectedVariant = p.variants[0];
+      selectedVariant = sorted[0];
     }
 
     function selectVariant(variantId) {
