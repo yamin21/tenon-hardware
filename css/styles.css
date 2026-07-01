@@ -788,7 +788,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 
 /* real image cards from API */
 .product-card-img--real { background: #fff; }
-.product-card-img--real img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
+.product-card-img--real img { width: 100%; height: 100%; object-fit: contain; }
 
 /* placeholder colour palettes per product type */
 
