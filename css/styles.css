@@ -472,7 +472,11 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: calc(100vw - 32px);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.cat-dropdown-inner::-webkit-scrollbar { display: none; }
 .cat-dropdown-inner::before {
   content: '';
   position: absolute;
