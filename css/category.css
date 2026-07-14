@@ -57,9 +57,15 @@
   font-weight: 600;
 }
 
+#childCatDropdown {
+  --chip-center: 50%;
+}
 #childCatDropdown .cat-dropdown-inner {
   top: 5px;
   box-shadow: none;
+}
+#childCatDropdown .cat-dropdown-inner::before {
+  display: none;
 }
 #pageMain {
   transition: padding-top 0.2s ease;
