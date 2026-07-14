@@ -830,6 +830,7 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
 }
 .product-brand { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand); }
 .product-name  { font-size: 1.05rem; font-weight: 600; color: var(--text); line-height: 1.35; flex: 1; text-transform: uppercase; }
+.product-card-sku { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.02em; }
 
 .stars { color: #F59E0B; font-size: 0.8rem; letter-spacing: 1px; }
 .rating-count { font-size: 0.75rem; color: var(--text-muted); }
