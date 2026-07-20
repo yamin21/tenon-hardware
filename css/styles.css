@@ -456,6 +456,16 @@ h1,h2,h3,h4,h5,h6 { font-family: 'Inter', system-ui, -apple-system, sans-serif; 
   z-index: 97;
   pointer-events: none;
 }
+/* The child-category filter bar (#childCatDropdown) is a persistent
+   secondary nav, not a transient hover menu, so it needs to reserve
+   its own space in the flow -- otherwise, once scrolled, its fixed
+   position makes it overlap whatever content lands underneath it. */
+#childCatDropdown {
+  position: sticky;
+  top: calc(var(--header-h) + var(--cat-nav-h));
+  height: var(--child-dropdown-h, 0px);
+  transition: height 0.2s ease;
+}
 .cat-dropdown-inner {
   position: absolute;
   top: 10px;

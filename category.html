@@ -280,7 +280,6 @@
     function positionChildDropdown() {
       const dropdown = document.getElementById('childCatDropdown');
       const inner = document.getElementById('childCatDropdownInner');
-      const pageMain = document.getElementById('pageMain');
       const activeChip = document.querySelector('#catNavInner .cat-nav-item--active');
       if (!activeChip) return;
       const rect = activeChip.getBoundingClientRect();
@@ -293,7 +292,7 @@
         const arrowPct = Math.max(10, Math.min(90, ((chipCenter - clamped) / cardW + 0.5) * 100));
         inner.style.setProperty('--arrow-left', arrowPct + '%');
         if (dropdown.style.display !== 'none') {
-          pageMain.style.setProperty('--child-dropdown-h', (5 + inner.offsetHeight + 12) + 'px');
+          dropdown.style.setProperty('--child-dropdown-h', (5 + inner.offsetHeight + 12) + 'px');
         }
       });
     }
@@ -301,12 +300,10 @@
     async function loadChildCategories(subSlug) {
       const dropdown = document.getElementById('childCatDropdown');
       const inner = document.getElementById('childCatDropdownInner');
-      const pageMain = document.getElementById('pageMain');
       CHILD_CATS = [];
       if (!subSlug || subSlug === 'all') {
         dropdown.style.display = 'none';
         inner.innerHTML = '';
-        pageMain.classList.remove('has-child-dropdown');
         return;
       }
       const match = SUBCAT_TREE.find(s => s.slug === subSlug);
@@ -314,14 +311,12 @@
       if (!CHILD_CATS.length) {
         dropdown.style.display = 'none';
         inner.innerHTML = '';
-        pageMain.classList.remove('has-child-dropdown');
         return;
       }
       inner.innerHTML = '<button class="filter-chip' + (activeChildFilter === 'all' ? ' filter-chip--active' : '') + '" data-child="all">All</button>' +
         CHILD_CATS.map(c => `<button class="filter-chip${c.slug === activeChildFilter ? ' filter-chip--active' : ''}" data-child="${c.slug}">${c.name}</button>`).join('');
       inner.querySelectorAll('.filter-chip').forEach(b => b.onclick = () => filterByChild(b.dataset.child));
       dropdown.style.display = '';
-      pageMain.classList.add('has-child-dropdown');
       positionChildDropdown();
     }
 
