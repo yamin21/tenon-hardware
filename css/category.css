@@ -57,9 +57,15 @@
   font-weight: 600;
 }
 
+#childCatDropdown {
+  --chip-center: 50%;
+}
 #childCatDropdown .cat-dropdown-inner {
   top: 5px;
   box-shadow: none;
+}
+#childCatDropdown .cat-dropdown-inner::before {
+  display: none;
 }
 #childCatDropdownInner .filter-chip {
   font-size: 0.78rem;
