@@ -112,7 +112,7 @@
             </div>
 
             <div class="product-variants" id="productVariants" style="display:none">
-              <p class="product-qty-label">Size / Option</p>
+              <p class="product-qty-label" id="variantTypeLabel">Size / Option</p>
               <select class="variant-select" id="variantSelect" onchange="selectVariant(this.value)"></select>
             </div>
 
@@ -385,9 +385,14 @@
         .sort((a, b) => a.k[0] - b.k[0] || a.k[1] - b.k[1])
         .map(x => x.v);
     }
+    function formatVariantType(variantType) {
+      if (!variantType) return 'Size / Option';
+      return variantType.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
     function renderVariants(p) {
       if (!p.variants || !p.variants.length) return;
       document.getElementById('productVariants').style.display = '';
+      document.getElementById('variantTypeLabel').textContent = formatVariantType(p.variantType);
       const sorted = sortVariants(p.variants);
       const select = document.getElementById('variantSelect');
       select.innerHTML = sorted.map((v, i) => `
