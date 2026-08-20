@@ -84,6 +84,8 @@
 
 .product-sku { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; margin-bottom: 0; }
 
+.product-info .product-brand { display: block; margin: -8px 0 4px; }
+
 .product-title {
   font-size: 2rem;
   font-weight: 500;
