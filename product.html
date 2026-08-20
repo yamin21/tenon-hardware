@@ -59,6 +59,7 @@
   <link rel="stylesheet" href="css/product.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://erp.tenon.mv">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
@@ -196,6 +197,8 @@
   <script>
     let currentProduct = null;
     let selectedVariant = null;
+    let qty = 1;
+    let cartItems = loadCart();
 
     function buildProductCard(p, extraClass) {
       const raw = p.images && p.images[0] ? p.images[0] : '';
@@ -217,9 +220,46 @@
         </div>`;
     }
 
+    // Paint immediately from a cached listing snapshot (if the user
+    // arrived via a category/home grid, which already fetched this
+    // exact product object) instead of showing a blank spinner while
+    // waiting on a second ERP round trip. loadProduct() still fetches
+    // fresh data afterward and overwrites everything below, so this
+    // is purely a perceived-speed win, not a source of stale data.
+    function quickRenderProduct(p) {
+      currentProduct = p;
+      document.title = p.name + ' — Tenon Hardware';
+      document.getElementById('productTitle').textContent = p.name;
+      if (p.brand) {
+        const brandEl = document.getElementById('productBrand');
+        brandEl.textContent = p.brand;
+        brandEl.style.display = '';
+      }
+      if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+
+      renderVariants(p);
+      updatePriceDisplay();
+
+      const images = (p.images || []).filter(Boolean);
+      if (images.length > 0) {
+        const mainImg = document.getElementById('galleryImg');
+        document.getElementById('galleryPlaceholder').style.display = 'none';
+        mainImg.src = shopifyImg(images[0], 800);
+        mainImg.alt = p.name;
+        mainImg.style.display = '';
+      }
+
+      document.getElementById('pageSpinner').style.display = 'none';
+      document.getElementById('pageMain').style.display = '';
+    }
+
     async function loadProduct() {
       const id = new URLSearchParams(window.location.search).get('id');
       if (!id) return;
+
+      const cached = getCachedProduct(id);
+      if (cached) quickRenderProduct(cached);
+
       try {
         const res = await fetch(API_BASE + withLocation('/products/' + id), { headers: { 'x-api-key': API_KEY } });
         if (!res.ok) throw new Error();
@@ -354,7 +394,7 @@
       } catch(e) {
         document.getElementById('pageSpinner').style.display = 'none';
         document.getElementById('pageMain').style.display = '';
-        document.getElementById('productTitle').textContent = 'Product not found';
+        if (!cached) document.getElementById('productTitle').textContent = 'Product not found';
       }
     }
 
@@ -479,7 +519,6 @@
     loadProduct();
 
     // ── Quantity ───────────────────────────────────────────────
-    let qty = 1;
     function changeQty(dir) {
       const { stock } = currentProduct ? getActiveValues() : { stock: null };
       const max = stock != null ? stock : Infinity;
@@ -488,7 +527,6 @@
     }
 
     // ── Add to Cart ───────────────────────────────────────────
-    let cartItems = loadCart();
     renderCart();
     function addToCartPage() {
       if (!currentProduct) return;

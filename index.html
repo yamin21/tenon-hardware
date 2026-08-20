@@ -72,6 +72,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://erp.tenon.mv">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
@@ -764,6 +765,7 @@
         ]);
         const subs     = tree.map(({ children, ...sub }) => sub);
         const products = (await prodRes.json()).data;
+        cacheProductList(products);
 
         // Category mosaic. Tiles are grey until a category has an
         // image_url. Tile sizing is computed by layoutCategoryMosaic()

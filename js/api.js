@@ -144,6 +144,31 @@ async function getCategoryTree(categorySlug) {
   return tree;
 }
 
+// ── Product prefetch cache (sessionStorage) ─────────────────────
+// Category/home grids already fetch full product objects (same shape
+// as GET /products/:id, including variants/description). Stashing
+// them lets product.html paint instantly on click instead of waiting
+// on a second ERP round trip (~1-1.5s cold-start cost) for data the
+// browser already has. product.html still re-fetches in the
+// background to correct anything stale (price/stock changes).
+const PRODUCT_CACHE_KEY = 'product-cache-v1';
+
+function cacheProductList(products) {
+  try {
+    const map = {};
+    products.forEach(p => { map[p.id] = p; });
+    sessionStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify(map));
+  } catch {}
+}
+
+function getCachedProduct(id) {
+  try {
+    const raw = sessionStorage.getItem(PRODUCT_CACHE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw)[id] || null;
+  } catch { return null; }
+}
+
 // ── CMS-managed landing content (hero slides, etc.) ────────────
 // No cache here, unlike the category tree above — staff expect a
 // change to show up on the very next page load, not within a minute.
