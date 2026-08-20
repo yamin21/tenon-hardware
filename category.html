@@ -100,8 +100,8 @@
     <section class="cat-products-section">
       <div class="container">
         <div class="products-grid products-grid--5" id="productGrid"></div>
-        <div class="load-more-wrap" id="loadMoreWrap">
-          <a href="#" class="btn-outline-lg" onclick="loadMore(event)">Load more products →</a>
+        <div class="load-more-sentinel" id="loadMoreWrap" style="display:none">
+          <svg class="load-more-spinner" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--border-strong)" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
         </div>
       </div>
     </section>
@@ -408,11 +408,10 @@
       }).join('');
     }
 
-    function loadMore(e) {
-      e.preventDefault();
-      page++;
-      applyFilters();
-    }
+    const _observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { page++; applyFilters(); }
+    }, { rootMargin: '120px' });
+    _observer.observe(document.getElementById('loadMoreWrap'));
 
     const _locSeed = new URLSearchParams(location.search).get('_loc');
     if (_locSeed && ['male','thinadhoo'].includes(_locSeed)) localStorage.setItem('tenon_location', _locSeed);

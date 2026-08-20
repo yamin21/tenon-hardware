@@ -77,6 +77,11 @@
 /* Products section */
 .cat-products-section { padding: 40px 0 80px; }
 
+/* Infinite scroll sentinel */
+.load-more-sentinel { display: flex; justify-content: center; padding: 32px 0; }
+.load-more-spinner { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* No results */
 .no-results {
   grid-column: 1 / -1;
