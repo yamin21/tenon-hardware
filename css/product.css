@@ -259,6 +259,5 @@
   .product-price-block { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
   .product-price-row { margin: 0; }
   .product-price-note { margin: 0; }
-  .product-title { display: inline; margin-bottom: 12px; }
-  .product-sku { display: inline; margin-left: 8px; }
+  .product-title { margin-bottom: 4px; }
 }
