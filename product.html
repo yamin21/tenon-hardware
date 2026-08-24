@@ -235,7 +235,7 @@
         brandEl.textContent = p.brand;
         brandEl.style.display = '';
       }
-      if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+      if (p.sku) document.getElementById('productSku').textContent = p.sku;
 
       renderVariants(p);
       updatePriceDisplay();
@@ -273,7 +273,7 @@
           brandEl.textContent = p.brand;
           brandEl.style.display = '';
         }
-        if (p.sku) document.getElementById('productSku').textContent = 'SKU: ' + p.sku;
+        if (p.sku) document.getElementById('productSku').textContent = p.sku;
 
         // Dynamic Product schema for SEO / AI crawlers
         const img0 = p.images && p.images[0] ? shopifyImg(p.images[0].startsWith('http') ? p.images[0] : (p.images[0] ? API_BASE.replace('/api','') + '/' + p.images[0] : ''), 800) : 'https://tenon.mv/assets/og-image.svg';
@@ -454,7 +454,7 @@
       qty = 1;
       updatePriceDisplay();
 
-      if (v.sku) document.getElementById('productSku').textContent = 'SKU: ' + v.sku;
+      if (v.sku) document.getElementById('productSku').textContent = v.sku;
 
       document.getElementById('galleryImg').src = shopifyImg(v.image, 800);
       const thumbs = document.querySelectorAll('.gallery-thumb');
