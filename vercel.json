@@ -1,6 +1,11 @@
 {
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
+  "functions": {
+    "api/health.js": {
+      "includeFiles": "js/supabase-client.js"
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",

@@ -155,6 +155,29 @@ await test('loads with 200', async () => {
   await page.close();
 });
 
+// api/health.js — Vercel function, not served by the static dev server,
+// so invoke the handler directly instead of going through BASE.
+console.log('\napi/health.js');
+function mockRes() {
+  return { headers: {}, statusCode: 200, setHeader(k, v) { this.headers[k] = v; }, end(b) { this.body = b; } };
+}
+await test('GET reports catalogue status', async () => {
+  const { default: handler } = await import('../api/health.js');
+  const res = mockRes();
+  await handler({ method: 'GET' }, res);
+  if (![200, 503].includes(res.statusCode)) throw new Error(`Unexpected status ${res.statusCode}`);
+  if (res.headers['Cache-Control'] !== 'no-store') throw new Error('Missing Cache-Control: no-store');
+  const body = JSON.parse(res.body);
+  if (!['ok', 'down'].includes(body.status)) throw new Error(`Bad status: ${body.status}`);
+  if (body.checks.catalogue !== body.status) throw new Error('checks.catalogue should mirror status');
+});
+await test('non-GET returns 405', async () => {
+  const { default: handler } = await import('../api/health.js');
+  const res = mockRes();
+  await handler({ method: 'POST' }, res);
+  if (res.statusCode !== 405) throw new Error(`Expected 405, got ${res.statusCode}`);
+});
+
 // ── Summary ───────────────────────────────────────────────────────
 await browser.close();
 
