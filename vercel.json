@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "functions": {
     "api/health.js": {
-      "includeFiles": "js/supabase-client.js"
+      "includeFiles": "js/{api,supabase-client}.js"
     }
   },
   "headers": [

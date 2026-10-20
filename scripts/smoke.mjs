@@ -161,7 +161,7 @@ console.log('\napi/health.js');
 function mockRes() {
   return { headers: {}, statusCode: 200, setHeader(k, v) { this.headers[k] = v; }, end(b) { this.body = b; } };
 }
-await test('GET reports catalogue status', async () => {
+await test('GET reports catalogue and auth status', async () => {
   const { default: handler } = await import('../api/health.js');
   const res = mockRes();
   await handler({ method: 'GET' }, res);
@@ -169,7 +169,10 @@ await test('GET reports catalogue status', async () => {
   if (res.headers['Cache-Control'] !== 'no-store') throw new Error('Missing Cache-Control: no-store');
   const body = JSON.parse(res.body);
   if (!['ok', 'down'].includes(body.status)) throw new Error(`Bad status: ${body.status}`);
-  if (body.checks.catalogue !== body.status) throw new Error('checks.catalogue should mirror status');
+  if (!['ok', 'down'].includes(body.checks.catalogue)) throw new Error(`Bad checks.catalogue: ${body.checks.catalogue}`);
+  if (!['ok', 'down'].includes(body.checks.auth)) throw new Error(`Bad checks.auth: ${body.checks.auth}`);
+  const allOk = body.checks.catalogue === 'ok' && body.checks.auth === 'ok';
+  if (body.status !== (allOk ? 'ok' : 'down')) throw new Error('status should be ok only if both checks are ok');
 });
 await test('non-GET returns 405', async () => {
   const { default: handler } = await import('../api/health.js');
